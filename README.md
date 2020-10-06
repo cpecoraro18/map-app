@@ -18,7 +18,7 @@ Run
 Run this command in console the first time:
 
 ```
-npm run dev 
+set DEBUG=http & npm run dev 
 ```
 
 Run this command every other time
