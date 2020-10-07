@@ -47,8 +47,6 @@ User.getUserByUsername = function(username, result) {
 }
 
 User.getUserById = function(id, result) {
-  console.log(typeof(id))
-  console.log(typeof(users[0].id));
   result(null, users.find(user => user.id === id));
 }
 

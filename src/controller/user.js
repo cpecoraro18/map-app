@@ -24,7 +24,6 @@ exports.logoutUser = function(req, res) {
 exports.getUserById = function(req, res) {
   var id = parseInt(req.params.userId);
   User.getUserById(id, function(err, user) {
-    console.log(user);
     if(err) {
       res.status(500).json({
         error: err,
