@@ -4,7 +4,8 @@ const {ensureAuthenticated, forwardAuthenticated} = require('../config/auth');
 
 /* GET home page. */
 router.get('/', ensureAuthenticated, function(req, res, next) {
-  res.render('index', {page:'Home', menuId:'home'});
+  console.log(req);
+  res.render('index', {page:'Home', menuId:'home', username: req.user.username});
 });
 router.get('/about', function(req, res, next) {
   res.render('about', {page:'About', menuId:'about'});

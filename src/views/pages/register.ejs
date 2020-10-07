@@ -1,25 +1,33 @@
-<h1>Register</h1>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body>
+    <h1>Register</h1>
 
-<form class="" action="/user/register" method="post">
-  <div>
-    <label for="name">Name</label>
-    <input type="text" id="name" name="name" required>
-  </div>
-  <div>
-    <label for="username">Username</label>
-    <input type="text" id="username" name="username" required>
-  </div>
-  <div>
-    <label for="email">Email</label>
-    <input type="text" id="email" name="email" required>
-  </div>
-  <div>
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" required>
-  </div>
-  <button type="submit">Register</button>
-</form>
+    <form class="" action="/user/register" method="post">
+      <div>
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email" required>
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="submit">Register</button>
+    </form>
+    <br>
+    <a href='/login'>Login</a>
 
-<a href='/login'>Login</a>
-
-  <footer><%- include('../partials/footer') %></footer>
+    <footer><%- include('../partials/footer') %></footer>
+  </body>
+</html>
