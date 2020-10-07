@@ -1,13 +1,19 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+//config enviroment variables
+/*if(process.env.NODE_ENV != 'production') {
+  require('dotenv').config()
+}*/
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var exampleRouter = require('./routes/example')
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const passport = require('passport')
+const flash = require('express-flash')
+const session = require('express-session')
 
-var app = express();
+const app = express();
+
+require('./config/passport-config')(passport)
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views/pages'));
@@ -17,9 +23,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/tasks', exampleRouter)
+//Express session
+app.use(
+  session({
+    secret: "map",
+    resave: false,
+    saveUninitialized: false
+  })
+);
+
+//Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(flash());
+
+//Routes
+app.use('/', require('./routes/index'));
+app.use('/user', require('./routes/user'));
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
