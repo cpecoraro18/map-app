@@ -1,6 +1,9 @@
+//User model
+
 const bcrypt = require('bcrypt')
 
-const users = [{
+//Mock Database with test user
+var users = [{
   id: 0,
   name: "test",
   username: "test",
@@ -15,6 +18,7 @@ bcrypt.genSalt(10, (err, salt) => {
   });
 });
 
+//User attributes
 var User = function(user){
   this.name = user.name,
   this.username = user.username,
@@ -22,6 +26,8 @@ var User = function(user){
   this.email = user.email
 }
 
+//takes a user made with template
+//returns new user with id
 User.createUser = async function(newUser, result) {
    var newUser = {
      id: users.length,
@@ -35,14 +41,15 @@ User.createUser = async function(newUser, result) {
 
 }
 
-User.getUserByUsername = function(user, result) {
-  //console.log(users);
-  console.log("IN USER MODEL: ", user.username)
-  result(null, users.find(u => u.username === user.username));
+//takes a user with a username
+User.getUserByUsername = function(username, result) {
+  result(null, users.find(u => u.username === username));
 }
 
-User.getUserByID = function(id, result) {
-  result(null, users.find(u => u.id === id));
+User.getUserById = function(id, result) {
+  console.log(typeof(id))
+  console.log(typeof(users[0].id));
+  result(null, users.find(user => user.id === id));
 }
 
 module.exports = User;

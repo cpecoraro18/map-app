@@ -3,6 +3,7 @@
   require('dotenv').config()
 }*/
 
+//Import Modules and Config
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -15,6 +16,7 @@ const app = express();
 
 require('./config/passport-config')(passport)
 
+//EJS view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views/pages'));
 

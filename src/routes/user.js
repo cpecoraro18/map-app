@@ -1,3 +1,5 @@
+//Router for user information
+
 var express = require('express');
 var router = express.Router();
 var userController = require('../controller/user');
@@ -9,7 +11,7 @@ router.get('/', ensureAuthenticated, function(req, res) {
   res.send('respond with a resource');
 });
 
-//router.get('/:userId', userController.getUserById);
+router.get('/:userId', userController.getUserById);
 
 router.post('/register', forwardAuthenticated, userController.registerUser)
 
