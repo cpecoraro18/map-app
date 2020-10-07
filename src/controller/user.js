@@ -45,6 +45,16 @@ exports.getUserById = function(req, res) {
 
 exports.registerUser = function(req, res) {
   const { name, username, email, password} = req.body;
+
+  User.getUserByUsername(username, (err, user) => {
+    if(user) {
+      res.status(500).json({
+        error: err,
+        message: "User Already Exists"
+      });
+    }
+  });
+  
   let errors = [];
 
   password2 = password;
