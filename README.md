@@ -1,5 +1,12 @@
 Map App
 ==================
+Make sure you have node installed by running
+```
+node -v 
+```
+If you done have it, download it from the nodejs website
+
+Clone this repo into a directory using git clone and step into the src file.
 
 Build
 -----
@@ -27,4 +34,8 @@ Run this command every other time
 npm run dev 
 ```
 
-Open `http://localhost:3000` to access basic Express Site.
+Open `http://localhost:3000` to access the site and login with
+
+test
+
+test
