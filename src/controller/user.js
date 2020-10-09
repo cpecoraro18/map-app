@@ -54,7 +54,7 @@ exports.registerUser = function(req, res) {
       });
     }
   });
-  
+
   let errors = [];
 
   password2 = password;

@@ -12,7 +12,8 @@ router.get('/about', function(req, res, next) {
   res.render('about', {page:'About', menuId:'about'});
 });
 router.get('/login', forwardAuthenticated, function(req, res) {
-  res.render('login', {page:'Login'});
+  const errors = req.flash().error || [];
+  res.render('login', {page:'Login', errors: errors});
 });
 
 router.get('/register', forwardAuthenticated, function(req, res) {

@@ -2,7 +2,7 @@ Map App
 ==================
 Make sure you have node installed by running
 ```
-node -v 
+node -v
 ```
 If you done have it, download it from the nodejs website
 
@@ -25,13 +25,13 @@ Run
 Run this command in console the first time:
 
 ```
-set DEBUG=http & npm run dev 
+set DEBUG=http & npm run dev
 ```
 
 Run this command every other time
 
 ```
-npm run dev 
+npm run dev
 ```
 
 Open `http://localhost:3000` to access the site and login with
@@ -42,4 +42,4 @@ test
 
 Commit
 -----
-When starting a new feature, make a seperate branch. When you are done, merge that branch into dev.
+When starting a new feature, make a separate branch. When you are done, merge that branch into dev.

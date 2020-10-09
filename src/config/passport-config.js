@@ -10,15 +10,18 @@ module.exports = function(passport) {
       // Match user
 
       User.getUserByUsername(username, (err, user) => {
-        if (err || !user) {
-          return done(null, false, { message: 'That username does not exist' });
+        if (err) {
+          return done(err);
+        }
+        if(!user) {
+          return done(null, false, {message: "User does not exists"})
         }
         bcrypt.compare(password, user.password, (err, isMatch) => {
           if (err) throw err;
           if (isMatch) {
             return done(null, user);
           } else {
-            return done(null, false, { message: 'Password incorrect' });
+            return done(null, false, { message: 'Incorrect password. Please try again!' });
           }
         });
       });
@@ -30,6 +33,7 @@ module.exports = function(passport) {
   });
 
   passport.deserializeUser(function(id, done) {
+    console.log("DESERIALIZING USER")
     User.getUserById(id, function(err, user) {
       done(err, user);
     });
