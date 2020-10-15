@@ -20,9 +20,9 @@ require('./config/passport-config')(passport)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views/pages'));
 
-//app.use(logger('dev'));
+app.use(logger('dev'));
+//for logging as necesarry
 app.use(function(req, res, next){
-  //console.log(req.originalUrl);
   next();
 })
 app.use(express.json());
@@ -47,6 +47,7 @@ app.use(flash());
 //Routes
 app.use('/', require('./routes/index'));
 app.use('/user', require('./routes/user'));
+app.use('/event', require('./routes/event'));
 
 
 app.use(express.static(path.join(__dirname, 'public')));

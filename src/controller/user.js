@@ -22,7 +22,7 @@ exports.logoutUser = function(req, res) {
 
 //sends json with user info
 exports.getUserById = function(req, res) {
-  var id = parseInt(req.params.userId);
+  var id= parseInt(req.params.id)
   User.getUserById(id, function(err, user) {
     if(err) {
       res.status(500).json({

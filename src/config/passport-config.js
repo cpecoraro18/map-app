@@ -8,7 +8,7 @@ module.exports = function(passport) {
   passport.use(
     new LocalStrategy({usernameField: 'username'}, (username, password, done) => {
       // Match user
-
+      console.log(username)
       User.getUserByUsername(username, (err, user) => {
         if (err) {
           return done(err);
@@ -33,7 +33,6 @@ module.exports = function(passport) {
   });
 
   passport.deserializeUser(function(id, done) {
-    console.log("DESERIALIZING USER")
     User.getUserById(id, function(err, user) {
       done(err, user);
     });
