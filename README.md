@@ -46,7 +46,7 @@ These are full html pages with a head and body tags. Each page should include th
 HTML that is reused often can be made into partials and plugged into pages using EJS
 
 ### Public Files
-To get assets, javascript files, css files, or any other public files, use the "../<foldername>/<filename>" as the directory.
+To get assets, javascript files, css files, or any other public files, use the "../XfoldernameX/XfilenameX" as the directory.
 
 ## Backend
 ### app.js
