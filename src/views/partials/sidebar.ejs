@@ -1,0 +1,49 @@
+
+<!-- Sidebar -->
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <h2>MapShot</h2>
+        <button type="button" name="button" id="sidebarToggle" class="btn"><i class="fas fa-bars"></i></button>
+        <img id="profilePicture" src="/assets/images/userProfile.png" alt="noPic">
+        <h3> <%= username %> </h3>
+    </div>
+
+
+    <ul class="list-unstyled components">
+        <li>
+          <a href="/">
+              <i class="fas fa-home"></i>
+              Home
+          </a>
+        </li>
+        <li>
+          <a href="/explore">
+              <i class="fas fa-compass"></i>
+              Explore
+          </a>
+        </li>
+        <li>
+          <a href="#profileSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-user-alt"></i>
+                Profile
+            </a>
+            <ul class="collapse list-unstyled" id="profileSubmenu">
+                  <li class="active">
+                      <a href="/profile">My Profile</a>
+                  </li>
+                  <li>
+                      <a href="/customizeMap">Customize Map</a>
+                  </li>
+                  <li>
+                      <a href="/settings">Settings</a>
+                  </li>
+                  <li>
+                      <a href="/changePassword">Change Password</a>
+                  </li>
+                  <li>
+                    <a href="#" id=logoutButton>Logout <i class="fas fa-sign-out-alt"></i></a>
+                  </li>
+              </ul>
+        </li>
+    </ul>
+</nav>
