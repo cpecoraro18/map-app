@@ -17,6 +17,8 @@ router.post('/register', forwardAuthenticated, userController.registerUser)
 
 router.post('/login', forwardAuthenticated, userController.authenticateUser);
 
+router.post('/changePassword', ensureAuthenticated, userController.changePassword);
+
 router.post('/logout', userController.logoutUser);
 
 module.exports = router;

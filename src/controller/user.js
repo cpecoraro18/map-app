@@ -22,7 +22,7 @@ exports.logoutUser = function(req, res) {
 
 //sends json with user info
 exports.getUserById = function(req, res) {
-  var id= parseInt(req.params.id)
+  var id = parseInt(req.params.id)
   User.getUserById(id, function(err, user) {
     if(err) {
       res.status(500).json({
@@ -107,4 +107,40 @@ exports.registerUser = function(req, res) {
       })
     })
   }
+}
+
+exports.changePassword = function(req, res) {
+  const { oldPassword, newPassword, newPassword2} = req.body
+
+  let errors = [];
+
+  if (newPassword != newPassword2) {
+    errors.push({ msg: 'Passwords do not match' });
+  }
+
+  if(errors.length > 0) {
+    res.render('changePassword', {
+      errors
+    });
+  } else {
+    //change password
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(newPassword, salt, (err, hash) => {
+        if(err) throw err;
+        //add user to database
+        User.changePassword(req.user.username, hash, (err, user) => {
+          if(err) {
+            res.status(500).json({
+              error: err,
+              message: err.message
+            });
+            return;
+          } else {
+            res.redirect('/');
+          }
+        });
+      })
+    })
+  }
+
 }

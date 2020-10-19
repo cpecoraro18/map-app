@@ -50,4 +50,10 @@ User.getUserById = function(id, result) {
   result(null, users.find(user => user.id === id));
 }
 
+User.changePassword = function(username, newPassword, result) {
+  var userIndex = users.findIndex(user => user.username === username)
+  users[userIndex].password = newPassword;
+  console.log(users[userIndex]);
+  result(null, users.find(user => user.username === username))
+}
 module.exports = User;

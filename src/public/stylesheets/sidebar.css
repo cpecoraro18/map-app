@@ -1,8 +1,8 @@
 
-
+/*sidebar styling when fully expanded */
 #sidebar {
-    min-width: 500px;
-    max-width: 500px;
+    min-width: 40%;
+    max-width: 40%;
     min-height: 100%;
     background: #7386D5;
     color: #fff;
@@ -12,6 +12,7 @@
 #sidebar .sidebar-header {
     padding: 20px;
     background: #6d7fcc;
+    text-align: center;
 }
 
 #sidebar ul.components {
@@ -31,6 +32,14 @@
     text-align: left;
 }
 
+/*list item styling when sidebar is retracted */
+#sidebar.active {
+  min-width: 15%;
+  max-width: 15%;
+  text-align: center;
+}
+
+
 #sidebar.active ul li a  {
     padding: 20px 10px;
     text-align: center;
@@ -44,10 +53,6 @@
     margin-bottom: 5px;
 }
 
-/* Same dropdown links padding*/
-#sidebar.active ul ul a  {
-    padding: 10px !important;
-}
 
 /* Changing the arrow position to bottom center position,
    translateX(50%) works with right: 50%
@@ -60,7 +65,7 @@
     -ms-transform: translateX(50%);
     transform: translateX(50%);
 }
-
+/*whats not visible when menu is closed */
 #sidebar .sidebar-header strong {
     display: none;
 }
@@ -68,12 +73,28 @@
     display: none;
 }
 
-#sidebar.active .sidebar-header h2{
+
+#sidebar.active .sidebar-header img{
     display: none;
 }
+
 #sidebar.active .sidebar-header strong {
     display: block;
 }
+
+#sidebar.active .sidebar-header strong {
+    display: block;
+}
+
+#sidebar .sidebar-header button {
+    display: none;
+}
+
+#sidebar.active .pull-left{
+  display: none;
+}
+
+
 
 #sidebar ul li a:hover :hover{
     color: #7386D5;
@@ -91,11 +112,7 @@ ul ul a  {
     background: #6d7fcc;
 }
 
-#sidebar.active {
-  min-width: 80px;
-  max-width: 80px;
-  text-align: center;
-}
+
 
 a[data-toggle="collapse"] [data-toggle="collapse"]{
     position: relative;
@@ -114,9 +131,19 @@ a[data-toggle="collapse"] [data-toggle="collapse"]{
   height: 10%;
 }
 
-#sidebarToggle {
-  background: none;
-  float: right;
+
+#sidebar ul {
+  list-style: none;
+}
+
+#sidebar > .dropdown {
+  height: 250px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+.colors {
+  color:black;
 }
 
 @media (max-width: 768px) {
@@ -133,12 +160,24 @@ a[data-toggle="collapse"] [data-toggle="collapse"]{
 
     /* Reappearing the sidebar on toggle button click */
     #sidebar {
-        margin-left: 0;
-        width: 100%;
-        top: 0;
-        left: 0;
+      min-width: 100%;
+      max-width: 100%;
+      min-height: 100%;
+      margin-left: 0;
+      top: 0;
+      left: 0;
+    }
+    /*diplay toggle on sidebar if mobile*/
+    #sidebar .sidebar-header button {
+        display: block;
+        float: right;
+        background-color: rgb(255, 255, 255);
+        border: 2px solid rgb(255, 255, 255);
+        border-radius: 3px;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 6px;
+        cursor: pointer;
+        text-align: center;
+        color:black;
     }
 
-
-    }
 }
