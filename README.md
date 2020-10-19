@@ -37,10 +37,10 @@ npm run dev
 Code Structure
 ---
 ## Front End
-Each page should have a corresponding css and javascript file that performs all the logic and styling for that page
+Each page should have a corresponding css and javascript file that performs all the logic and styling for that page. For example, home.ejs should include home.css in the head and home.js in the bottom of the body. 
 ### Views
 #### Pages
-These are full html pages with a head and body tags. Each page should include the head and scripts partials to get all of the libraries like jquery and bootstrap
+These are full html pages with a head and body tags. Each page should include the HEAD and SCRIPTS partials to get all of the libraries like jquery and bootstrap
 
 #### Partials
 HTML that is reused often can be made into partials and plugged into pages using EJS
