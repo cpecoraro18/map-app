@@ -46,38 +46,31 @@ exports.getUserById = function(req, res) {
 exports.registerUser = function(req, res) {
   const { name, username, email, password} = req.body;
 
+  let errors = [];
+
+
   User.getUserByUsername(username, (err, user) => {
     if(user) {
-      res.status(500).json({
-        error: err,
-        message: "User Already Exists"
-      });
+      errors.push({ msg: 'Username already exisits' });
     }
   });
 
-  let errors = [];
-
   password2 = password;
 
-  //checks
-  /*
+
   if (!name || !email || !password || !password2) {
     errors.push({ msg: 'Please enter all fields' });
   }
   if (password != password2) {
     errors.push({ msg: 'Passwords do not match' });
   }
+  /*
   if (password.length < 6) {
     errors.push({ msg: 'Password must be at least 6 characters' });
-  }
-  */
+  }*/
   if(errors.length > 0) {
     res.render('register', {
-      errors,
-      name,
-      email,
-      password,
-      password2
+      errors
     });
   } else {
     //add new user

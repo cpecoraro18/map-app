@@ -4,10 +4,10 @@ var express = require('express');
 var router = express.Router();
 const {ensureAuthenticated, forwardAuthenticated} = require('../config/auth');
 
-/* GET home page. */
 router.get('/', ensureAuthenticated, function(req, res, next) {
   res.render('home', {page:'Home', menuId:'home', username: req.user.username});
 });
+
 router.get('/profile', ensureAuthenticated, function(req, res, next) {
   res.render('profile', {page:'Profile', menuId:'profile', username: req.user.username});
 });
@@ -28,8 +28,8 @@ router.get('/login', forwardAuthenticated, function(req, res) {
   const errors = req.flash().error || [];
   res.render('login', {page:'Login', errors: errors});
 });
-
 router.get('/register', forwardAuthenticated, function(req, res) {
-  res.render('register', {page:'Register'});
+    const errors = req.flash().error || [];
+  res.render('register', {page:'Register', errors: errors });
 });
 module.exports = router;

@@ -8,7 +8,6 @@ module.exports = function(passport) {
   passport.use(
     new LocalStrategy({usernameField: 'username'}, (username, password, done) => {
       // Match user
-      console.log(username)
       User.getUserByUsername(username, (err, user) => {
         if (err) {
           return done(err);

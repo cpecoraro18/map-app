@@ -1,37 +1,24 @@
 
 <!-- Sidebar -->
-<nav id="sidebar">
-    <div class="sidebar-header">
-      <div class="row">
-        <button type="button" name="button" id="sidebarToggle" class="btn"><i class="fas fa-caret-right"></i></button>
-      </div>
-      <h2>MapShot</h2>
-        <h3><%= page %></h3>
-        <img id="profilePicture" src="/assets/images/userProfile.png" alt="noPic">
-        <h3> <%= username %> </h3>
-    </div>
-
-
+<nav class="sidebar" id="sidebar">
+    <button type="button" name="button" class="sidebar " id="sidebarToggle">Toggle</button>
     <ul class="list-unstyled components">
-        <li>
-          <a href="/">
-              <i class="fas fa-home"></i>
-              Home
-          </a>
-        </li>
+      <li>
+        <a href="/">
+          <i class="fas fa-home"></i>
+        </a>
+      </li>
         <li>
           <a href="/explore">
-              <i class="fas fa-compass"></i>
-              Explore
+              <i class="fas fa-search"></i>
           </a>
         </li>
         <li>
           <a href="#profileSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                 <i class="fas fa-user-alt"></i>
-                Profile
             </a>
             <ul class="collapse list-unstyled" id="profileSubmenu">
-                  <li class="active">
+                  <li>
                       <a href="/profile">My Profile</a>
                   </li>
                   <li>

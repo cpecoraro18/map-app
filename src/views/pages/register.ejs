@@ -26,7 +26,16 @@
       <button type="submit">Register</button>
     </form>
     <br>
+    <ul style="list-style: none;">
+      <% for(var i=0; i<errors.length; i++) { %>
+        <li style="color:red">
+          <%= errors[i].msg %>
+        </li>
+      <% } %>
+    </ul>
+
     <a href='/login'>Login</a>
+
 
     <footer><%- include('../partials/footer') %></footer>
   </body>
