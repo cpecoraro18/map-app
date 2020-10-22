@@ -4,10 +4,11 @@
     <div>
       <label for="hue">Hue:</label>
       <select id="hue" onchange="changeMapStyles()">
-        <option value="	#FFFFFF">White</option>
-        <option value="#0000">Black</option>
-        <option value="#3363FF">Blue</option>
-        <option value="#FF3333">Red</option>
+        <option value="null">None</option>
+        <option value="#1EA362">Green</option>
+        <option value="#FFE047">Yellow</option>
+        <option value="#4A89F3">Blue</option>
+        <option value="#DD4B3E">Red</option>
       </select>
       <br>
     </div>
@@ -15,40 +16,44 @@
     <div>
       <label for="water">Water:</label>
       <select id="water" onchange="changeMapStyles()">
-        <option value="	#FFFFFF">White</option>
-        <option value="#000000">Black</option>
-        <option value="#3363FF">Blue</option>
-        <option value="#FF3333">Red</option>
+        <option value="null">None</option>
+        <option value="#1EA362">Green</option>
+        <option value="#FFE047">Yellow</option>
+        <option value="#4A89F3">Blue</option>
+        <option value="#DD4B3E">Red</option>
       </select>
       <br>
     </div>
     <div>
       <label for="land">Landscape:</label>
       <select id="land" onchange="changeMapStyles()">
-        <option value="	#FFFFFF">White</option>
-        <option value="#000000">Black</option>
-        <option value="#3363FF">Blue</option>
-        <option value="#FF3333">Red</option>
+        <option value="null">None</option>
+        <option value="#1EA362">Green</option>
+        <option value="#FFE047">Yellow</option>
+        <option value="#4A89F3">Blue</option>
+        <option value="#DD4B3E">Red</option>
       </select>
       <br>
     </div>
     <div>
       <label for="road">Road:</label>
       <select id="road" onchange="changeMapStyles()">
-        <option value="	#FFFFFF">White</option>
-        <option value="#000000">Black</option>
-        <option value="#3363FF">Blue</option>
-        <option value="#FF3333">Red</option>
+        <option value="null">None</option>
+        <option value="#1EA362">Green</option>
+        <option value="#FFE047">Yellow</option>
+        <option value="#4A89F3">Blue</option>
+        <option value="#DD4B3E">Red</option>
       </select>
       <br>
     </div>
     <div>
       <label for="poi">Points of Interest:</label>
       <select id="poi" onchange="changeMapStyles()">
-        <option value="white">White</option>
-        <option value="black">Black</option>
-        <option value="blue">Blue</option>
-        <option value="red">Red</option>
+        <option value="null">None</option>
+        <option value="#1EA362">Green</option>
+        <option value="#FFE047">Yellow</option>
+        <option value="#4A89F3">Blue</option>
+        <option value="#DD4B3E">Red</option>
       </select>
       <br>
     </div>
@@ -57,9 +62,8 @@
 
 
   <div id="labels">
-
     <div>
-      <input type="checkbox" id="labels" name="labels" value="labels">
+      <input type="checkbox" id="labelCheckbox" name="labels" value="labels" onclick="changeMapStyles()" checked>
       <label for="labels">Labels Visible</label>
       <br>
     </div>

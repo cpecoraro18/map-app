@@ -8,7 +8,8 @@ function initMap() {
   zoom:3,
   gestureHandling: 'greedy',
   minZoom: 3,
-  disableDefaultUI: true
+  disableDefaultUI: true,
+  mapTypeId: google.maps.MapTypeId.ROADMAP
 };
   map = new google.maps.Map(document.getElementById("map"), mapProp);
   addStaticButtons(map);
@@ -27,22 +28,25 @@ function addStyles(map) {
 }
 
 function changeMapStyles() {
-  console.log("CHANGE")
   var hueColor = $('#hue').val();
   var waterColor = $('#water').val();
   var landColor = $('#land').val();
   var roadColor = $('#road').val();
   var poiColor = $('#poi').val();
-  console.log(hueColor);
+  var showLabels = $('#labelCheckbox').prop('checked') ? 'on' : 'off';
   var userStyles = [
     {
       stylers: [
-        {hue: hueColor}
+        {hue: hueColor},
+        {gamma: 0.5},
+        {weight: 0.5},
+        {visibility: 'simplified'}
+
       ]
     }, {
       elementType: "labels",
       stylers: [
-        {visibility: 'on'}
+        {visibility: showLabels}
       ]
     }, {
       featureType: "water",
@@ -57,12 +61,12 @@ function changeMapStyles() {
     }, {
       featureType: "road",
       stylers: [
-        {color: "roadColor"}
+        {color: roadColor}
       ]
     }, {
       featureType: "poi",
       stylers: [
-        {color: "poiColor"}
+        {color: poiColor}
       ]
     }
   ]
@@ -70,4 +74,5 @@ function changeMapStyles() {
   map.setOptions({
     styles: userStyles
   })
+  console.log(userStyles)
 }
