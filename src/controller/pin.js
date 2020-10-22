@@ -1,0 +1,39 @@
+
+var Pin = require('../model/pin')
+
+
+exports.getUserPins = function(req, res) {
+  var userId = req.user.id;
+  console.log(req.user);
+  Pin.getPins(userId, (err, rows) => {
+    if(err) throw err;
+    res.status(200).json(rows);
+  });
+}
+
+exports.postPin = function(req, res) {
+  const userId = req.user.id;
+  const newPin = new Pin(req.body);
+  Pin.createPin(newPin, userId, (err) => {
+    if(err) throw err;
+    res.status(201);
+  });
+}
+
+exports.editPin = function(req, res) {
+  const userId = req.user.id;
+  const newPin = new Pin(req.body);
+  Pin.editPin(newPin, (err) => {
+    if(err) throw err;
+    res.status(201);
+  });
+}
+
+exports.deletePin = function(req, res) {
+  const userId = req.user.id;
+  const newPin = new Pin(req.body);
+  Pin.deletePin(newPin, (err) => {
+    if(err) throw err;
+    res.status(201);
+  });
+}

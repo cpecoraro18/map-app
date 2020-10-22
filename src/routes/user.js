@@ -6,12 +6,6 @@ var userController = require('../controller/user');
 
 const {ensureAuthenticated, forwardAuthenticated} = require('../config/auth');
 
-/* GET users listing. */
-router.get('/', ensureAuthenticated, function(req, res) {
-  res.send('respond with a resource');
-});
-
-router.get('/:userId', userController.getUserById);
 
 router.post('/register', forwardAuthenticated, userController.registerUser)
 

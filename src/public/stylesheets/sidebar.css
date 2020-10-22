@@ -1,11 +1,13 @@
 /*sidebar styling when fully expanded */
 #sidebar {
-    min-width: 8%;
-    max-width: 8%;
+    min-width: 10%;
+    max-width: 10%;
     min-height: 100%;
     background: #3B5284;
     color: #fff;
     transition: all 0.3s;
+    z-index: 100000000; /* should always be visible*/
+    box-shadow: 5px 10px #888888:
 }
 
 #sidebar .sidebar-header {
@@ -25,10 +27,14 @@
 }
 
 #sidebar ul li a  {
-    padding: 10px;
-    font-size: 1.1em;
+    padding-bottom: 30px;
+    padding-top: 20px;
+    padding-left: 0px;
+    font-size: 1.5em;
     display: block;
     text-align: center;
+    color: white;
+    background: #3B5284;
 }
 
 
@@ -43,11 +49,6 @@
     background: #3B5284;
 }
 
-ul ul a  {
-    font-size: 0.9em !important;
-    padding-left: 30px !important;
-    background: #3B5284;
-}
 
 
 
@@ -62,20 +63,13 @@ a[data-toggle="collapse"] [data-toggle="collapse"]{
     right: 20px;
     transform: translateY(-50%);
 }
-
-
-#sidebar ul {
-  list-style: none;
-}
-
-#sidebar > .dropdown {
-  height: 250px;
-  overflow: hidden;
-  overflow-y: scroll;
-}
-
+/*toggle button*/
 #sidebar button {
   display: none;
+}
+
+#profileSubmenu a {
+  font-size: 1em!important;
 }
 
 @media (max-width: 768px) {

@@ -7,9 +7,11 @@ function initMap() {
   zoom:3,
   gestureHandling: 'greedy',
   minZoom: 3,
-  disableDefaultUI: true
+  disableDefaultUI: true,
+  clickableIcons: true,
 };
   map = new google.maps.Map(document.getElementById("map"), mapProp);
+  addStaticButtons(map);
   addButtons(map);
   addStyles(map);
 
@@ -18,9 +20,6 @@ function initMap() {
 function addButtons(map) {
 
   //button for title
-  const titleDiv = document.createElement("div");
-  AddTitle(titleDiv, map);
-  map.controls[google.maps.ControlPosition.TOP_CENTER].push(titleDiv);
   AddSearchBar(map);
 
 }
@@ -31,42 +30,18 @@ function addStyles(map) {
 
 }
 
-function AddTitle(controlDiv, map) {
-  // Set CSS for the control border.
-  const controlUI = document.createElement("div");
-  controlUI.id = "rightControl";
-  controlUI.style.width = "75px";
-  controlUI.style.width = "75px";
-  controlUI.style.backgroundColor = "none";
-  controlUI.style.cursor = "pointer";
-  controlUI.style.textAlign = "center";
-  controlUI.title = "MapShot";
-  controlDiv.appendChild(controlUI);
-  // Set CSS for the control interior.
-  const controlText = document.createElement("div");
-  controlText.style.color = "rgb(25,25,25)";
-  controlText.style.fontFamily = "Roboto,Arial,sans-serif";
-  controlText.style.fontSize = "16px";
-  controlText.style.lineHeight = "38px";
-  controlText.style.paddingLeft = "5px";
-  controlText.style.paddingRight = "5px";
-  controlText.innerHTML = '<h1>MapShot</h1>';
-  controlUI.appendChild(controlText);
 
-  controlUI.addEventListener("click", () => {
-    //add event
-  });
-}
 
 function AddSearchBar(map) {
   const input = document.createElement('input');
   input.style.backgroundColor = "#fff";
-  input.style.fontSize = "15px;"
+  input.style.fontSize = "100px;"
   input.style.margin = "12px"
   input.style.padding = "0 11px 0 13px"
   input.style.textOverflow = "ellipsis"
   input.style.width = "200px"
-  input.style.height = "1.5em"
+  input.style.height = "4em"
+  input.placeholder = 'Search'
   const searchBox = new google.maps.places.SearchBox(input);
   console.log(searchBox);
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
