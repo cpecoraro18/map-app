@@ -1,22 +1,4 @@
 
-
-var map;
-
-function initMap() {
-  var mapProp= {
-  center:new google.maps.LatLng(44.9727, -93.23540000000003),
-  zoom:3,
-  gestureHandling: 'greedy',
-  minZoom: 3,
-  disableDefaultUI: true
-};
-  map = new google.maps.Map(document.getElementById("map"), mapProp);
-  addStaticButtons(map);
-  addButtons(map);
-  addStyles(map);
-
-}
-
 function addButtons(map) {
 
   //button for adding pin
@@ -24,7 +6,7 @@ function addButtons(map) {
   AddPinControl(addPinControlDiv, map);
   map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(addPinControlDiv);
 
-
+  return;
 }
 
 //https://developers.google.com/maps/documentation/javascript/style-reference
@@ -117,7 +99,8 @@ function addStyles(map) {
   ]
   map.setOptions({
     styles: userStyles
-  })
+  });
+  return;
 }
 
 
@@ -151,4 +134,5 @@ function AddPinControl(controlDiv, map) {
   controlUI.addEventListener("click", () => {
     $('#overlay-back').fadeIn(500);
   });
+  return;
 }

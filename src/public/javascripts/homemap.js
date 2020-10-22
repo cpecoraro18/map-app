@@ -1,21 +1,4 @@
 
-var map;
-
-function initMap() {
-  var mapProp= {
-  center:new google.maps.LatLng(44.9727, -93.23540000000003),
-  zoom:3,
-  gestureHandling: 'greedy',
-  minZoom: 3,
-  disableDefaultUI: true
-};
-  map = new google.maps.Map(document.getElementById("map"), mapProp);
-  addStaticButtons(map);
-  addButtons(map);
-  addStyles(map);
-
-}
-
 
 function addButtons(map) {
 
@@ -33,10 +16,12 @@ function addButtons(map) {
   const rightControlDiv = document.createElement("div");
   RightControl(rightControlDiv, map);
   map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(rightControlDiv);
+
+  return;
 }
 
 function addStyles(map) {
-
+  return;
 }
 
 

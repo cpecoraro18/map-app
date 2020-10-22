@@ -1,39 +1,25 @@
 
 
-var map;
-
-function initMap() {
-  var mapProp= {
-  center:new google.maps.LatLng(44.9727, -93.23540000000003),
-  zoom:3,
-  gestureHandling: 'greedy',
-  minZoom: 3,
-  disableDefaultUI: true,
-  mapTypeId: google.maps.MapTypeId.ROADMAP
-};
-  map = new google.maps.Map(document.getElementById("map"), mapProp);
-  addStaticButtons(map);
-  addButtons(map);
-  addStyles(map);
-
-}
-
 function addButtons(map) {
-
+  return;
 }
 
 //https://developers.google.com/maps/documentation/javascript/style-reference
 //add user styles to map
 function addStyles(map) {
+  return;
 }
 
 function changeMapStyles() {
+  //get colors from selects
   var hueColor = $('#hue').val();
   var waterColor = $('#water').val();
   var landColor = $('#land').val();
   var roadColor = $('#road').val();
   var poiColor = $('#poi').val();
   var showLabels = $('#labelCheckbox').prop('checked') ? 'on' : 'off';
+
+  //apply styles to map
   var userStyles = [
     {
       stylers: [
@@ -70,9 +56,8 @@ function changeMapStyles() {
       ]
     }
   ]
-  console.log(map);
+  //set map options with new style
   map.setOptions({
     styles: userStyles
   })
-  console.log(userStyles)
 }

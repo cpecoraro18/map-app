@@ -1,3 +1,24 @@
+
+
+var map;
+
+function initMap() {
+  var mapProp= {
+  center:new google.maps.LatLng(44.9727, -93.23540000000003),
+  zoom:3,
+  gestureHandling: 'greedy',
+  minZoom: 3,
+  disableDefaultUI: true,
+  mapTypeId: google.maps.MapTypeId.ROADMAP,
+  backgroundColor: "#5BA8A0"
+};
+  map = new google.maps.Map(document.getElementById("map"), mapProp);
+  addStaticButtons(map);
+  addButtons(map);
+  addStyles(map);
+}
+
+
 function addStaticButtons(map) {
   //button for title
   const titleDiv = document.createElement("div");
@@ -13,7 +34,7 @@ function addStaticButtons(map) {
     SidebarToggleControl(sidebarToggleControlDiv, map);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(sidebarToggleControlDiv);
   }
-
+  return;
 }
 
 
@@ -42,6 +63,8 @@ function AddTitle(controlDiv, map) {
   controlUI.addEventListener("click", () => {
     //add event
   });
+
+  return;
 }
 
 function ZoomControl(controlDiv, map) {
@@ -75,6 +98,8 @@ function ZoomControl(controlDiv, map) {
   controlUI.addEventListener("click", () => {
     map.setZoom(3);
   });
+
+  return;
 }
 
 function SidebarToggleControl(controlDiv, map) {
@@ -103,4 +128,5 @@ function SidebarToggleControl(controlDiv, map) {
   controlUI.addEventListener("click", () => {
     $('#sidebar').toggleClass('active');
   });
+  return;
 }
