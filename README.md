@@ -34,6 +34,37 @@ Run this command every other time
 npm run dev
 ```
 
+Code Structure
+---
+## Front End
+Each page should have a corresponding css and javascript file that performs all the logic and styling for that page. For example, home.ejs should include home.css in the head and home.js in the bottom of the body. 
+### Views
+#### Pages
+These are full html pages with a head and body tags. Each page should include the HEAD and SCRIPTS partials to get all of the libraries like jquery and bootstrap
+
+#### Partials
+HTML that is reused often can be made into partials and plugged into pages using EJS
+
+### Public Files
+To get assets, javascript files, css files, or any other public files, use the "../XfoldernameX/XfilenameX" as the directory.
+
+## Backend
+### app.js
+Loads libraries and is in charge of sending routes to the right place
+
+### routes
+The interface for the api
+
+### controller
+Handels request parsing and response handeling
+
+### model
+Representation of the objects. Interacts with the database
+
+
+
+
+
 Open `http://localhost:3000` to access the site and login with
 
 test
