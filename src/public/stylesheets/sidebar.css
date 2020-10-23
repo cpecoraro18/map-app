@@ -72,6 +72,9 @@ a[data-toggle="collapse"] [data-toggle="collapse"]{
   font-size: 1em!important;
 }
 
+#sidebar h3 {
+  overflow:hidden;
+}
 @media (max-width: 768px) {
     /* 80px and its content aligned to centre. Pushing it off the screen with the
        negative left margin

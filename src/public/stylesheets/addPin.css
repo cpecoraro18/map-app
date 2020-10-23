@@ -13,6 +13,7 @@
 #addNewEventContainer {
   background-color: white;
   opacity: 1!important;
+  position: relative;
   position: fixed;
   width: 50%;
   height: 60%;

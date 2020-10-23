@@ -1,4 +1,57 @@
 
+function loadMarkers(map) {
+  $.ajax({
+   url:"/pin",
+   method: "GET",
+   success:function(pins) {
+     addPinsToMap(pins, map);
+   }
+ });
+}
+
+function addPinsToMap(pins, map) {
+  pins.forEach(function(pin) {
+    var marker = addMarker(pin, map);
+    addInfoWindow(pin, marker, map);
+  })
+}
+
+function addMarker(pin, map) {
+  var pos = {
+    lat: pin.lat,
+    lng: pin.lng
+  };
+  console.log(map);
+  var marker = new google.maps.Marker({
+    position:pos,
+  });
+  marker.setMap(map);
+  return marker;
+}
+
+function addInfoWindow(pin, marker, map) {
+  var infowindow = new google.maps.InfoWindow();
+  var contentString =
+  '<div>' +
+    '<div>' +
+      '<h1>'+ pin.title + '</h1>' +
+    '</div>'+
+
+    '<div >'+
+    '<p><b>cpecoraro18 </b>'+ pin.description + "</p>" +
+    '</div>'+
+  '</div>';
+  infowindow.setContent(contentString);
+
+  marker.addListener('mouseover', function() {
+    infowindow.open(map, marker);
+  });
+  marker.addListener('mouseout', function() {
+    infowindow.close();
+  });
+}
+
+
 function addButtons(map) {
 
   //button for adding pin
@@ -13,90 +66,166 @@ function addButtons(map) {
 //add user styles to map
 function addStyles(map) {
   var userStyles = [
-    {
-      stylers: [
-        {visibility: 'simplified'}
-      ]
-    },
-    { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
-    { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
-    { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
-    {
-      featureType: "administrative.locality",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#d59563" }],
-    },
-    {
-      featureType: "poi",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#d59563" }],
-    },
-    {
-      featureType: "poi.park",
-      elementType: "geometry",
-      stylers: [{ color: "#263c3f" }],
-    },
-    {
-      featureType: "poi.park",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#6b9a76" }],
-    },
-    {
-      featureType: "road",
-      elementType: "geometry",
-      stylers: [{ color: "#38414e" }],
-    },
-    {
-      featureType: "road",
-      elementType: "geometry.stroke",
-      stylers: [{ color: "#212a37" }],
-    },
-    {
-      featureType: "road",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#9ca5b3" }],
-    },
-    {
-      featureType: "road.highway",
-      elementType: "geometry",
-      stylers: [{ color: "#746855" }],
-    },
-    {
-      featureType: "road.highway",
-      elementType: "geometry.stroke",
-      stylers: [{ color: "#1f2835" }],
-    },
-    {
-      featureType: "road.highway",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#f3d19c" }],
-    },
-    {
-      featureType: "transit",
-      elementType: "geometry",
-      stylers: [{ color: "#2f3948" }],
-    },
-    {
-      featureType: "transit.station",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#d59563" }],
-    },
-    {
-      featureType: "water",
-      elementType: "geometry",
-      stylers: [{ color: "#17263c" }],
-    },
-    {
-      featureType: "water",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#515c6d" }],
-    },
-    {
-      featureType: "water",
-      elementType: "labels.text.stroke",
-      stylers: [{ color: "#17263c" }],
-    },
-  ]
+  {
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#242f3e"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#746855"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#242f3e"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.locality",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#d59563"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#d59563"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#263c3f"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#6b9a76"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#38414e"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#212a37"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#9ca5b3"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#746855"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#1f2835"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#f3d19c"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#2f3948"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.station",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#d59563"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#17263c"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#515c6d"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#17263c"
+      }
+    ]
+  }
+]
   map.setOptions({
     styles: userStyles
   });
@@ -117,7 +246,7 @@ function AddPinControl(controlDiv, map) {
   controlUI.style.cursor = "pointer";
   controlUI.style.margin = "30px";
   controlUI.style.textAlign = "center";
-  controlUI.title = "Click to see next pin";
+  controlUI.title = "Click to add a new pin";
   controlDiv.appendChild(controlUI);
   // Set CSS for the control interior.
   const controlText = document.createElement("div");
@@ -133,6 +262,7 @@ function AddPinControl(controlDiv, map) {
 
   controlUI.addEventListener("click", () => {
     $('#overlay-back').fadeIn(500);
+    $('#addNewEventContainer').slideDown(500);
   });
   return;
 }

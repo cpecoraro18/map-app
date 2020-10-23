@@ -7,55 +7,21 @@ function addButtons(map) {
 //https://developers.google.com/maps/documentation/javascript/style-reference
 //add user styles to map
 function addStyles(map) {
+}
+
+function loadMarkers(map) {
   return;
 }
 
 function changeMapStyles() {
   //get colors from selects
-  var hueColor = $('#hue').val();
-  var waterColor = $('#water').val();
-  var landColor = $('#land').val();
-  var roadColor = $('#road').val();
-  var poiColor = $('#poi').val();
-  var showLabels = $('#labelCheckbox').prop('checked') ? 'on' : 'off';
 
-  //apply styles to map
-  var userStyles = [
-    {
-      stylers: [
-        {hue: hueColor},
-        {gamma: 0.5},
-        {weight: 0.5},
-        {visibility: 'simplified'}
 
-      ]
-    }, {
-      elementType: "labels",
-      stylers: [
-        {visibility: showLabels}
-      ]
-    }, {
-      featureType: "water",
-      stylers: [
-        {color: waterColor}
-      ]
-    }, {
-      featureType: "landscape",
-      stylers: [
-        {color: landColor}
-      ]
-    }, {
-      featureType: "road",
-      stylers: [
-        {color: roadColor}
-      ]
-    }, {
-      featureType: "poi",
-      stylers: [
-        {color: poiColor}
-      ]
-    }
-  ]
+  var userStyles = mapTemplates[$("#template").val()];
+  console.log(userStyles);
+  //based on labels
+
+
   //set map options with new style
   map.setOptions({
     styles: userStyles

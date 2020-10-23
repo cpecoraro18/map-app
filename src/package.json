@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "body-parser": "^1.18.3",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "cookie-parser": "~1.4.4",
@@ -23,6 +24,5 @@
     "nodemon": "^2.0.4",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0"
-  },
-  "devDependencies": {}
+  }
 }

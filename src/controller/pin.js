@@ -11,12 +11,19 @@ exports.getUserPins = function(req, res) {
   });
 }
 
+exports.getUserFeed = function(req, res) {
+  Pin.getFeed((err, rows) => {
+    if(err) throw err;
+    res.status(200).json(rows);
+  });
+}
+
 exports.postPin = function(req, res) {
   const userId = req.user.id;
   const newPin = new Pin(req.body);
-  Pin.createPin(newPin, userId, (err) => {
+  Pin.createPin(newPin, userId, (err, pin) => {
     if(err) throw err;
-    res.status(201);
+    res.status(201).json(newPin);
   });
 }
 

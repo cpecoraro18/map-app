@@ -16,6 +16,7 @@ function initMap() {
   addStaticButtons(map);
   addButtons(map);
   addStyles(map);
+  loadMarkers(map);
 }
 
 

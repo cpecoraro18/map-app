@@ -1,4 +1,9 @@
+$( document ).ready(function() {
+  $('#addNewEventContainer').slideUp(500);
+});
+
 $("#closeAddPin").on("click", () => {
-  console.log("here")
+  $('#addNewEventContainer').slideUp(500);
   $('#overlay-back').fadeOut(500);
+
 });

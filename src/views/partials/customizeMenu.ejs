@@ -1,73 +1,36 @@
 <div class="dynamic-sidebar" id="customizeSidebar">
   <div id="options">
-
     <div class="item">
-      <label for="hue">Hue:</label>
-      <select id="hue" onchange="changeMapStyles()">
-        <option value="null">None</option>
-        <option value="#1EA362">Green</option>
-        <option value="#FFE047">Yellow</option>
-        <option value="#4A89F3">Blue</option>
-        <option value="#DD4B3E">Red</option>
+      <label for="hue">Style</label>
+      <select id="template" onchange="changeMapStyles()">
+        <option value="standard">Standard</option>
+        <option value="silver">Silver</option>
+        <option value="retro">Retro</option>
+        <option value="dark">Dark</option>
+        <option value="night">Night</option>
+        <option value="aub">Aubergine</option>
       </select>
       <br>
     </div>
-
-    <div>
-      <label for="water">Water:</label>
-      <select id="water" onchange="changeMapStyles()">
-        <option value="null">None</option>
-        <option value="#1EA362">Green</option>
-        <option value="#FFE047">Yellow</option>
-        <option value="#4A89F3">Blue</option>
-        <option value="#DD4B3E">Red</option>
-      </select>
-      <br>
-    </div>
-    <div>
-      <label for="land">Landscape:</label>
-      <select id="land" onchange="changeMapStyles()">
-        <option value="null">None</option>
-        <option value="#1EA362">Green</option>
-        <option value="#FFE047">Yellow</option>
-        <option value="#4A89F3">Blue</option>
-        <option value="#DD4B3E">Red</option>
-      </select>
-      <br>
-    </div>
-    <div>
-      <label for="road">Road:</label>
-      <select id="road" onchange="changeMapStyles()">
-        <option value="null">None</option>
-        <option value="#1EA362">Green</option>
-        <option value="#FFE047">Yellow</option>
-        <option value="#4A89F3">Blue</option>
-        <option value="#DD4B3E">Red</option>
-      </select>
-      <br>
-    </div>
-    <div>
-      <label for="poi">Points of Interest:</label>
-      <select id="poi" onchange="changeMapStyles()">
-        <option value="null">None</option>
-        <option value="#1EA362">Green</option>
-        <option value="#FFE047">Yellow</option>
-        <option value="#4A89F3">Blue</option>
-        <option value="#DD4B3E">Red</option>
-      </select>
-      <br>
-    </div>
-
   </div>
 
 
   <div id="labels">
     <div>
-      <input type="checkbox" id="labelCheckbox" name="labels" value="labels" onclick="changeMapStyles()" checked>
-      <label for="labels">Labels Visible</label>
+      <input type="checkbox" id="roadCheckbox" name="labels" value="labels" onclick="changeMapStyles()" checked>
+      <label for="labels">Roads</label>
       <br>
     </div>
-
+    <div>
+      <input type="checkbox" id="poiCheckbox" name="labels" value="labels" onclick="changeMapStyles()" checked>
+      <label for="labels">Landmarks</label>
+      <br>
+    </div>
+    <div>
+      <input type="checkbox" id="labelCheckbox" name="labels" value="labels" onclick="changeMapStyles()" checked>
+      <label for="labels">Labels</label>
+      <br>
+    </div>
   </div>
 
 

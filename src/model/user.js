@@ -8,7 +8,16 @@ var users = [{
   name: "test",
   username: "test",
   email: "test@gmail.com",
-  password:'test'
+  password:'test',
+  styles: {
+    hue: "",
+    waterColor: "",
+    landColor: "",
+    roadColor: "",
+    poiColor: "",
+    labelsVisible: "on"
+
+  }
 }]
 
 bcrypt.genSalt(10, (err, salt) => {
