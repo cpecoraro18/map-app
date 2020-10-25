@@ -12,6 +12,10 @@ function addStyles(map) {
 }
 
 
+function loadMarkers() {
+  return;
+}
+
 
 function AddSearchBar(map) {
   const input = document.createElement('input');

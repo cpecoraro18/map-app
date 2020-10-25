@@ -18,7 +18,6 @@ function changeMapStyles() {
 
 
   var userStyles = mapTemplates[$("#template").val()];
-  console.log(userStyles);
   //based on labels
 
 

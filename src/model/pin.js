@@ -4,7 +4,7 @@ var pins = [{
   userId: 0,
   title: "Argentina",
   description: "AR",
-  img_url: "/",
+  img_url: "/assets/images/argentina.jpg",
   creation_date: "1-1-0001",
   pin_date: "1-2-0001",
   lat: -38.416097,
@@ -14,7 +14,7 @@ var pins = [{
   userId: 1,
   title: "Austria",
   description: "AT",
-  img_url: "/",
+  img_url: "/assets/images/austria.jpg",
   creation_date: "1-3-0001",
   pin_date: "1-4-0001",
   lat: 47.516231,
@@ -24,7 +24,7 @@ var pins = [{
   userId: 0,
   title: "Brazil",
   description: "BR",
-  img_url: "/",
+  img_url: "/assets/images/brazil.jpg",
   creation_date: "1-1-0001",
   pin_date: "1-2-0001",
   lat: -14.235004,
@@ -34,7 +34,7 @@ var pins = [{
   userId: 1,
   title: "Canada",
   description: "CA",
-  img_url: "/",
+  img_url: "/assets/images/canada.jpeg",
   creation_date: "1-3-0001",
   pin_date: "1-4-0001",
   lat: 56.130366,
@@ -44,7 +44,7 @@ var pins = [{
   userId: 0,
   title: "Chile",
   description: "CL",
-  img_url: "/",
+  img_url: "/assets/images/chile.jpg",
   creation_date: "1-1-0001",
   pin_date: "1-2-0001",
   lat: -35.675147,
@@ -54,14 +54,14 @@ var pins = [{
   userId: 1,
   title: "Germany",
   description: "DE",
-  img_url: "/",
+  img_url: "/assets/images/germany.webp",
   creation_date: "1-3-0001",
   pin_date: "1-4-0001",
   lat: 51.165691,
   lng: 10.451526
 }]
 
-
+//creates pin object with req body if it has all the information
 var Pin = function(body) {
   this.title = body.title,
   this.description = body.description,
@@ -70,12 +70,12 @@ var Pin = function(body) {
   this.lng = body.lng
 }
 
-
+//loads all users pin
 Pin.getPins = function(userId, result) {
   result(null, pins.filter(p => p.userId === userId))
 }
 
-
+//loads all pins
 Pin.getFeed = function(result) {
   result(null, pins)
 }

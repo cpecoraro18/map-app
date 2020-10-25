@@ -48,7 +48,6 @@ exports.registerUser = function(req, res) {
 
   let errors = [];
 
-
   User.getUserByUsername(username, (err, user) => {
     if(user) {
       errors.push({ msg: 'Username already exisits' });

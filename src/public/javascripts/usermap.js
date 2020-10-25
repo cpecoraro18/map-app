@@ -9,49 +9,6 @@ function loadMarkers(map) {
  });
 }
 
-function addPinsToMap(pins, map) {
-  pins.forEach(function(pin) {
-    var marker = addMarker(pin, map);
-    addInfoWindow(pin, marker, map);
-  })
-}
-
-function addMarker(pin, map) {
-  var pos = {
-    lat: pin.lat,
-    lng: pin.lng
-  };
-  console.log(map);
-  var marker = new google.maps.Marker({
-    position:pos,
-  });
-  marker.setMap(map);
-  return marker;
-}
-
-function addInfoWindow(pin, marker, map) {
-  var infowindow = new google.maps.InfoWindow();
-  var contentString =
-  '<div>' +
-    '<div>' +
-      '<h1>'+ pin.title + '</h1>' +
-    '</div>'+
-
-    '<div >'+
-    '<p><b>cpecoraro18 </b>'+ pin.description + "</p>" +
-    '</div>'+
-  '</div>';
-  infowindow.setContent(contentString);
-
-  marker.addListener('mouseover', function() {
-    infowindow.open(map, marker);
-  });
-  marker.addListener('mouseout', function() {
-    infowindow.close();
-  });
-}
-
-
 function addButtons(map) {
 
   //button for adding pin

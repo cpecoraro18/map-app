@@ -10,46 +10,6 @@ function loadMarkers(map) {
  });
 }
 
-function addPinsToMap(pins, map) {
-  pins.forEach(function(pin) {
-    var marker = addMarker(pin, map);
-    addInfoWindow(pin, marker, map);
-  })
-}
-
-function addMarker(pin, map) {
-  var pos = {
-    lat: pin.lat,
-    lng: pin.lng
-  };
-  var marker = new google.maps.Marker({
-    position:pos,
-  });
-  marker.setMap(map);
-  return marker;
-}
-
-function addInfoWindow(pin, marker, map) {
-  var infowindow = new google.maps.InfoWindow();
-  var contentString =
-  '<div>' +
-    '<div>' +
-      '<h1>'+ pin.title + '</h1>' +
-    '</div>'+
-
-    '<div >'+
-    '<p><b>cpecoraro18 </b>'+ pin.description + "</p>" +
-    '</div>'+
-  '</div>';
-  infowindow.setContent(contentString);
-
-  marker.addListener('mouseover', function() {
-    infowindow.open(map, marker);
-  });
-  marker.addListener('mouseout', function() {
-    infowindow.close();
-  });
-}
 
 
 function addButtons(map) {
@@ -87,7 +47,7 @@ function LeftControl(controlDiv, map) {
   controlUI.style.cursor = "pointer";
   controlUI.style.margin = "30px";
   controlUI.style.textAlign = "center";
-  controlUI.title = "Click to recenter the map";
+  controlUI.title = "Click to see previous pin";
   controlDiv.appendChild(controlUI);
   // Set CSS for the control interior.
   const controlText = document.createElement("div");
@@ -146,7 +106,7 @@ function AddPinControl(controlDiv, map) {
   controlUI.style.cursor = "pointer";
   controlUI.style.margin = "30px";
   controlUI.style.textAlign = "center";
-  controlUI.title = "Click to see next pin";
+  controlUI.title = "Click to add a pin";
   controlDiv.appendChild(controlUI);
   // Set CSS for the control interior.
   const controlText = document.createElement("div");

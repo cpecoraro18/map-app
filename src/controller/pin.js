@@ -4,7 +4,7 @@ var Pin = require('../model/pin')
 
 exports.getUserPins = function(req, res) {
   var userId = req.user.id;
-  console.log(req.user);
+
   Pin.getPins(userId, (err, rows) => {
     if(err) throw err;
     res.status(200).json(rows);
