@@ -2,6 +2,8 @@
 var pins = [{
   id: 0,
   userId: 0,
+  userName: "test",
+  userPic_url: "/assets/profilePictures/person2.webp",
   title: "Argentina",
   description: "AR",
   img_url: "/assets/images/argentina.jpg",
@@ -12,6 +14,8 @@ var pins = [{
 },{
   id: 1,
   userId: 1,
+  userName: "cpecoraro18",
+  userPic_url: "/assets/profilePictures/person1.jpeg",
   title: "Austria",
   description: "AT",
   img_url: "/assets/images/austria.jpg",
@@ -22,6 +26,8 @@ var pins = [{
 },{
   id: 2,
   userId: 0,
+  userName: "test",
+  userPic_url: "/assets/profilePictures/person2.webp",
   title: "Brazil",
   description: "BR",
   img_url: "/assets/images/brazil.jpg",
@@ -32,6 +38,8 @@ var pins = [{
 },{
   id: 3,
   userId: 1,
+  userName: "cpecoraro18",
+  userPic_url: "/assets/profilePictures/person1.jpeg",
   title: "Canada",
   description: "CA",
   img_url: "/assets/images/canada.jpeg",
@@ -42,6 +50,8 @@ var pins = [{
 },{
   id: 4,
   userId: 0,
+  userName: "test",
+  userPic_url: "/assets/profilePictures/person2.webp",
   title: "Chile",
   description: "CL",
   img_url: "/assets/images/chile.jpg",
@@ -52,6 +62,8 @@ var pins = [{
 },{
   id: 5,
   userId: 1,
+  userName: "cpecoraro18",
+  userPic_url: "/assets/profilePictures/person1.jpeg",
   title: "Germany",
   description: "DE",
   img_url: "/assets/images/germany.webp",
@@ -84,10 +96,11 @@ Pin.getPinById = function(id, result) {
   result(null, pins.find(p => (p.userId === userId && p.id === id)))
 }
 
-Pin.createPin = function(newPin, userId, result) {
+Pin.createPin = function(newPin, user, result) {
   var newPin = {
     id: pins.length,
-    userId: userId,
+    userId: user.id,
+    userName: user.username,
     title: newPin.title,
     description: newPin.description,
     img_url: newPin.img_url,

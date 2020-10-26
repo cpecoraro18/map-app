@@ -1,4 +1,124 @@
+//loads pins from pages user doesnt follow
+function loadMarkers(map) {
+  $.ajax({
+   url:"/pin/feed",
+   method: "GET",
+   success:function(pins) {
+     console.log(pins);
+     addPinsToMap(pins, map);
+   }
+ });
+}
 
+function addPinsToMap(pins, map) {
+  pins.forEach(function(pin) {
+    var marker = addMarker(pin, map);
+    addInfoWindow(pin, marker, map);
+  })
+}
+
+function addMarker(pin, map) {
+  var pos = {
+    lat: pin.lat,
+    lng: pin.lng
+  };
+  CustomMarker.prototype = new google.maps.OverlayView();
+
+  function CustomMarker(latlng, map, imageSrc) {
+      this.latlng_ = latlng;
+      this.imageSrc_ = imageSrc;
+      // Once the LatLng and text are set, add the overlay to the map.  This will
+      // trigger a call to panes_changed which should in turn call draw.
+      this.setMap(map);
+  }
+
+
+  CustomMarker.prototype.onAdd = function() {
+    // Check if the div has been created.
+    var div = this.div_;
+    if (!div) {
+        // Create a overlay text DIV
+        div = this.div_ = document.createElement('div');
+        // Create the DIV representing our CustomMarker
+        div.className = "customMarker"
+
+
+        var imgDiv = document.createElement("div");
+        imgDiv.setAttribute('style', 'background-image: url("'+ this.imageSrc_+ '")');
+        imgDiv.className = "customMarkerImage"
+        div.appendChild(imgDiv);
+        console.log(div)
+        var me = this;
+        google.maps.event.addDomListener(div, "mouseover", function (event) {
+            google.maps.event.trigger(me, "mouseover");
+        });
+        google.maps.event.addDomListener(div, "mouseout", function (event) {
+            google.maps.event.trigger(me, "mouseout");
+        });
+        google.maps.event.addDomListener(div, "click", function (event) {
+            google.maps.event.trigger(me, "click");
+        });
+
+        // Then add the overlay to the DOM
+        var panes = this.getPanes();
+        panes.overlayImage.appendChild(div);
+    }
+  }
+
+  CustomMarker.prototype.draw = function () {
+      // Position the overlay
+      var point = this.getProjection().fromLatLngToDivPixel(this.latlng_);
+      if (point) {
+          this.div_.style.left = point.x + 'px';
+          this.div_.style.top = point.y + 'px';
+      }
+  };
+
+  CustomMarker.prototype.onRemove = function () {
+      // Check if the overlay was on the map and needs to be removed.
+      if (this.div_) {
+          this.div_.parentNode.removeChild(this.div_);
+          this.div_ = null;
+      }
+  };
+
+  CustomMarker.prototype.getPosition = function () {
+      return this.latlng_;
+  };
+
+  var marker = new CustomMarker(new google.maps.LatLng(pos.lat, pos.lng), map, pin.userPic_url);
+  return marker;
+}
+
+function addInfoWindow(pin, marker, map) {
+  var infowindow = new google.maps.InfoWindow();
+  var contentString =
+  '<div class="infowindow">' +
+    '<div>' +
+      '<h1>'+ pin.title + '</h1>' +
+    '</div>'+
+
+    '<div>'+
+      '<div class="pin-img" style="background-image: url('+ pin.img_url +'); "></div>'+
+    '</div>' +
+    '<div>'+
+      '<p><b>'+ pin.userName + ' </b>'+ pin.description + "</p>" +
+    '</div>'+
+  '</div>';
+  infowindow.setContent(contentString);
+
+  marker.addListener('mouseover', function() {
+    infowindow.open(map, marker);
+  });
+  marker.addListener('mouseout', function() {
+    infowindow.close();
+  });
+
+  marker.addListener('click', function() {
+    map.setZoom(17);
+    map.panTo({lat: pin.lat, lng: pin.lng});
+  });
+}
 
 function addButtons(map) {
   AddSearchBar(map);
@@ -8,11 +128,6 @@ function addButtons(map) {
 //https://developers.google.com/maps/documentation/javascript/style-reference
 //add user styles to map
 function addStyles(map) {
-  return;
-}
-
-
-function loadMarkers() {
   return;
 }
 
@@ -28,8 +143,7 @@ function AddSearchBar(map) {
   input.style.height = "4em"
   input.placeholder = 'Search'
   const searchBox = new google.maps.places.SearchBox(input);
-  console.log(searchBox);
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+  map.controls[google.maps.ControlPosition.LEFT_TOP].push(input);
   // Bias the SearchBox results towards current map's viewport.
   map.addListener("bounds_changed", () => {
     searchBox.setBounds(map.getBounds());

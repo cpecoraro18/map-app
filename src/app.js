@@ -22,15 +22,17 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views/pages'));
 
 app.use(logger('dev'));
-//for logging as necesarry
-app.use(function(req, res, next){
-  next();
-})
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(bodyParser());
 
+
+//for logging as necesarry
+app.use(function(req, res, next){
+  next();
+})
 //Express session
 app.use(
   session({

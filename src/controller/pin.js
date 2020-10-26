@@ -19,16 +19,15 @@ exports.getUserFeed = function(req, res) {
 }
 
 exports.postPin = function(req, res) {
-  const userId = req.user.id;
+  const user = req.user;
   const newPin = new Pin(req.body);
-  Pin.createPin(newPin, userId, (err, pin) => {
+  Pin.createPin(newPin, user, (err, pin) => {
     if(err) throw err;
     res.status(201).json(newPin);
   });
 }
 
 exports.editPin = function(req, res) {
-  const userId = req.user.id;
   const newPin = new Pin(req.body);
   Pin.editPin(newPin, (err) => {
     if(err) throw err;
@@ -37,9 +36,8 @@ exports.editPin = function(req, res) {
 }
 
 exports.deletePin = function(req, res) {
-  const userId = req.user.id;
-  const newPin = new Pin(req.body);
-  Pin.deletePin(newPin, (err) => {
+  var pinId = req.pinId;
+  Pin.deletePin(pinId, (err) => {
     if(err) throw err;
     res.status(201);
   });

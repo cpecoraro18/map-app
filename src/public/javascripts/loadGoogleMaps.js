@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var js_file = document.createElement('script');
     js_file.type = 'text/javascript';
     js_file.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD_3IRiN33WsqHpL5xEBNkLRoJx7Axndkw&libraries=places&callback=initMap&language=' + lang;
+    js_file.setAttribute('async','');
+    js_file.setAttribute('defer','');
     document.getElementsByTagName('head')[0].appendChild(js_file);
   }
 });
