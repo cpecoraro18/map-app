@@ -1,5 +1,10 @@
 /**
-  *Loads pins from backend
+* Explore Map
+*@module exploreMap
+*/
+
+/**
+  *Loads pin data for explore map from backend
   *@param {map} map Map from init map.
   */
 function loadMarkers(map) {
@@ -112,7 +117,7 @@ function addMarker(map, pin) {
   return marker;
 }
 /**
-  *Adds infowindow to maker with pin information
+  *Adds infowindow to maker with pin information to explore page
   *@param {map} map Map from init map.
   *@param {object} pin a pin object
   *@param {object} marker a marker object

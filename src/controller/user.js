@@ -1,10 +1,18 @@
-// User Controller
+/**
+* User Controller
+*@module UserController
+*/
 
 const User = require('../model/user');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 
-// Use passport to authenticate user
+/**
+* authenticates user with passport
+* @param {Object} req client request
+* @param {Object} res server response
+* @param {Object} next function for express to call next
+*/
 exports.authenticateUser = function(req, res, next) {
   passport.authenticate('local', {
     successRedirect: '/',
@@ -12,21 +20,33 @@ exports.authenticateUser = function(req, res, next) {
     failureFlash: true,
   })(req, res, next);
 };
-
+/**
+* get userInfo from req and delete password, then return user info
+* @param {Object} req client request
+* @param {Object} res server response
+*/
 exports.getUserInfo = function(req, res) {
   const userInfo = req.user;
   delete userInfo['password'];
   res.json(userInfo);
 };
 
-// Logout user, redirect to login page
+/**
+* logs out user
+* @param {Object} req client request
+* @param {Object} res server response
+*/
 exports.logoutUser = function(req, res) {
   req.logout();
   req.flash('success_msg', 'You are logged out');
   res.redirect('/login');
 };
 
-// sends json with user info
+/**
+* gets user id from request and respond with user
+* @param {Object} req client request
+* @param {Object} res server response
+*/
 exports.getUserById = function(req, res) {
   const id = parseInt(req.params.id);
   User.getUserById(id, function(err, user) {
@@ -47,7 +67,12 @@ exports.getUserById = function(req, res) {
     }
   });
 };
-
+/**
+* gets user info from request and creates user
+* responds with the new user
+* @param {Object} req client request
+* @param {Object} res server response
+*/
 exports.registerUser = function(req, res) {
   const {name, username, email, password} = req.body;
 
@@ -105,7 +130,11 @@ exports.registerUser = function(req, res) {
     });
   }
 };
-
+/**
+* gets new password and old password andn changes password
+* @param {Object} req client request
+* @param {Object} res server response
+*/
 exports.changePassword = function(req, res) {
   const {oldPassword, newPassword, newPassword2} = req.body;
 
@@ -140,7 +169,11 @@ exports.changePassword = function(req, res) {
     });
   }
 };
-
+/**
+* sets user styles based on template from req
+* @param {Object} req client request
+* @param {Object} res server response
+*/
 exports.editStyle = function(req, res) {
   console.log(req.body);
   const newStyle = req.body.userStyle;

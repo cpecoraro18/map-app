@@ -1,4 +1,8 @@
-// Mock Database with test pins
+/**
+* Pin Model
+* @module Pin
+*/
+
 const pins = [{
   id: 0,
   userId: 0,
@@ -73,7 +77,16 @@ const pins = [{
   lng: 10.451526,
 }];
 
-// creates pin object with req body if it has all the information
+/**
+* A Pin
+* @typedef {Object} Pin
+* @class Pin
+* @property {string} title - Pin Title
+* @property {string} description - Pin description
+* @property {string} img_url - pin image
+* @property {double} lat - Pin latitute
+* @property {double} lng - Pin longitude
+*/
 const Pin = function(body) {
   this.title = body.title,
   this.description = body.description,
@@ -82,20 +95,37 @@ const Pin = function(body) {
   this.lng = body.lng;
 };
 
-// loads all users pin
+/**
+  * Gets all user pins from database
+  * @param {number} userId ID of user getting the pins
+  * @param {function} result function that takes and error and a list of pins
+  */
 Pin.getPins = function(userId, result) {
   result(null, pins.filter((p) => p.userId === userId));
 };
 
-// loads all pins
+/**
+  * Gets all feed pins from database
+  *@param {function} result function that takes and error and a list of pins
+  */
 Pin.getFeed = function(result) {
   result(null, pins);
 };
-
+/**
+  * Gets a single pin by its id
+  * @param {number} id ID of the pin
+  * @param {function} result function that takes and error and a pin
+  */
 Pin.getPinById = function(id, result) {
   result(null, pins.find((p) => (p.userId === userId && p.id === id)));
 };
 
+/**
+  * Creates a new pin
+  * @param {Object} newPin The pin information that is being added
+  * @param {Object} user The user who posted the pin
+  * @param {function} result function that takes and error and a pin
+  */
 Pin.createPin = function(newPin, user, result) {
   const createdPin = {
     id: pins.length,
@@ -110,11 +140,19 @@ Pin.createPin = function(newPin, user, result) {
   pins.push(createdPin);
   result(null, createdPin);
 };
-
+/**
+  * Edits a pin
+  * @param {number} id ID of the pin
+  * @param {function} result function that takes and error
+  */
 Pin.editPin = function(editedPin, result) {
   result(null);
 };
-
+/**
+  * Deletes a pin
+  * @param {number} id ID of the pin
+  * @param {function} result function that takes and error
+  */
 Pin.deletePin = function(id, result) {
   pin = pins.filter((p) => p.id != id);
   result(null);

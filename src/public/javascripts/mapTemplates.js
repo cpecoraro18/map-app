@@ -1,3 +1,7 @@
+/**
+* List of map templates used for styling on customize map page
+* @type {Array<Object>}
+*/
 const mapStyles = {
   'standard': [],
   'silver': [

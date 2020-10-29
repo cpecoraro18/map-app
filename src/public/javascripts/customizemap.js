@@ -1,7 +1,16 @@
-//  eslint-disable-next-line no-var
-var template;
 /**
- * Adds customize map buttons
+* Customize Map
+*@module customizeMap
+*/
+
+/**
+* current template that is styling the customize map. Can be saved as a user style
+* @type {Object}
+*/
+var template;
+
+/**
+ * Adds buttons necessary for customize map
  * @param {map} map Map from init map.
  */
 function addButtons(map) {
@@ -10,14 +19,15 @@ function addButtons(map) {
 
 
 /**
-  *Adds customize map initial styles
+  *Adds initial styles to the customize map
   *@param {map} map Map from init map.
   */
 function addStyles(map) {
   return;
 }
+
 /**
-  *Adds customize map markers
+  *Adds markers that will be displayed on the customize map
   *@param {map} map Map from init map.
   */
 function loadMarkers(map) {
@@ -25,7 +35,7 @@ function loadMarkers(map) {
 }
 
 /**
-  *Adds changes styles based on values selected from a dropdown
+  * Changes map styles based on values selected from a dropdown
   */
 function changeMapStyles() {
   //  get colors from selects
@@ -71,7 +81,7 @@ function changeMapStyles() {
   });
 }
 /**
-  *Sends style to server
+  * Sends style to server
   */
 function saveStyle() {
   $.ajax({
@@ -87,7 +97,7 @@ function saveStyle() {
 }
 
 /**
-  *Adds changes styles based on values selected from a dropdown
+  * Changes any given google style template to add or change a given style
   * @param {json} template - Map style template
   * @param {String} featureType - Map feature being edited
   * @param {String} elementType - Map element being edited

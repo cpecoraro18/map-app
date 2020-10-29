@@ -1,4 +1,9 @@
 /**
+* Home Map
+*@module homeMap
+*/
+
+/**
   *Loads pins from backend
   *@param {map} map Map from init map.
   */

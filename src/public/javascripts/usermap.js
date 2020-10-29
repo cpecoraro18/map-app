@@ -1,4 +1,9 @@
 /**
+* User Map
+*@module userMap
+*/
+
+/**
   *Loads pins from backend
   *@param {map} map Map from init map.
   */
@@ -19,7 +24,7 @@ function loadMarkers(map) {
 function addPinsToMap(map, pins) {
   pins.forEach(function(pin) {
     const marker = addMarker(map, pin);
-    addInfoWindow(pin, marker, map);
+    addInfoWindow(map, pin, marker);
   });
 }
 /**

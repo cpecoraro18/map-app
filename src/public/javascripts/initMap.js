@@ -1,3 +1,12 @@
+/**
+* initialize Map
+*@module initMap
+*/
+
+/**
+* Map
+* @type {Object}
+*/
 let map;
 
 /**
