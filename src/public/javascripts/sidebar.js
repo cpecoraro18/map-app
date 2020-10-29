@@ -4,7 +4,6 @@ $(document).ready(function () {
     });
 });
 
-
 $('#logoutButton').on('click', function(e) {
   e.preventDefault();
   $.ajax({
@@ -12,6 +11,6 @@ $('#logoutButton').on('click', function(e) {
     url: "user/logout",
     success: function(){
       window.location.replace("/");
-    }
+    },
   });
 });
