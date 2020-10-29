@@ -6,7 +6,7 @@ function initMap() {
     center:new google.maps.LatLng(44.9727, -93.23540000000003),
     zoom:3,
     gestureHandling: 'greedy',
-    minZoom: 3,
+    minZoom: 2,
     disableDefaultUI: true,
     mapTypeControl: true,
     fullscreenControl: true,
@@ -19,9 +19,6 @@ function initMap() {
   addStyles(map);
   loadMarkers(map);
 }
-
-
-
 
 function addStaticButtons(map) {
   //button for title
@@ -47,7 +44,8 @@ function addStaticButtons(map) {
 function AddTitle(controlDiv, map) {
   // Set CSS for the control border.
   const controlUI = document.createElement("div");
-  controlUI.id = "rightControl";
+  controlUI.id = "title";
+  controlUI.classList.add("map");
   controlUI.style.width = "100%";
   controlUI.style.height = "100px";
   controlUI.style.backgroundColor = "none";
@@ -57,7 +55,7 @@ function AddTitle(controlDiv, map) {
   controlDiv.appendChild(controlUI);
   // Set CSS for the control interior.
   const controlText = document.createElement("div");
-  controlText.style.color = "#5D6E1E";
+  controlText.style.color = "#fff";
   controlText.style.fontFamily = "Roboto,Arial,sans-serif";
   controlText.style.fontSize = "16px";
   controlText.style.lineHeight = "38px";
@@ -76,7 +74,8 @@ function AddTitle(controlDiv, map) {
 function ZoomControl(controlDiv, map) {
   // Set CSS for the control border.
   const controlUI = document.createElement("div");
-  controlUI.id = "rightControl";
+  controlUI.id = "zoomControl";
+  controlUI.class = "map";
   controlUI.style.width = "75px";
   controlUI.style.height = "75px";
   controlUI.style.backgroundColor = "#fff";
@@ -87,7 +86,7 @@ function ZoomControl(controlDiv, map) {
   controlUI.style.marginRight = "30px";
   controlUI.style.marginBottom = "15px";
   controlUI.style.textAlign = "center";
-  controlUI.title = "Click to see next pin";
+  controlUI.title = "Click to zoom out";
   controlDiv.appendChild(controlUI);
   // Set CSS for the control interior.
   const controlText = document.createElement("div");

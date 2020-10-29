@@ -14,7 +14,7 @@ var pins = [{
 },{
   id: 1,
   userId: 1,
-  userName: "cpecoraro18",
+  userName: "cjpec18",
   userPic_url: "/assets/profilePictures/person1.jpeg",
   title: "Austria",
   description: "AT",

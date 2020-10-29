@@ -3,37 +3,45 @@
 <div class="dynamic-sidebar" id="customizeSidebar">
   <div id="options">
     <div class="item">
-      <label for="hue">Style</label>
-      <select id="template" onchange="changeMapStyles()">
+      <label for="styleTemplate">Style</label>
+      <select id="styleTemplate" onchange="changeMapStyles()" class="form-control">
         <option value="standard">Standard</option>
         <option value="silver">Silver</option>
         <option value="retro">Retro</option>
         <option value="dark">Dark</option>
         <option value="night">Night</option>
-        <option value="aub">Aubergine</option>
+        <option value="aubergine">Aubergine</option>
+      </select>
+      <br>
+    </div>
+    <br><br>
+    <div class="item">
+      <label for="roadVisible">Roads</label>
+      <select id="roadVisible" onchange="changeMapStyles()" class="form-control">
+        <option value="on">On</option>
+        <option value="simplified">Simplified</option>
+        <option value="off">Off</option>
+      </select>
+      <br>
+    </div>
+    <div class="item">
+      <label for="labels">Labels</label>
+      <select id="labels" onchange="changeMapStyles()" class="form-control">
+        <option value="on">On</option>
+        <option value="simplified">Simplified</option>
+        <option value="off">Off</option>
+      </select>
+      <br>
+    </div>
+    <div class="item">
+      <label for="landmarks">Landmarks</label>
+      <select id="landmarks" onchange="changeMapStyles()" class="form-control">
+        <option value="on">On</option>
+        <option value="simplified">Simplified</option>
+        <option value="off">Off</option>
       </select>
       <br>
     </div>
   </div>
-
-
-  <div id="labels">
-    <div>
-      <input type="checkbox" id="roadCheckbox" name="labels" value="labels" onclick="changeMapStyles()" checked>
-      <label for="labels">Roads</label>
-      <br>
-    </div>
-    <div>
-      <input type="checkbox" id="poiCheckbox" name="labels" value="labels" onclick="changeMapStyles()" checked>
-      <label for="labels">Landmarks</label>
-      <br>
-    </div>
-    <div>
-      <input type="checkbox" id="labelCheckbox" name="labels" value="labels" onclick="changeMapStyles()" checked>
-      <label for="labels">Labels</label>
-      <br>
-    </div>
-  </div>
-
-
+  <a href="#" class="btn btn-large" onclick="saveStyle()">Save</a>
 </div>

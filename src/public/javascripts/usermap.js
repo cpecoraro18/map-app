@@ -46,6 +46,11 @@ function addMarker(pin, map) {
         var imgDiv = document.createElement("div");
         imgDiv.setAttribute('style', 'background-image: url("'+ this.imageSrc_+ '")');
         imgDiv.className = "customMarkerImage"
+        var maxColors = 3;
+        var color = Math.floor(Math.random()*maxColors);
+        if(color == 0) imgDiv.style.border = "solid #94B447";
+        if(color == 1) imgDiv.style.border = "solid #3B5284";
+        if(color == 2) imgDiv.style.border = "solid #5BA8A0";
         div.appendChild(imgDiv);
         console.log(div)
         var me = this;
@@ -89,11 +94,13 @@ function addMarker(pin, map) {
   var marker = new CustomMarker(new google.maps.LatLng(pos.lat, pos.lng), map, pin.userPic_url);
   return marker;
 
-  
+
 }
 
 function addInfoWindow(pin, marker, map) {
-  var infowindow = new google.maps.InfoWindow();
+  var infowindow = new google.maps.InfoWindow({
+    pixelOffset: new google.maps.Size(25, 10)
+  });
   var contentString =
   '<div class="infowindow">' +
     '<div>' +
@@ -134,171 +141,15 @@ function addButtons(map) {
 //https://developers.google.com/maps/documentation/javascript/style-reference
 //add user styles to map
 function addStyles(map) {
-  var userStyles = [
-  {
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#242f3e"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#746855"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#242f3e"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.locality",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#d59563"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#d59563"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#263c3f"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#6b9a76"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#38414e"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#212a37"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#9ca5b3"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#746855"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#1f2835"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#f3d19c"
-      }
-    ]
-  },
-  {
-    "featureType": "transit",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#2f3948"
-      }
-    ]
-  },
-  {
-    "featureType": "transit.station",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#d59563"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#17263c"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#515c6d"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#17263c"
-      }
-    ]
-  }
-]
+  $.get("/user/userInfo", function(userInfo, status){
+     setUserStyles(map, userInfo.style)
+   });
+}
+
+function setUserStyles(map, userStyle){
   map.setOptions({
-    styles: userStyles
+    styles: userStyle
   });
-  return;
 }
 
 

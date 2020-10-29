@@ -46,6 +46,11 @@ function addMarker(pin, map) {
         var imgDiv = document.createElement("div");
         imgDiv.setAttribute('style', 'background-image: url("'+ this.imageSrc_+ '")');
         imgDiv.className = "customMarkerImage"
+        var maxColors = 3;
+        var color = Math.floor(Math.random()*maxColors);
+        if(color == 0) imgDiv.style.border = "solid #94B447";
+        if(color == 1) imgDiv.style.border = "solid #3B5284";
+        if(color == 2) imgDiv.style.border = "solid #5BA8A0";
         div.appendChild(imgDiv);
         console.log(div)
         var me = this;
@@ -91,7 +96,9 @@ function addMarker(pin, map) {
 }
 
 function addInfoWindow(pin, marker, map) {
-  var infowindow = new google.maps.InfoWindow();
+  var infowindow = new google.maps.InfoWindow({
+    pixelOffset: new google.maps.Size(25, 10)
+  });
   var contentString =
   '<div class="infowindow">' +
     '<div>' +

@@ -24,9 +24,9 @@ app.set('views', path.join(__dirname, 'views/pages'));
 app.use(logger('dev'));
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(bodyParser());
+app.use(bodyParser.urlencoded());
 
 
 //for logging as necesarry

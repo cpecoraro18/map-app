@@ -13,6 +13,12 @@ exports.authenticateUser = function(req, res, next) {
   })(req, res, next);
 }
 
+exports.getUserInfo = function(req, res) {
+  var userInfo = req.user;
+  delete userInfo["password"];
+  res.json(userInfo);
+}
+
 //Logout user, redirect to login page
 exports.logoutUser = function(req, res) {
   req.logout();
@@ -135,4 +141,14 @@ exports.changePassword = function(req, res) {
     })
   }
 
+}
+
+exports.editStyle = function(req, res) {
+  console.log(req.body);
+  var newStyle = req.body.userStyle;
+  User.changeStyle(req.user.username, newStyle, (err, style) => {
+    if(err) throw err;
+    console.log(style)
+    res.json(style);
+  });
 }

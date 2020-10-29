@@ -9,6 +9,7 @@ var users = [{
   username: "test",
   email: "test@gmail.com",
   password:'test',
+  style: []
 }]
 
 bcrypt.genSalt(10, (err, salt) => {
@@ -55,5 +56,12 @@ User.changePassword = function(username, newPassword, result) {
   users[userIndex].password = newPassword;
   console.log(users[userIndex]);
   result(null, users.find(user => user.username === username))
+}
+
+User.changeStyle = function(username, newStyle, result) {
+  var userIndex = users.findIndex(user => user.username === username)
+  users[userIndex].style = newStyle;
+  console.log(users[userIndex]);
+  result(null, newStyle);
 }
 module.exports = User;

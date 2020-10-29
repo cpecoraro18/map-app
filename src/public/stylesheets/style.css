@@ -14,7 +14,10 @@ body {
     padding: 0;
     background-color: "#5BA8A0";
 }
-
+.map h1 {
+  font-family: 'Pacifico', cursive;
+  font-size: 3em;
+}
 .wrapper {
     display: flex;
     width: 100%;
