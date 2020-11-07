@@ -189,7 +189,7 @@ exports.change_password = function(req, res) {
       bcrypt.hash(newPassword, salt, (err, hash) => {
         if (err) throw err;
         // add user to database
-        User.changePassword(req.user.username, hash, (err, user) => {
+        User.changePassword(req.user.user_username, hash, (err, user) => {
           if (err) {
             res.status(500).json({
               error: err,

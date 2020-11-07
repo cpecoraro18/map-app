@@ -1,4 +1,13 @@
+/**
+* Explore Map
+*@module BucketListMap
+*/
 
+/**
+ * Explore Map
+ * @class
+ * @constructor
+ */
 
 function ExploreMap() {
   console.log("Init Explore Map")
@@ -11,6 +20,9 @@ function ExploreMap() {
 ExploreMap.prototype = Object.create(MapShotMap.prototype);
 ExploreMap.prototype.constructor = ExploreMap;
 
+/**
+  *Gets pins from backend and starts process of putting them on the map
+  */
 ExploreMap.prototype.getPins = function() {
   var self = this;
   $.ajax({
@@ -24,7 +36,6 @@ ExploreMap.prototype.getPins = function() {
 
 /**
   *Adds a marker and infowindow for each pin on explore map
-  *@param {object} map Map from init map.
   *@param {array} pins Map from init map.
   */
 ExploreMap.prototype.addPinsToMap = function(pins) {
@@ -35,6 +46,10 @@ ExploreMap.prototype.addPinsToMap = function(pins) {
   });
 }
 
+/**
+  *Adds a marker based on pin information
+  *@param {array} pin has pin information
+  */
 ExploreMap.prototype.addMarker = function(pin) {
   const pos = {
     lat: pin.pin_lat,
@@ -119,7 +134,11 @@ ExploreMap.prototype.addMarker = function(pin) {
   return marker;
 }
 
-
+/**
+  *Adds a infowindow to marker based on pin information
+  *@param {array} pin holds pin information
+  *@param {array} marker for infowindow to be attatched to
+  */
 ExploreMap.prototype.addInfoWindow = function(pin, marker) {
   const infowindow = new google.maps.InfoWindow({
     pixelOffset: new google.maps.Size(25, 10),
@@ -155,7 +174,11 @@ ExploreMap.prototype.addInfoWindow = function(pin, marker) {
   });
 }
 
-
+/**
+  *Adds a infowindow to marker based on place information
+  *@param {array} pin holds pin information
+  *@param {array} marker for infowindow to be attatched to
+  */
 ExploreMap.prototype.addPlaceInfoWindow = function(place, marker) {
   let img = './assets/images/userProfile.png';
   if (place.photos) img = place.photos[0].getUrl()
@@ -180,7 +203,9 @@ ExploreMap.prototype.addPlaceInfoWindow = function(place, marker) {
     infowindow.open(this.map, marker);
   });
 }
-
+/**
+  *Initializes explore map menu
+  */
 ExploreMap.prototype.initMenu = function() {
   console.log("Initializing Menu");
   const searchbox = new google.maps.places.SearchBox($("#explore_textbox")[0]);
@@ -240,9 +265,11 @@ ExploreMap.prototype.initMenu = function() {
     this.map.fitBounds(bounds);
   });
 }
-
-var sitemap;
-
+/** @global */
+var map;
+/**
+  *Initializes the map when the window is loaded
+  */
 function initMap() {
-  sitemap = new ExploreMap();
+  map = new ExploreMap();
 }

@@ -2,7 +2,6 @@
 * User
 *@module User
 */
-const bcrypt = require('bcrypt');
 const db = require('../config/db');
 
 /**
@@ -101,9 +100,17 @@ User.getUserInfo = function(id, result) {
   * @param {function} result function that takes and user
   */
 User.changePassword = function(username, newPassword, result) {
-  const userIndex = users.findIndex((user) => user.username === username);
-  users[userIndex].password = newPassword;
-  result(null, users.find((user) => user.username === username));
+  console.log(username)
+  let query = 'update user set user_password =\'' + newPassword +'\' where user_username = "'+ username + '"'
+
+  db.query(query, (err, user, fields) => {
+    // if any error while executing above query, throw error
+    if (err) result(err, null);
+    else {
+      // if there is no error, you have the result
+      result(null, user[0]);
+    }
+ });
 };
 
 /**

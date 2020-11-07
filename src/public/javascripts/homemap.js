@@ -3,6 +3,11 @@
 *@module homeMap
 */
 
+/**
+ * Bucket List Map
+ * @class
+ * @constructor
+ */
 function HomeMap() {
   console.log("Init Home Map")
   MapShotMap.call(this);
@@ -13,13 +18,15 @@ function HomeMap() {
 HomeMap.prototype = Object.create(MapShotMap.prototype);
 HomeMap.prototype.constructor = HomeMap;
 
+/**
+  *Gets pins from backend and starts process of putting them on the map
+  */
 HomeMap.prototype.getPins = function() {
   var self = this;
   $.ajax({
     url: '/pin/feed',
     method: 'GET',
     success: function(pins) {
-      console.log(pins);
       self.addPinsToMap(pins);
     },
   });
@@ -27,7 +34,6 @@ HomeMap.prototype.getPins = function() {
 
 /**
   *Adds a marker and infowindow for each pin on explore map
-  *@param {object} map Map from init map.
   *@param {array} pins Map from init map.
   */
 HomeMap.prototype.addPinsToMap = function(pins) {
@@ -37,6 +43,11 @@ HomeMap.prototype.addPinsToMap = function(pins) {
     self.addInfoWindow(pin, marker);
   });
 }
+
+/**
+  *Adds a marker based on information from pin
+  *@param {array} pins Map from init map.
+  */
 
 HomeMap.prototype.addMarker = function(pin) {
   const pos = {
@@ -79,7 +90,6 @@ HomeMap.prototype.addMarker = function(pin) {
       if (color == 1) imgDiv.style.border = 'solid #3B5284';
       if (color == 2) imgDiv.style.border = 'solid #5BA8A0';
       div.appendChild(imgDiv);
-      console.log(div);
       const me = this;
       google.maps.event.addDomListener(div, 'mouseover', function(event) {
         google.maps.event.trigger(me, 'mouseover');
@@ -122,7 +132,11 @@ HomeMap.prototype.addMarker = function(pin) {
   return marker;
 }
 
-
+/**
+  *Adds an infowindow based on information from the pin
+  *@param {array} pin holds information about pin
+  *@param {array} marker the marker that the infowindow will be attatched to
+  */
 HomeMap.prototype.addInfoWindow = function(pin, marker) {
   const infowindow = new google.maps.InfoWindow({
     pixelOffset: new google.maps.Size(25, 10),
@@ -158,8 +172,14 @@ HomeMap.prototype.addInfoWindow = function(pin, marker) {
   });
 }
 
-
+/**
+  *Adds a infowindow to marker based on place information
+  *@param {array} pin holds pin information
+  *@param {array} marker for infowindow to be attatched to
+  */
 HomeMap.prototype.addPlaceInfoWIndow = function() {
+  let img = './assets/images/userProfile.png';
+  if (place.photos) img = place.photos[0].getUrl()
   const infowindow = new google.maps.InfoWindow();
   const contentString =
   '<div class="infowindow">' +
@@ -182,9 +202,10 @@ HomeMap.prototype.addPlaceInfoWIndow = function() {
   });
 }
 
-HomeMap.prototype.initMenu = function() {
-}
 
+/**
+  *Adds buttons to bucketlist map
+  */
 HomeMap.prototype.addButtons = function() {
   MapShotMap.prototype.addButtons.call(this);
   // button for adding pin
@@ -306,8 +327,12 @@ function addPinControl(controlDiv) {
   });
 }
 
-var sitemap;
+/** @global */
+var map;
 
+/**
+  *Initializes the map when the window is loaded
+  */
 function initMap() {
-  sitemap = new HomeMap();
+  map = new HomeMap();
 }

@@ -1,8 +1,12 @@
 /**
-* Map
-*@module Map
+* MapShot Map
+*@module MapShotMap
 */
-
+/**
+ * MapShot Map Base Class
+ * @class
+ * @constructor
+ */
 function MapShotMap() {
     console.log("Init MapShot Map");
     const mapProp = {
@@ -17,12 +21,13 @@ function MapShotMap() {
       backgroundColor: '#3B5284',
     };
     this.map = new google.maps.Map(document.getElementById('map'), mapProp);
-    console.log(this.map);
     this.addButtons();
     this.addStyles();
     this.initMenu();
 }
-
+/**
+  *Adds buttons to bucketlist map
+  */
 MapShotMap.prototype.addButtons = function() {
   console.log("Adding Buttons")
   const titleDiv = document.createElement('div');
@@ -42,22 +47,35 @@ MapShotMap.prototype.addButtons = function() {
   }
   return;
 }
-
+/**
+  *Gets style from backend and applies it to map
+  */
+/**
+  *Gets style from backend and applies it to map
+  */
 MapShotMap.prototype.addStyles = function() {
   console.log("Adding styles")
   var self = this;
   $.get('/user/style', function(mapStyle, status) {
-    self.setMapStyle(mapStyle.mapStyle_template);
+    const style = JSON.parse('[' + mapStyle.mapStyle_template + ']');
+    self.setMapStyle(style[0]);
   });
 }
 
+/**
+  *Intitialize base menu
+  */
+MapShotMap.prototype.initMenu = function() {
+  return;
+}
 
+/**
+  *set map style based array of objects
+  * *@param {array} mapStyle Map from init map.
+  */
 MapShotMap.prototype.setMapStyle = function(mapStyle) {
-  console.log("Setting Map Style")
-  const userStyleValue = JSON.parse('[' + mapStyle + ']');
-  console.log("User style: " + userStyleValue);
   this.map.setOptions({
-    styles: userStyleValue,
+    styles: mapStyle,
   });
 }
 

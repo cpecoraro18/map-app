@@ -19,7 +19,6 @@ UserMap.prototype.getPins = function() {
     url: '/pin',
     method: 'GET',
     success: function(pins) {
-      console.log(pins);
       self.addPinsToMap(pins);
     },
   });
@@ -79,7 +78,6 @@ UserMap.prototype.addMarker = function(pin) {
       if (color == 1) imgDiv.style.border = 'solid #3B5284';
       if (color == 2) imgDiv.style.border = 'solid #5BA8A0';
       div.appendChild(imgDiv);
-      console.log(div);
       const me = this;
       google.maps.event.addDomListener(div, 'mouseover', function(event) {
         google.maps.event.trigger(me, 'mouseover');
@@ -162,7 +160,6 @@ UserMap.prototype.addInfoWindow = function(pin, marker) {
 
 UserMap.prototype.initMenu = function() {
   $.get('/user/info', function( user ) {
-    console.log('url(' + user.user_profilePic + ')');
     let img = './assets/images/userProfile.png';
     if (user.user_profilePic) img = user.user_profilePic;
     $('#profilePicture').css('background-image', 'url(' + img + ')');
@@ -214,7 +211,7 @@ function addPinControl(controlDiv) {
 
   controlUI.addEventListener('click', () => {
     $('#overlay-back').fadeIn(500);
-    $('#addNewEventContainer').slideDown(500);
+    $('#addNewPinContainer').slideDown(500);
   });
 }
 

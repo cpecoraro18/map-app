@@ -2,6 +2,7 @@
 * Bucket List Map
 *@module BucketListMap
 */
+
 /**
  * Bucket List Map
  * @class
@@ -17,13 +18,15 @@ function BucketListMap() {
 BucketListMap.prototype = Object.create(MapShotMap.prototype);
 BucketListMap.prototype.constructor = BucketListMap;
 
+/**
+  *Gets pins from backend and starts process of putting them on the map
+  */
 BucketListMap.prototype.getPins = function() {
   var self = this;
   $.ajax({
     url: '/pin',
     method: 'GET',
     success: function(pins) {
-      console.log(pins);
       self.addPinsToMap(pins);
     },
   });
@@ -31,7 +34,6 @@ BucketListMap.prototype.getPins = function() {
 
 /**
   *Adds a marker and infowindow for each pin on explore map
-  *@param {object} map Map from init map.
   *@param {array} pins Map from init map.
   */
 BucketListMap.prototype.addPinsToMap = function(pins) {
@@ -42,6 +44,10 @@ BucketListMap.prototype.addPinsToMap = function(pins) {
   });
 }
 
+/**
+  *Adds a marker based on information from pin
+  *@param {array} pins Map from init map.
+  */
 BucketListMap.prototype.addMarker = function(pin) {
   const pos = {
     lat: pin.pin_lat,
@@ -83,7 +89,6 @@ BucketListMap.prototype.addMarker = function(pin) {
       if (color == 1) imgDiv.style.border = 'solid #3B5284';
       if (color == 2) imgDiv.style.border = 'solid #5BA8A0';
       div.appendChild(imgDiv);
-      console.log(div);
       const me = this;
       google.maps.event.addDomListener(div, 'mouseover', function(event) {
         google.maps.event.trigger(me, 'mouseover');
@@ -126,7 +131,11 @@ BucketListMap.prototype.addMarker = function(pin) {
   return marker;
 }
 
-
+/**
+  *Adds an infowindow based on information from the pin
+  *@param {array} pin holds information about pin
+  *@param {array} marker the marker that the infowindow will be attatched to
+  */
 BucketListMap.prototype.addInfoWindow = function(pin, marker) {
   const infowindow = new google.maps.InfoWindow({
     pixelOffset: new google.maps.Size(25, 10),
@@ -164,9 +173,9 @@ BucketListMap.prototype.addInfoWindow = function(pin, marker) {
 
 
 
-BucketListMap.prototype.initMenu = function() {
-}
-
+/**
+  *Adds buttons to bucketlist map
+  */
 BucketListMap.prototype.addButtons = function() {
   MapShotMap.prototype.addButtons.call(this);
   // button for adding pin
@@ -178,8 +187,7 @@ BucketListMap.prototype.addButtons = function() {
 
 /**
  * Adds add pin control to map
-* @param {html} controlDiv Map from init map.
- * @param {map} map Map from init map.
+ * @param {html} controlDiv Map from init map.
  */
 function addPinControl(controlDiv) {
   // Set CSS for the control border.
@@ -214,8 +222,12 @@ function addPinControl(controlDiv) {
   });
 }
 
-var sitemap;
+/** @global */
+var map;
 
+/**
+  *Initializes the map when the window is loaded
+  */
 function initMap() {
-  sitemap = new BucketListMap();
+  map = new BucketListMap();
 }
