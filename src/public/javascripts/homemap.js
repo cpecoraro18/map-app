@@ -3,50 +3,54 @@
 *@module homeMap
 */
 
-/**
-  *Loads pins from backend
-  *@param {map} map Map from init map.
-  */
-function loadMarkers(map) {
+function HomeMap() {
+  console.log("Init Home Map")
+  MapShotMap.call(this);
+  this.getPins();
+  console.log("Done with Mapshot constructor")
+}
+
+HomeMap.prototype = Object.create(MapShotMap.prototype);
+HomeMap.prototype.constructor = HomeMap;
+
+HomeMap.prototype.getPins = function() {
+  var self = this;
   $.ajax({
     url: '/pin/feed',
     method: 'GET',
     success: function(pins) {
       console.log(pins);
-      addPinsToMap(map, pins);
+      self.addPinsToMap(pins);
     },
   });
 }
+
 /**
   *Adds a marker and infowindow for each pin on explore map
   *@param {object} map Map from init map.
   *@param {array} pins Map from init map.
   */
-function addPinsToMap(map, pins) {
+HomeMap.prototype.addPinsToMap = function(pins) {
+  var self = this;
   pins.forEach(function(pin) {
-    const marker = addMarker(map, pin);
-    addInfoWindow(map, pin, marker);
+    const marker = self.addMarker(pin);
+    self.addInfoWindow(pin, marker);
   });
 }
-/**
-  *Adds custom markers to the explore map
-  *@param {map} map Map from init map.
-  *@param {object} pin a pin object
-  *@return {object} custom marker
-  */
-function addMarker(map, pin) {
+
+HomeMap.prototype.addMarker = function(pin) {
   const pos = {
-    lat: pin.lat,
-    lng: pin.lng,
+    lat: pin.pin_lat,
+    lng: pin.pin_lng,
   };
-  CustomMarker.prototype = new google.maps.OverlayView();
+  HomeMapMarker.prototype = new google.maps.OverlayView();
   /**
     *Adds custom markers to the explore map
     *@param {map} map Map from init map.
     *@param {object} latlng a lat lng object
     *@param {object} imageSrc image used for marker
     */
-  function CustomMarker(map, latlng, imageSrc) {
+  function HomeMapMarker(map, latlng, imageSrc) {
     this.latlng_ = latlng;
     this.imageSrc_ = imageSrc;
     // Once the LatLng and text are set, add the overlay to the map.  This will
@@ -55,7 +59,7 @@ function addMarker(map, pin) {
   }
 
 
-  CustomMarker.prototype.onAdd = function() {
+  HomeMapMarker.prototype.onAdd = function() {
     // Check if the div has been created.
     let div = this.div_;
     if (!div) {
@@ -66,7 +70,8 @@ function addMarker(map, pin) {
 
 
       const imgDiv = document.createElement('div');
-      imgDiv.setAttribute('style', 'background-image: url("'+ this.imageSrc_+ '")');
+      imgDiv.setAttribute('style',
+          'background-image: url("'+ this.imageSrc_+ '")');
       imgDiv.className = 'customMarkerImage';
       const maxColors = 3;
       const color = Math.floor(Math.random()*maxColors);
@@ -92,7 +97,7 @@ function addMarker(map, pin) {
     }
   };
 
-  CustomMarker.prototype.draw = function() {
+  HomeMapMarker.prototype.draw = function() {
     // Position the overlay
     const point = this.getProjection().fromLatLngToDivPixel(this.latlng_);
     if (point) {
@@ -101,7 +106,7 @@ function addMarker(map, pin) {
     }
   };
 
-  CustomMarker.prototype.onRemove = function() {
+  HomeMapMarker.prototype.onRemove = function() {
     // Check if the overlay was on the map and needs to be removed.
     if (this.div_) {
       this.div_.parentNode.removeChild(this.div_);
@@ -109,38 +114,37 @@ function addMarker(map, pin) {
     }
   };
 
-  CustomMarker.prototype.getPosition = function() {
+  HomeMapMarker.prototype.getPosition = function() {
     return this.latlng_;
   };
 
-  const marker = new CustomMarker(map, new google.maps.LatLng(pos.lat, pos.lng), pin.userPic_url);
+  const marker = new HomeMapMarker(this.map, new google.maps.LatLng(pos.lat, pos.lng), pin.user_profilePic);
   return marker;
 }
-/**
-  *Adds infowindow to maker with pin information
-  *@param {map} map Map from init map.
-  *@param {object} pin a pin object
-  *@param {object} marker a marker object
-  */
-function addInfoWindow(map, pin, marker) {
+
+
+HomeMap.prototype.addInfoWindow = function(pin, marker) {
   const infowindow = new google.maps.InfoWindow({
     pixelOffset: new google.maps.Size(25, 10),
   });
+
+  let img = './assets/images/userProfile.png';
+  if (pin.pin_imgUrl) img = pin.pin_imgUrl;
   const contentString =
   '<div class="infowindow">' +
     '<div>' +
-      '<h1>'+ pin.title + '</h1>' +
+      '<h1>'+ pin.pin_title + '</h1>' +
     '</div>'+
 
     '<div>'+
-      '<div class="pin-img" style="background-image: url('+ pin.img_url +'); "></div>'+
+      '<div class="pin-img" style="background-image: url('+ img +'); "></div>'+
     '</div>' +
     '<div>'+
-      '<p><b>'+ pin.userName + ' </b>'+ pin.description + '</p>' +
+      '<p><b>'+ pin.user_username + ' </b>'+ pin.pin_description + '</p>' +
     '</div>'+
   '</div>';
   infowindow.setContent(contentString);
-  console.log(marker);
+
   marker.addListener('mouseover', function() {
     infowindow.open(map, marker);
   });
@@ -149,39 +153,55 @@ function addInfoWindow(map, pin, marker) {
   });
 
   marker.addListener('click', function() {
-    map.setZoom(17);
-    map.panTo({lat: pin.lat, lng: pin.lng});
+    this.map.setZoom(17);
+    this.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
   });
 }
 
-/**
- * Adds home map buttons
- * @param {map} map Map from init map.
- */
-function addButtons(map) {
+
+HomeMap.prototype.addPlaceInfoWIndow = function() {
+  const infowindow = new google.maps.InfoWindow();
+  const contentString =
+  '<div class="infowindow">' +
+    '<div>' +
+      '<h1>'+ place.name + '</h1>' +
+      '<h3>'+ place.formatted_address + '</h3>' +
+    '</div>'+
+
+    '<div>'+
+      '<div class="pin-img" style="background-image: url('+ place.photos[0].getUrl() +'); "></div>'+
+      '<button>Use Location for New Event'
+    '</div>' +
+  '</div>';
+  infowindow.setContent(contentString);
+
+  marker.addListener('click', function() {
+    this.map.setZoom(17);
+    this.map.panTo(place.geometry.location)
+    infowindow.open(this.map, marker);
+  });
+}
+
+HomeMap.prototype.initMenu = function() {
+}
+
+HomeMap.prototype.addButtons = function() {
+  MapShotMap.prototype.addButtons.call(this);
   // button for adding pin
   const addPinControlDiv = document.createElement('div');
-  AddPinControl(addPinControlDiv, map);
-  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(addPinControlDiv);
+  addPinControl(addPinControlDiv);
+  this.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(addPinControlDiv);
 
   // button for seeing pervious pin
   const leftControlDiv = document.createElement('div');
-  LeftControl(leftControlDiv, map);
-  map.controls[google.maps.ControlPosition.LEFT_CENTER].push(leftControlDiv);
+  addLeftControl(leftControlDiv);
+  this.map.controls[google.maps.ControlPosition.LEFT_CENTER].push(leftControlDiv);
 
   // button for seeing next pin
   const rightControlDiv = document.createElement('div');
-  RightControl(rightControlDiv, map);
-  map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(rightControlDiv);
+  addRightControl(rightControlDiv);
+  this.map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(rightControlDiv);
 
-  return;
-}
-/**
- * Adds home map styles
- * @param {map} map Map from init map.
- */
-function addStyles(map) {
-  return;
 }
 
 /**
@@ -189,7 +209,7 @@ function addStyles(map) {
 * @param {html} controlDiv Map from init map.
  * @param {map} map Map from init map.
  */
-function LeftControl(controlDiv, map) {
+function addLeftControl(controlDiv) {
   // Set CSS for the control border.
   const controlUI = document.createElement('div');
   controlUI.id = 'leftControl';
@@ -221,7 +241,7 @@ function LeftControl(controlDiv, map) {
 * @param {html} controlDiv Map from init map.
  * @param {map} map Map from init map.
  */
-function RightControl(controlDiv, map) {
+function addRightControl(controlDiv, map) {
   // Set CSS for the control border.
   const controlUI = document.createElement('div');
   controlUI.id = 'rightControl';
@@ -253,7 +273,7 @@ function RightControl(controlDiv, map) {
 * @param {html} controlDiv Map from init map.
  * @param {map} map Map from init map.
  */
-function AddPinControl(controlDiv, map) {
+function addPinControl(controlDiv) {
   // Set CSS for the control border.
   const controlUI = document.createElement('div');
   controlUI.id = 'rightControl';
@@ -282,6 +302,12 @@ function AddPinControl(controlDiv, map) {
 
   controlUI.addEventListener('click', () => {
     $('#overlay-back').fadeIn(500);
-    $('#addNewEventContainer').slideDown(500);
+    $('#addNewPinContainer').slideDown(500);
   });
+}
+
+var sitemap;
+
+function initMap() {
+  sitemap = new HomeMap();
 }

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <%- include('../partials/head'); %>
+  <link rel="stylesheet" href="/stylesheets/profileMenu.css">
 </head>
 
 <body>
@@ -10,14 +11,14 @@
   <div class="wrapper">
 
     <%- include('../partials/sidebar') %>
+      <%- include('../partials/profileMenu') %>
     <div id="content" class="m-0 p-0 ">
       <%- include('../partials/map') %>
     </div>
 
   </div>
-  <script src="../javascripts/usermap.js" charset="utf-8"></script>
-  <script src="../javascripts/mapTemplates.js" charset="utf-8"></script>
   <%- include('../partials/script') %>
+  <script src="../javascripts/usermapNew.js" charset="utf-8"></script>
 </body>
 
 

@@ -10,7 +10,22 @@ const Pin = require('../model/pin');
 * @param {Object} req client request
 * @param {Object} res server response
 */
-exports.getUserPins = function(req, res) {
+exports.get_user_pins = function(req, res) {
+  const userId = req.user.user_id;
+
+  Pin.getPins(userId, (err, rows) => {
+    if (err) throw err;
+    res.status(200).json(rows);
+  });
+};
+
+/**
+* gets user id and post id from req and responds with a pin
+* @param {Object} req client request
+* @param {Object} res server response
+*/
+exports.get_pin_by_id = function(req, res) {
+  //NOT IMPLEMENTED
   const userId = req.user.id;
 
   Pin.getPins(userId, (err, rows) => {
@@ -18,12 +33,14 @@ exports.getUserPins = function(req, res) {
     res.status(200).json(rows);
   });
 };
+
+
 /**
 * responds with a list of pins from feed
 * @param {Object} req client request
 * @param {Object} res server response
 */
-exports.getUserFeed = function(req, res) {
+exports.get_user_feed = function(req, res) {
   Pin.getFeed((err, rows) => {
     if (err) throw err;
     res.status(200).json(rows);
@@ -35,7 +52,7 @@ exports.getUserFeed = function(req, res) {
 * @param {Object} req client request
 * @param {Object} res server response
 */
-exports.postPin = function(req, res) {
+exports.post_pin = function(req, res) {
   const user = req.user;
   const newPin = new Pin(req.body);
   Pin.createPin(newPin, user, (err, pin) => {
@@ -49,7 +66,7 @@ exports.postPin = function(req, res) {
 * @param {Object} req client request
 * @param {Object} res server response
 */
-exports.editPin = function(req, res) {
+exports.edit_pin = function(req, res) {
   const newPin = new Pin(req.body);
   Pin.editPin(newPin, (err) => {
     if (err) throw err;
@@ -62,7 +79,7 @@ exports.editPin = function(req, res) {
 * @param {Object} req client request
 * @param {Object} res server response
 */
-exports.deletePin = function(req, res) {
+exports.delete_pin = function(req, res) {
   const pinId = req.pinId;
   Pin.deletePin(pinId, (err) => {
     if (err) throw err;

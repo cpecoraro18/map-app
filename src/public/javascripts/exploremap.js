@@ -1,51 +1,53 @@
-/**
-* Explore Map
-*@module exploreMap
-*/
 
-/**
-  *Loads pin data for explore map from backend
-  *@param {map} map Map from init map.
-  */
-function loadMarkers(map) {
+
+function ExploreMap() {
+  console.log("Init Explore Map")
+  MapShotMap.call(this);
+  console.log("Done with Mapshot constructor")
+  this.initMenu();
+  this.getPins();
+}
+
+ExploreMap.prototype = Object.create(MapShotMap.prototype);
+ExploreMap.prototype.constructor = ExploreMap;
+
+ExploreMap.prototype.getPins = function() {
+  var self = this;
   $.ajax({
     url: '/pin/feed',
     method: 'GET',
     success: function(pins) {
-      addPinsToMap(map, pins);
+      self.addPinsToMap(pins);
     },
   });
 }
+
 /**
   *Adds a marker and infowindow for each pin on explore map
   *@param {object} map Map from init map.
   *@param {array} pins Map from init map.
   */
-function addPinsToMap(map, pins) {
+ExploreMap.prototype.addPinsToMap = function(pins) {
+  var self = this;
   pins.forEach(function(pin) {
-    const marker = addMarker(map, pin);
-    addInfoWindow(map, pin, marker);
+    const marker = self.addMarker(pin);
+    self.addInfoWindow(pin, marker);
   });
 }
-/**
-  *Adds custom markers to the explore map
-  *@param {map} map Map from init map.
-  *@param {object} pin a pin object
-  *@return {object} custom marker
-  */
-function addMarker(map, pin) {
+
+ExploreMap.prototype.addMarker = function(pin) {
   const pos = {
-    lat: pin.lat,
-    lng: pin.lng,
+    lat: pin.pin_lat,
+    lng: pin.pin_lng,
   };
-  CustomMarker.prototype = new google.maps.OverlayView();
+  ExploreMapMarker.prototype = new google.maps.OverlayView();
   /**
     *Adds custom markers to the explore map
     *@param {map} map Map from init map.
     *@param {object} latlng a lat lng object
     *@param {object} imageSrc image used for marker
     */
-  function CustomMarker(map, latlng, imageSrc) {
+  function ExploreMapMarker(map, latlng, imageSrc) {
     this.latlng_ = latlng;
     this.imageSrc_ = imageSrc;
     // Once the LatLng and text are set, add the overlay to the map.  This will
@@ -54,7 +56,7 @@ function addMarker(map, pin) {
   }
 
 
-  CustomMarker.prototype.onAdd = function() {
+  ExploreMapMarker.prototype.onAdd = function() {
     // Check if the div has been created.
     let div = this.div_;
     if (!div) {
@@ -74,7 +76,7 @@ function addMarker(map, pin) {
       if (color == 1) imgDiv.style.border = 'solid #3B5284';
       if (color == 2) imgDiv.style.border = 'solid #5BA8A0';
       div.appendChild(imgDiv);
-      console.log(div);
+
       const me = this;
       google.maps.event.addDomListener(div, 'mouseover', function(event) {
         google.maps.event.trigger(me, 'mouseover');
@@ -92,7 +94,7 @@ function addMarker(map, pin) {
     }
   };
 
-  CustomMarker.prototype.draw = function() {
+  ExploreMapMarker.prototype.draw = function() {
     // Position the overlay
     const point = this.getProjection().fromLatLngToDivPixel(this.latlng_);
     if (point) {
@@ -101,7 +103,7 @@ function addMarker(map, pin) {
     }
   };
 
-  CustomMarker.prototype.onRemove = function() {
+  ExploreMapMarker.prototype.onRemove = function() {
     // Check if the overlay was on the map and needs to be removed.
     if (this.div_) {
       this.div_.parentNode.removeChild(this.div_);
@@ -109,34 +111,33 @@ function addMarker(map, pin) {
     }
   };
 
-  CustomMarker.prototype.getPosition = function() {
+  ExploreMapMarker.prototype.getPosition = function() {
     return this.latlng_;
   };
 
-  const marker = new CustomMarker(map, new google.maps.LatLng(pos.lat, pos.lng), pin.userPic_url);
+  const marker = new ExploreMapMarker(this.map, new google.maps.LatLng(pos.lat, pos.lng), pin.user_profilePic);
   return marker;
 }
-/**
-  *Adds infowindow to maker with pin information to explore page
-  *@param {map} map Map from init map.
-  *@param {object} pin a pin object
-  *@param {object} marker a marker object
-  */
-function addInfoWindow(map, pin, marker) {
+
+
+ExploreMap.prototype.addInfoWindow = function(pin, marker) {
   const infowindow = new google.maps.InfoWindow({
     pixelOffset: new google.maps.Size(25, 10),
   });
+
+  let img = './assets/images/userProfile.png';
+  if (pin.pin_imgUrl) img = pin.pin_imgUrl;
   const contentString =
   '<div class="infowindow">' +
     '<div>' +
-      '<h1>'+ pin.title + '</h1>' +
+      '<h1>'+ pin.pin_title + '</h1>' +
     '</div>'+
 
     '<div>'+
-      '<div class="pin-img" style="background-image: url('+ pin.img_url +'); "></div>'+
+      '<div class="pin-img" style="background-image: url('+ img +'); "></div>'+
     '</div>' +
     '<div>'+
-      '<p><b>'+ pin.userName + ' </b>'+ pin.description + '</p>' +
+      '<p><b>'+ pin.user_username + ' </b>'+ pin.pin_description + '</p>' +
     '</div>'+
   '</div>';
   infowindow.setContent(contentString);
@@ -149,52 +150,48 @@ function addInfoWindow(map, pin, marker) {
   });
 
   marker.addListener('click', function() {
-    map.setZoom(17);
-    map.panTo({lat: pin.lat, lng: pin.lng});
+    this.map.setZoom(17);
+    this.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
   });
 }
-/**
- * Adds explore map buttons
- * @param {map} map Map from init map.
- */
-function addButtons(map) {
-  addSearchBar(map);
-  return;
+
+
+ExploreMap.prototype.addPlaceInfoWindow = function(place, marker) {
+  let img = './assets/images/userProfile.png';
+  if (place.photos) img = place.photos[0].getUrl()
+  const infowindow = new google.maps.InfoWindow();
+  const contentString =
+  '<div class="infowindow">' +
+    '<div>' +
+      '<h1>'+ place.name + '</h1>' +
+      '<h3>'+ place.formatted_address + '</h3>' +
+    '</div>'+
+
+    '<div>'+
+      '<div class="pin-img" style="background-image: url('+ img +'); "></div>'+
+      '<button>Use Location for New Event'
+    '</div>' +
+  '</div>';
+  infowindow.setContent(contentString);
+
+  marker.addListener('click', function() {
+    this.map.setZoom(17);
+    this.map.panTo(place.geometry.location)
+    infowindow.open(this.map, marker);
+  });
 }
 
-/**
- * Adds explore map styles
- * @param {map} map Map from init map.
- */
-function addStyles(map) {
-  return;
-}
-
-/**
- * Adds search bar to map
- * @param {map} map Map from init map.
- */
-function addSearchBar(map) {
-  const input = document.createElement('input');
-  input.style.backgroundColor = '#fff';
-  input.style.fontSize = '100px;';
-  input.style.margin = '12px';
-  input.style.padding = '0 11px 0 13px';
-  input.style.textOverflow = 'ellipsis';
-  input.style.width = '200px';
-  input.style.height = '4em';
-  input.placeholder = 'Search';
-  const searchBox = new google.maps.places.SearchBox(input);
-  map.controls[google.maps.ControlPosition.LEFT_TOP].push(input);
-  // Bias the SearchBox results towards current map's viewport.
-  map.addListener('bounds_changed', () => {
-    searchBox.setBounds(map.getBounds());
+ExploreMap.prototype.initMenu = function() {
+  console.log("Initializing Menu");
+  const searchbox = new google.maps.places.SearchBox($("#explore_textbox")[0]);
+  this.map.addListener('bounds_changed', () => {
+    searchbox.setBounds(this.map.getBounds());
   });
   let markers = [];
   // Listen for the event fired when the user selects a prediction and retrieve
   // more details for that place.
-  searchBox.addListener('places_changed', () => {
-    const places = searchBox.getPlaces();
+  searchbox.addListener('places_changed', () => {
+    const places = searchbox.getPlaces();
 
     if (places.length == 0) {
       return;
@@ -218,15 +215,20 @@ function addSearchBar(map) {
         anchor: new google.maps.Point(17, 34),
         scaledSize: new google.maps.Size(25, 25),
       };
-      // Create a marker for each place.
+      // Create a marker for each place
+      let markerMap = this.map;
+      const marker = new google.maps.Marker({
+          map: markerMap,
+          icon: icon,
+          title: place.name,
+          position: place.geometry.location,
+        });
       markers.push(
-          new google.maps.Marker({
-            map,
-            icon,
-            title: place.name,
-            position: place.geometry.location,
-          }),
+        marker
       );
+
+      this.addPlaceInfoWindow(place, marker);
+
 
       if (place.geometry.viewport) {
         // Only geocodes have viewport.
@@ -235,6 +237,12 @@ function addSearchBar(map) {
         bounds.extend(place.geometry.location);
       }
     });
-    map.fitBounds(bounds);
+    this.map.fitBounds(bounds);
   });
+}
+
+var sitemap;
+
+function initMap() {
+  sitemap = new ExploreMap();
 }

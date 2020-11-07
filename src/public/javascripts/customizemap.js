@@ -7,7 +7,7 @@
 * current template that is styling the customize map. Can be saved as a user style
 * @type {Object}
 */
-var template;
+let template = [];
 
 /**
  * Adds buttons necessary for customize map
@@ -19,7 +19,8 @@ function addButtons(map) {
 
 
 /**
-  *Adds initial styles to the customize map
+  *Adds initial styles to the cu
+  stomize map
   *@param {map} map Map from init map.
   */
 function addStyles(map) {
@@ -32,6 +33,9 @@ function addStyles(map) {
   */
 function loadMarkers(map) {
   return;
+}
+
+function initMenu(map) {
 }
 
 /**
@@ -87,7 +91,7 @@ function saveStyle() {
   $.ajax({
     type: 'PUT',
     url: '/user/style',
-    data: {userStyle: template},
+    data: {userStyle: JSON.stringify(template)},
     dataType: 'json',
     contentType: 'application/x-www-form-urlencoded',
     success: function(data, status) {

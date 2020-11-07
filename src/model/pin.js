@@ -2,6 +2,8 @@
 * Pin Model
 * @module Pin
 */
+const db = require('../config/db');
+
 
 const pins = [{
   id: 0,
@@ -101,7 +103,14 @@ const Pin = function(body) {
   * @param {function} result function that takes and error and a list of pins
   */
 Pin.getPins = function(userId, result) {
-  result(null, pins.filter((p) => p.userId === userId));
+  let query = 'select pin.pin_title, pin.pin_description, pin.pin_lat, pin.pin_lng, pin.pin_imgUrl, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id WHERE pin_userId = ' + userId;
+  console.log(query);
+  db.query(query, (err, pins, fields) => {
+    // if any error while executing above query, throw error
+    if (err) throw err;
+    // if there is no error, you have the result
+    result(null, pins);
+ });
 };
 
 /**
@@ -109,15 +118,29 @@ Pin.getPins = function(userId, result) {
   *@param {function} result function that takes and error and a list of pins
   */
 Pin.getFeed = function(result) {
-  result(null, pins);
+  let query = 'select pin.pin_title, pin.pin_description, pin.pin_lat, pin.pin_lng, pin.pin_imgUrl, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id';
+
+  db.query(query, (err, pins, fields) => {
+    // if any error while executing above query, throw error
+    if (err) throw err;
+    // if there is no error, you have the result
+    result(null, pins);
+ });
 };
 /**
   * Gets a single pin by its id
   * @param {number} id ID of the pin
   * @param {function} result function that takes and error and a pin
   */
-Pin.getPinById = function(id, result) {
-  result(null, pins.find((p) => (p.userId === userId && p.id === id)));
+Pin.getPinById = function(pinId, result) {
+  let query = 'select pin.pin_title, pin.pin_description, pin.pin_lat, pin.pin_lng, pin.pin_imgUrl, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id where pin.id = ' + pinId;
+
+  db.query(query, (err, pin, fields) => {
+    // if any error while executing above query, throw error
+    if (err) throw err;
+    // if there is no error, you have the result
+    result(null, pin);
+ });
 };
 
 /**
@@ -127,8 +150,7 @@ Pin.getPinById = function(id, result) {
   * @param {function} result function that takes and error and a pin
   */
 Pin.createPin = function(newPin, user, result) {
-  const createdPin = {
-    id: pins.length,
+  const pin = {
     userId: user.id,
     userName: user.username,
     title: newPin.title,
@@ -137,8 +159,14 @@ Pin.createPin = function(newPin, user, result) {
     lat: newPin.lat,
     lng: newPin.lng,
   };
-  pins.push(createdPin);
-  result(null, createdPin);
+  let query = 'insert into pin (pin_userId, pin_title, pin_description, pin_lat, pin_lng) values("' + pin.userId + '","' + pin.title + '","' + pin.description + '","' + pin.lat + '","' + pin.lng + '")';
+
+  db.query(query, (err, pin, fields) => {
+    // if any error while executing above query, throw error
+    if (err) throw err;
+    // if there is no error, you have the result
+    result(null, pin);
+ });
 };
 /**
   * Edits a pin
@@ -154,7 +182,7 @@ Pin.editPin = function(editedPin, result) {
   * @param {function} result function that takes and error
   */
 Pin.deletePin = function(id, result) {
-  pin = pins.filter((p) => p.id != id);
+  pins = pins.filter((p) => p.id != id);
   result(null);
 };
 

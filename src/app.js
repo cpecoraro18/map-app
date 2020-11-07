@@ -12,6 +12,7 @@ const logger = require('morgan');
 const passport = require('passport');
 const flash = require('express-flash');
 const session = require('express-session');
+const db = require('./config/db.js')
 
 const app = express();
 
@@ -52,6 +53,7 @@ app.use(flash());
 app.use('/', require('./routes/index'));
 app.use('/user', require('./routes/user'));
 app.use('/pin', require('./routes/pin'));
+app.use('/pin', require('./routes/tag'));
 
 
 app.use(express.static(path.join(__dirname, 'public')));

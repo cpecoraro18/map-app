@@ -1,47 +1,52 @@
 <!-- menu for customize map screen -->
 
 <div class="dynamic-sidebar" id="customizeSidebar">
-  <div id="options">
-    <div class="item">
-      <label for="styleTemplate">Style</label>
-      <select id="styleTemplate" onchange="changeMapStyles()" class="form-control">
-        <option value="standard">Standard</option>
-        <option value="silver">Silver</option>
-        <option value="retro">Retro</option>
-        <option value="dark">Dark</option>
-        <option value="night">Night</option>
-        <option value="aubergine">Aubergine</option>
-      </select>
-      <br>
-    </div>
-    <br><br>
-    <div class="item">
-      <label for="roadVisible">Roads</label>
-      <select id="roadVisible" onchange="changeMapStyles()" class="form-control">
-        <option value="on">On</option>
-        <option value="simplified">Simplified</option>
-        <option value="off">Off</option>
-      </select>
-      <br>
-    </div>
-    <div class="item">
-      <label for="labels">Labels</label>
-      <select id="labels" onchange="changeMapStyles()" class="form-control">
-        <option value="on">On</option>
-        <option value="simplified">Simplified</option>
-        <option value="off">Off</option>
-      </select>
-      <br>
-    </div>
-    <div class="item">
-      <label for="landmarks">Landmarks</label>
-      <select id="landmarks" onchange="changeMapStyles()" class="form-control">
-        <option value="on">On</option>
-        <option value="simplified">Simplified</option>
-        <option value="off">Off</option>
-      </select>
-      <br>
-    </div>
+  <div class="menu-toggle" onclick="toggleMenu()">
+    <i class="fas fa-caret-left"></i>
   </div>
-  <a href="#" class="btn btn-large" onclick="saveStyle()">Save</a>
+  <div class="menu-content">
+    <div id="options">
+      <div>
+        <label for="styleTemplate">Style</label>
+        <select id="styleTemplate" onchange="changeMapStyles()" class="form-control">
+          <option value="standard">Standard</option>
+          <option value="silver">Silver</option>
+          <option value="retro">Retro</option>
+          <option value="dark">Dark</option>
+          <option value="night">Night</option>
+          <option value="aubergine">Aubergine</option>
+        </select>
+        <br>
+      </div>
+      <br><br>
+      <div>
+        <label for="roadVisible">Roads</label>
+        <select id="roadVisible" onchange="changeMapStyles()" class="form-control">
+          <option value="on">On</option>
+          <option value="simplified">Simplified</option>
+          <option value="off">Off</option>
+        </select>
+        <br>
+      </div>
+      <div>
+        <label for="labels">Labels</label>
+        <select id="labels" onchange="changeMapStyles()" class="form-control">
+          <option value="on">On</option>
+          <option value="simplified">Simplified</option>
+          <option value="off">Off</option>
+        </select>
+        <br>
+      </div>
+      <div>
+        <label for="landmarks">Landmarks</label>
+        <select id="landmarks" onchange="changeMapStyles()" class="form-control">
+          <option value="on">On</option>
+          <option value="simplified">Simplified</option>
+          <option value="off">Off</option>
+        </select>
+        <br>
+      </div>
+    </div>
+    <a href="#" class="btn btn-large" onclick="saveStyle()">Save</a>
+  </div>
 </div>

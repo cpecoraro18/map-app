@@ -8,11 +8,13 @@ const {ensureAuthenticated} = require('../config/auth');
 
 
 // gets all user pins
-router.get('/', ensureAuthenticated, pinController.getUserPins);
-router.get('/feed', ensureAuthenticated, pinController.getUserFeed);
-router.post('/', ensureAuthenticated, pinController.postPin);
-router.put('/', ensureAuthenticated, pinController.editPin);
-router.delete('/', ensureAuthenticated, pinController.deletePin);
+router.get('/', ensureAuthenticated, pinController.get_user_pins);
+router.get('/feed', ensureAuthenticated, pinController.get_user_feed);
+//router.get('/explore', ensureAuthenticated, pinController.get_explore_feed);
+router.post('/', ensureAuthenticated, pinController.post_pin);
+router.get('/:pinId', ensureAuthenticated, pinController.get_pin_by_id);
+router.put('/:pinId', ensureAuthenticated, pinController.edit_pin);
+router.delete('/:pinId', ensureAuthenticated, pinController.delete_pin);
 
 
 module.exports = router;

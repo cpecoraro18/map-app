@@ -13,6 +13,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: "#5BA8A0";
+    overflow: hidden;
 }
 .map h1 {
   font-family: 'Pacifico', cursive;

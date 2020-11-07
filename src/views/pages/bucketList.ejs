@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <%- include('../partials/head'); %>
-  <link rel="stylesheet" href="/stylesheets/exploreMenu.css">
 </head>
 
 <body>
+  <%- include('../partials/addBucket') %>
   <!-- Container for map and sidebar -->
   <div class="wrapper">
 
     <%- include('../partials/sidebar') %>
-    <%- include('../partials/exploreMenu.ejs') %>
-    <%- include('../partials/map') %>
+    <%- include('../partials/bucketlistMenu') %>
+    <div id="content" class="m-0 p-0 ">
+      <%- include('../partials/map') %>
+    </div>
 
   </div>
-
   <%- include('../partials/script') %>
-  <script src="../javascripts/exploremap.js" charset="utf-8"></script>
+  <script src="../javascripts/bucketlistmap.js" charset="utf-8"></script>
 </body>
 
 

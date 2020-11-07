@@ -1,51 +1,60 @@
 /**
-* User Map
-*@module userMap
+* Bucket List Map
+*@module BucketListMap
 */
-
 /**
-  *Loads pins from backend
-  *@param {map} map Map from init map.
-  */
-function loadMarkers(map) {
+ * Bucket List Map
+ * @class
+ * @constructor
+ */
+function BucketListMap() {
+  console.log("Init Home Map")
+  MapShotMap.call(this);
+  this.getPins();
+  console.log("Done with Mapshot constructor")
+}
+
+BucketListMap.prototype = Object.create(MapShotMap.prototype);
+BucketListMap.prototype.constructor = BucketListMap;
+
+BucketListMap.prototype.getPins = function() {
+  var self = this;
   $.ajax({
     url: '/pin',
     method: 'GET',
     success: function(pins) {
-      addPinsToMap(map, pins);
+      console.log(pins);
+      self.addPinsToMap(pins);
     },
   });
 }
+
 /**
   *Adds a marker and infowindow for each pin on explore map
   *@param {object} map Map from init map.
   *@param {array} pins Map from init map.
   */
-function addPinsToMap(map, pins) {
+BucketListMap.prototype.addPinsToMap = function(pins) {
+  var self = this;
   pins.forEach(function(pin) {
-    const marker = addMarker(map, pin);
-    addInfoWindow(map, pin, marker);
+    const marker = self.addMarker(pin);
+    self.addInfoWindow(pin, marker);
   });
 }
-/**
-  *Adds custom markers to the explore map
-  *@param {map} map Map from init map.
-  *@param {object} pin a pin object
-  *@return {object} custom marker
-  */
-function addMarker(map, pin) {
+
+BucketListMap.prototype.addMarker = function(pin) {
   const pos = {
     lat: pin.pin_lat,
     lng: pin.pin_lng,
   };
-  CustomMarker.prototype = new google.maps.OverlayView();
+  BucketListMapMarker.prototype = new google.maps.OverlayView();
   /**
     *Adds custom markers to the explore map
     *@param {map} map Map from init map.
     *@param {object} latlng a lat lng object
     *@param {object} imageSrc image used for marker
     */
-  function CustomMarker(map, latlng, imageSrc) {
+  function BucketListMapMarker(map, latlng, imageSrc) {
     this.latlng_ = latlng;
     this.imageSrc_ = imageSrc;
     // Once the LatLng and text are set, add the overlay to the map.  This will
@@ -54,7 +63,7 @@ function addMarker(map, pin) {
   }
 
 
-  CustomMarker.prototype.onAdd = function() {
+  BucketListMapMarker.prototype.onAdd = function() {
     // Check if the div has been created.
     let div = this.div_;
     if (!div) {
@@ -65,7 +74,8 @@ function addMarker(map, pin) {
 
 
       const imgDiv = document.createElement('div');
-      imgDiv.setAttribute('style', 'background-image: url("'+ this.imageSrc_+ '")');
+      imgDiv.setAttribute('style',
+          'background-image: url("'+ this.imageSrc_+ '")');
       imgDiv.className = 'customMarkerImage';
       const maxColors = 3;
       const color = Math.floor(Math.random()*maxColors);
@@ -73,6 +83,7 @@ function addMarker(map, pin) {
       if (color == 1) imgDiv.style.border = 'solid #3B5284';
       if (color == 2) imgDiv.style.border = 'solid #5BA8A0';
       div.appendChild(imgDiv);
+      console.log(div);
       const me = this;
       google.maps.event.addDomListener(div, 'mouseover', function(event) {
         google.maps.event.trigger(me, 'mouseover');
@@ -90,7 +101,7 @@ function addMarker(map, pin) {
     }
   };
 
-  CustomMarker.prototype.draw = function() {
+  BucketListMapMarker.prototype.draw = function() {
     // Position the overlay
     const point = this.getProjection().fromLatLngToDivPixel(this.latlng_);
     if (point) {
@@ -99,7 +110,7 @@ function addMarker(map, pin) {
     }
   };
 
-  CustomMarker.prototype.onRemove = function() {
+  BucketListMapMarker.prototype.onRemove = function() {
     // Check if the overlay was on the map and needs to be removed.
     if (this.div_) {
       this.div_.parentNode.removeChild(this.div_);
@@ -107,23 +118,20 @@ function addMarker(map, pin) {
     }
   };
 
-  CustomMarker.prototype.getPosition = function() {
+  BucketListMapMarker.prototype.getPosition = function() {
     return this.latlng_;
   };
 
-  const marker = new CustomMarker(map, new google.maps.LatLng(pos.lat, pos.lng), './assets/profilePictures/person1.jpeg');
+  const marker = new BucketListMapMarker(this.map, new google.maps.LatLng(pos.lat, pos.lng), pin.user_profilePic);
   return marker;
 }
-/**
-  *Adds infowindow to maker with pin information
-  *@param {map} map Map from init map.
-  *@param {object} pin a pin object
-  *@param {object} marker a marker object
-  */
-function addInfoWindow(map, pin, marker) {
+
+
+BucketListMap.prototype.addInfoWindow = function(pin, marker) {
   const infowindow = new google.maps.InfoWindow({
     pixelOffset: new google.maps.Size(25, 10),
   });
+
   let img = './assets/images/userProfile.png';
   if (pin.pin_imgUrl) img = pin.pin_imgUrl;
   const contentString =
@@ -147,62 +155,33 @@ function addInfoWindow(map, pin, marker) {
   marker.addListener('mouseout', function() {
     infowindow.close();
   });
+
   marker.addListener('click', function() {
-    map.setZoom(17);
-    map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
+    this.map.setZoom(17);
+    this.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
   });
 }
-/**
- * Adds user map buttons
- * @param {map} map Map from init map.
- */
-function addButtons(map) {
+
+
+
+BucketListMap.prototype.initMenu = function() {
+}
+
+BucketListMap.prototype.addButtons = function() {
+  MapShotMap.prototype.addButtons.call(this);
   // button for adding pin
   const addPinControlDiv = document.createElement('div');
-  AddPinControl(addPinControlDiv, map);
-  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(addPinControlDiv);
-
-  return;
+  addPinControl(addPinControlDiv);
+  this.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(addPinControlDiv);
 }
 
-/**
- * Adds user map buttons
- * @param {map} map Map from init map.
- */
-function addStyles(map) {
-  $.get('/user/style', function(mapStyle, status) {
-    setUserStyles(map, mapStyle.mapStyle_template);
-  });
-}
-/**
- * Adds home map buttons
- * @param {map} map Map from init map.
- * @param {object} userStyle Users map style
- */
-function setUserStyles(map, userStyle) {
-  console.log(JSON.parse('[' + userStyle + ']')[0]);
-  const userStyleValue = JSON.parse('[' + userStyle + ']');
-  map.setOptions({
-    styles: userStyleValue[0],
-  });
-}
 
-function initMenu(map) {
-  $.get('/user/info', function( user ) {
-    console.log('url(' + user.user_profilePic + ')');
-    let img = './assets/images/userProfile.png';
-    if (user.user_profilePic) img = user.user_profilePic;
-    $('#profilePicture').css('background-image', 'url(' + img + ')');
-    $('#username').html('@' + user.user_username);
-    $('#bio').html(user.user_bio);
-  });
-}
 /**
  * Adds add pin control to map
 * @param {html} controlDiv Map from init map.
  * @param {map} map Map from init map.
  */
-function AddPinControl(controlDiv, map) {
+function addPinControl(controlDiv) {
   // Set CSS for the control border.
   const controlUI = document.createElement('div');
   controlUI.id = 'rightControl';
@@ -215,7 +194,7 @@ function AddPinControl(controlDiv, map) {
   controlUI.style.cursor = 'pointer';
   controlUI.style.margin = '30px';
   controlUI.style.textAlign = 'center';
-  controlUI.title = 'Click to add a new pin';
+  controlUI.title = 'Click to add a pin';
   controlDiv.appendChild(controlUI);
   // Set CSS for the control interior.
   const controlText = document.createElement('div');
@@ -225,13 +204,18 @@ function AddPinControl(controlDiv, map) {
   controlText.style.lineHeight = '38px';
   controlText.style.paddingLeft = '5px';
   controlText.style.paddingRight = '5px';
-  controlText.style.paddingTop = '15px';
+  controlText.style.paddingTop = '16px';
   controlText.innerHTML = '<i class="fas fa-plus"></i>';
   controlUI.appendChild(controlText);
 
   controlUI.addEventListener('click', () => {
     $('#overlay-back').fadeIn(500);
-    $('#addNewPintContainer').slideDown(500);
+    $('#addNewBucketContainer').slideDown(500);
   });
-  return;
+}
+
+var sitemap;
+
+function initMap() {
+  sitemap = new BucketListMap();
 }

@@ -14,6 +14,9 @@ router.get('/profile', ensureAuthenticated, function(req, res, next) {
 router.get('/explore', ensureAuthenticated, function(req, res, next) {
   res.render('explore', {page: 'Explore', menuId: 'explore', username: req.user.username});
 });
+router.get('/bucketList', ensureAuthenticated, function(req, res, next) {
+  res.render('bucketList', {page: 'Bucket List', menuId: 'bucketList', username: req.user.username});
+});
 router.get('/customizeMap', ensureAuthenticated, function(req, res, next) {
   res.render('customizeMap', {page: 'Customize', menuId: 'Customize', username: req.user.username});
 });

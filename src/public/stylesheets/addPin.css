@@ -10,7 +10,7 @@
     display    : none;
 }
 
-#addNewEventContainer {
+.add-window {
   background-color: white;
   opacity: 1!important;
   position: relative;
@@ -24,13 +24,13 @@
   box-shadow: 5px 10px 8px #383838;
 }
 
-#closeAddPin {
+.add-window {
   float: right;
 }
 
 
 @media (max-width: 768px) {
-  #addNewEventContainer {
+  .add-window {
     background-color: white;
     opacity: 1!important;
     position: fixed;

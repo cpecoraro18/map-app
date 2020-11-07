@@ -7,16 +7,18 @@ const userController = require('../controller/user');
 const {ensureAuthenticated, forwardAuthenticated} = require('../config/auth');
 
 
-router.post('/register', forwardAuthenticated, userController.registerUser);
+router.post('/register', forwardAuthenticated, userController.register_user);
 
-router.post('/login', forwardAuthenticated, userController.authenticateUser);
+router.post('/login', forwardAuthenticated, userController.authenticate_user);
 
-router.post('/changePassword', ensureAuthenticated, userController.changePassword);
+router.post('/changePassword', ensureAuthenticated, userController.change_password);
 
-router.put('/style', ensureAuthenticated, userController.editStyle);
+router.get('/style', ensureAuthenticated, userController.get_style);
 
-router.get('/userInfo', ensureAuthenticated, userController.getUserInfo);
+router.put('/style', ensureAuthenticated, userController.edit_style);
 
-router.post('/logout', userController.logoutUser);
+router.get('/info', ensureAuthenticated, userController.get_user_info);
+
+router.post('/logout', userController.logout_user);
 
 module.exports = router;

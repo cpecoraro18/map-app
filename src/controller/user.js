@@ -13,7 +13,7 @@ const passport = require('passport');
 * @param {Object} res server response
 * @param {Object} next function for express to call next
 */
-exports.authenticateUser = function(req, res, next) {
+exports.authenticate_user = function(req, res, next) {
   passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
@@ -25,10 +25,45 @@ exports.authenticateUser = function(req, res, next) {
 * @param {Object} req client request
 * @param {Object} res server response
 */
-exports.getUserInfo = function(req, res) {
-  const userInfo = req.user;
-  delete userInfo['password'];
-  res.json(userInfo);
+exports.get_user_info = function(req, res) {
+  User.getUserById(req.user.user_id, function(err, user) {
+    if(err) return err;
+    delete user['password'];
+    res.status(200).json(user)
+  })
+};
+/**
+* get userInfo from req and delete password, then return user info
+* @param {Object} req client request
+* @param {Object} res server response
+*/
+exports.get_style = function(req, res) {
+  console.log(req.user)
+
+  User.getUserStyle(req.user.user_id, function(err, mapStyle) {
+    if (err) {
+      res.status(500).json({
+        error: err,
+        message: 'Could not getstyle',
+      });
+      return;
+    }
+    res.status(200).json(mapStyle);
+
+  });
+};
+
+/**
+* sets user styles based on template from req
+* @param {Object} req client request
+* @param {Object} res server response
+*/
+exports.edit_style = function(req, res) {
+  const newStyle = req.body.userStyle;
+  User.changeStyle(req.user.user_id, newStyle, (err, style) => {
+    if (err) throw err;
+    res.status(201).json(style);
+  });
 };
 
 /**
@@ -36,7 +71,7 @@ exports.getUserInfo = function(req, res) {
 * @param {Object} req client request
 * @param {Object} res server response
 */
-exports.logoutUser = function(req, res) {
+exports.logout_user = function(req, res) {
   req.logout();
   req.flash('success_msg', 'You are logged out');
   res.redirect('/login');
@@ -47,7 +82,7 @@ exports.logoutUser = function(req, res) {
 * @param {Object} req client request
 * @param {Object} res server response
 */
-exports.getUserById = function(req, res) {
+exports.get_user_by_id = function(req, res) {
   const id = parseInt(req.params.id);
   User.getUserById(id, function(err, user) {
     if (err) {
@@ -73,7 +108,7 @@ exports.getUserById = function(req, res) {
 * @param {Object} req client request
 * @param {Object} res server response
 */
-exports.registerUser = function(req, res) {
+exports.register_user = function(req, res) {
   const {name, username, email, password} = req.body;
 
   const errors = [];
@@ -135,7 +170,7 @@ exports.registerUser = function(req, res) {
 * @param {Object} req client request
 * @param {Object} res server response
 */
-exports.changePassword = function(req, res) {
+exports.change_password = function(req, res) {
   const {oldPassword, newPassword, newPassword2} = req.body;
 
   const errors = [];
@@ -168,18 +203,4 @@ exports.changePassword = function(req, res) {
       });
     });
   }
-};
-/**
-* sets user styles based on template from req
-* @param {Object} req client request
-* @param {Object} res server response
-*/
-exports.editStyle = function(req, res) {
-  console.log(req.body);
-  const newStyle = req.body.userStyle;
-  User.changeStyle(req.user.username, newStyle, (err, style) => {
-    if (err) throw err;
-    console.log(style);
-    res.json(style);
-  });
 };

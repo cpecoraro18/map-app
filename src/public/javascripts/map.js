@@ -1,59 +1,64 @@
 /**
-* initialize Map
-*@module initMap
-*/
-
-/**
 * Map
-* @type {Object}
+*@module Map
 */
-let map;
 
-/**
-  *Initialized the google map for every page
-  */
-function initMap() {
-  const mapProp= {
-    center: new google.maps.LatLng(44.9727, -93.23540000000003),
-    zoom: 3,
-    gestureHandling: 'greedy',
-    minZoom: 2,
-    disableDefaultUI: true,
-    mapTypeControl: true,
-    fullscreenControl: true,
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
-    backgroundColor: '#3B5284',
-  };
-  map = new google.maps.Map(document.getElementById('map'), mapProp);
-  $('#map').find('*').css('padding', '100px');
-  addStaticButtons(map);
-  addButtons(map);
-  addStyles(map);
-  loadMarkers(map);
-  initMenu(map);
+function MapShotMap() {
+    console.log("Init MapShot Map");
+    const mapProp = {
+      center: new google.maps.LatLng(44.9727, -93.23540000000003),
+      zoom: 3,
+      gestureHandling: 'greedy',
+      minZoom: 2,
+      disableDefaultUI: true,
+      mapTypeControl: true,
+      fullscreenControl: true,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      backgroundColor: '#3B5284',
+    };
+    this.map = new google.maps.Map(document.getElementById('map'), mapProp);
+    console.log(this.map);
+    this.addButtons();
+    this.addStyles();
+    this.initMenu();
 }
-/**
-  *Add buttons that are on every page
-  *@param {map} map Map from init map.
-  */
-function addStaticButtons(map) {
-  // button for title
+
+MapShotMap.prototype.addButtons = function() {
+  console.log("Adding Buttons")
   const titleDiv = document.createElement('div');
-  AddTitle(titleDiv, map);
-  map.controls[google.maps.ControlPosition.TOP_CENTER].push(titleDiv);
+  this.addTitle(titleDiv);
+  this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(titleDiv);
   // button for adding pin
   const zoomControlDiv = document.createElement('div');
-  ZoomControl(zoomControlDiv, map);
-  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(zoomControlDiv);
+  this.addZoom(zoomControlDiv);
+  this.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(zoomControlDiv);
 
   if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
     const sidebarToggleControlDiv = document.createElement('div');
-    SidebarToggleControl(sidebarToggleControlDiv, map);
-    map.controls[google.maps.ControlPosition.LEFT_TOP].push(sidebarToggleControlDiv);
-    map.fullscreenControl = false;
-    map.mapTypeControl = false;
+    this.addSidebarToggle(sidebarToggleControlDiv);
+    this.map.controls[google.maps.ControlPosition.LEFT_TOP].push(sidebarToggleControlDiv);
+    this.map.fullscreenControl = false;
+    this.map.mapTypeControl = false;
   }
   return;
+}
+
+MapShotMap.prototype.addStyles = function() {
+  console.log("Adding styles")
+  var self = this;
+  $.get('/user/style', function(mapStyle, status) {
+    self.setMapStyle(mapStyle.mapStyle_template);
+  });
+}
+
+
+MapShotMap.prototype.setMapStyle = function(mapStyle) {
+  console.log("Setting Map Style")
+  const userStyleValue = JSON.parse('[' + mapStyle + ']');
+  console.log("User style: " + userStyleValue);
+  this.map.setOptions({
+    styles: userStyleValue,
+  });
 }
 
 /**
@@ -61,7 +66,8 @@ function addStaticButtons(map) {
   * @param {html} controlDiv Map from init map.
   *@param {map} map Map from init map.
   */
-function AddTitle(controlDiv, map) {
+MapShotMap.prototype.addTitle = function(controlDiv) {
+  console.log("Adding Title")
   // Set CSS for the control border.
   const controlUI = document.createElement('div');
   controlUI.id = 'title';
@@ -96,7 +102,8 @@ function AddTitle(controlDiv, map) {
   * @param {html} controlDiv Map from init map.
   *@param {map} map Map from init map.
   */
-function ZoomControl(controlDiv, map) {
+MapShotMap.prototype.addZoom = function(controlDiv) {
+  console.log("Adding zoom")
   // Set CSS for the control border.
   const controlUI = document.createElement('div');
   controlUI.id = 'zoomControl';
@@ -126,7 +133,7 @@ function ZoomControl(controlDiv, map) {
   controlUI.appendChild(controlText);
 
   controlUI.addEventListener('click', () => {
-    map.setZoom(3);
+    this.map.setZoom(3);
   });
 
   return;
@@ -136,7 +143,8 @@ function ZoomControl(controlDiv, map) {
   * @param {html} controlDiv Map from init map.
   *@param {map} map Map from init map.
   */
-function SidebarToggleControl(controlDiv, map) {
+MapShotMap.prototype.addSidebarToggle = function(controlDiv) {
+  console.log("Adding Sidebar Toggle")
   // Set CSS for the control border.
   const controlUI = document.createElement('div');
   controlUI.style.backgroundColor = '#fff';
