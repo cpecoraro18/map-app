@@ -1,35 +1,32 @@
-/**
-* MapShot Map
-*@module MapShotMap
-*/
+
 /**
  * MapShot Map Base Class
  * @class
  * @constructor
  */
 function MapShotMap() {
-    console.log("Init MapShot Map");
-    const mapProp = {
-      center: new google.maps.LatLng(44.9727, -93.23540000000003),
-      zoom: 3,
-      gestureHandling: 'greedy',
-      minZoom: 2,
-      disableDefaultUI: true,
-      mapTypeControl: true,
-      fullscreenControl: true,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      backgroundColor: '#3B5284',
-    };
-    this.map = new google.maps.Map(document.getElementById('map'), mapProp);
-    this.addButtons();
-    this.addStyles();
-    this.initMenu();
+  console.log('Init MapShot Map');
+  const mapProp = {
+    center: new google.maps.LatLng(44.9727, -93.23540000000003),
+    zoom: 3,
+    gestureHandling: 'greedy',
+    minZoom: 2,
+    disableDefaultUI: true,
+    mapTypeControl: true,
+    fullscreenControl: true,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    backgroundColor: '#3B5284',
+  };
+  this.map = new google.maps.Map(document.getElementById('map'), mapProp);
+  this.addButtons();
+  this.addStyles();
+  this.initMenu();
 }
 /**
   *Adds buttons to bucketlist map
   */
 MapShotMap.prototype.addButtons = function() {
-  console.log("Adding Buttons")
+  console.log('Adding Buttons');
   const titleDiv = document.createElement('div');
   this.addTitle(titleDiv);
   this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(titleDiv);
@@ -46,7 +43,7 @@ MapShotMap.prototype.addButtons = function() {
     this.map.mapTypeControl = false;
   }
   return;
-}
+};
 /**
   *Gets style from backend and applies it to map
   */
@@ -54,30 +51,30 @@ MapShotMap.prototype.addButtons = function() {
   *Gets style from backend and applies it to map
   */
 MapShotMap.prototype.addStyles = function() {
-  console.log("Adding styles")
-  var self = this;
+  console.log('Adding styles');
+  const self = this;
   $.get('/user/style', function(mapStyle, status) {
     const style = JSON.parse('[' + mapStyle.mapStyle_template + ']');
     self.setMapStyle(style[0]);
   });
-}
+};
 
 /**
   *Intitialize base menu
   */
 MapShotMap.prototype.initMenu = function() {
   return;
-}
+};
 
 /**
   *set map style based array of objects
-  * *@param {array} mapStyle Map from init map.
+  * @param {array} mapStyle Map from init map.
   */
 MapShotMap.prototype.setMapStyle = function(mapStyle) {
   this.map.setOptions({
     styles: mapStyle,
   });
-}
+};
 
 /**
   *Adds title
@@ -85,7 +82,7 @@ MapShotMap.prototype.setMapStyle = function(mapStyle) {
   *@param {map} map Map from init map.
   */
 MapShotMap.prototype.addTitle = function(controlDiv) {
-  console.log("Adding Title")
+  console.log('Adding Title');
   // Set CSS for the control border.
   const controlUI = document.createElement('div');
   controlUI.id = 'title';
@@ -113,7 +110,7 @@ MapShotMap.prototype.addTitle = function(controlDiv) {
   });
 
   return;
-}
+};
 
 /**
   *Adds zoom control
@@ -121,7 +118,7 @@ MapShotMap.prototype.addTitle = function(controlDiv) {
   *@param {map} map Map from init map.
   */
 MapShotMap.prototype.addZoom = function(controlDiv) {
-  console.log("Adding zoom")
+  console.log('Adding zoom');
   // Set CSS for the control border.
   const controlUI = document.createElement('div');
   controlUI.id = 'zoomControl';
@@ -155,14 +152,14 @@ MapShotMap.prototype.addZoom = function(controlDiv) {
   });
 
   return;
-}
+};
 /**
   *Adds sidebar toggle for mobile
   * @param {html} controlDiv Map from init map.
   *@param {map} map Map from init map.
   */
 MapShotMap.prototype.addSidebarToggle = function(controlDiv) {
-  console.log("Adding Sidebar Toggle")
+  console.log('Adding Sidebar Toggle');
   // Set CSS for the control border.
   const controlUI = document.createElement('div');
   controlUI.style.backgroundColor = '#fff';
@@ -189,4 +186,4 @@ MapShotMap.prototype.addSidebarToggle = function(controlDiv) {
     $('#sidebar').toggleClass('active');
   });
   return;
-}
+};

@@ -1,20 +1,25 @@
-/**
-* Home Map
-*@module UserMap
-*/
 
+/**
+ * User Map
+ * @class
+ * @constructor
+ */
 function UserMap() {
-  console.log("Init Home Map")
+  console.log('Init Home Map');
   MapShotMap.call(this);
   this.getPins();
-  console.log("Done with Mapshot constructor")
+  this.initAdd();
+  console.log('Done with Mapshot constructor');
 }
 
 UserMap.prototype = Object.create(MapShotMap.prototype);
 UserMap.prototype.constructor = UserMap;
 
+/**
+  *Gets pins from backend and starts process of putting them on the map
+  */
 UserMap.prototype.getPins = function() {
-  var self = this;
+  const self = this;
   $.ajax({
     url: '/pin',
     method: 'GET',
@@ -22,21 +27,129 @@ UserMap.prototype.getPins = function() {
       self.addPinsToMap(pins);
     },
   });
-}
+};
+
+
+/**
+  *Gets pins from backend and starts process of putting them on the map
+  */
+UserMap.prototype.initAdd = function() {
+  const self = this;
+
+  $('#addNewPinContainer').slideUp(500);
+
+  //  closes new pin window
+  $('#closeAddPin').on('click', () => {
+    $('#addNewEventContainer').slideUp(500);
+    $('#overlay-back').fadeOut(500);
+    $('#newPinForm').trigger('reset');
+    $('.image-preview-text')[0].style.display = 'block';
+    $('.image-preview-img')[0].style.display = 'none';
+    $('.image-preview-img')[0].setAttribute('src', '');
+  });
+  //  closes new pin window
+  $('#overlay-back').on('click', (e) => {
+    if (e.target.id == 'addNewPinContainer' || $(e.target).parents('#addNewPinContainer').length) {
+      return;
+    }
+    $('#addNewEventContainer').slideUp(500);
+    $('#overlay-back').fadeOut(500);
+    $('#newPinForm').trigger('reset');
+    $('.image-preview-text')[0].style.display = 'block';
+    $('.image-preview-img')[0].style.display = 'none';
+    $('.image-preview-img')[0].setAttribute('src', '');
+  });
+
+  const searchbox = new google.maps.places.SearchBox($('#location_searchbox')[0]);
+  $('#submitButton').click(function(e) {
+    e.preventDefault();
+    const formData = new FormData($('#newPinForm')[0]);
+    const places = searchbox.getPlaces();
+    let pos;
+    if (places && places[0].geometry) {
+      pos = {
+        lat: places[0].geometry.location.lat(),
+        lng: places[0].geometry.location.lng(),
+      };
+    } else if (places) {
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode( {'address': places.formatted_address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          pos = {
+            lat: results[0].geometry.location.lat(),
+            lng: results[0].geometry.location.lng(),
+          };
+        } else {
+          // address doesnt Exists
+          alert('ADDRESS DOESNT EXIST');
+          return;
+        }
+      });
+    } else {
+      // invalid location, input not entered
+      alert('PLEASE INPUT LOCATION FEILD');
+      return;
+    }
+
+
+    formData.append('lat', pos.lat);
+    formData.append('lng', pos.lng);
+    $.ajax({
+      type: 'POST',
+      url: '/pin',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function(result) {
+        $('#addNewEventContainer').slideUp(500);
+        $('#overlay-back').fadeOut(500);
+        self.getPins();
+        self.map.setZoom(17);
+        self.map.panTo({lat: parseInt(result.lat), lng: parseInt(result.lng)});
+      },
+    });
+  });
+
+  const inpFile = $('input[name=images]');
+  const previewImg = $('.image-preview-img');
+  const previewText = $('.image-preview-text');
+  inpFile[0].addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      previewText[0].style.display = 'none';
+      previewImg[0].style.display = 'block';
+
+      reader.addEventListener('load', function() {
+        previewImg[0].setAttribute('src', this.result);
+      });
+
+      reader.readAsDataURL(file);
+    } else {
+      previewText[0].style.display = 'block';
+      previewImg[0].style.display = 'none';
+    }
+  });
+};
+
 
 /**
   *Adds a marker and infowindow for each pin on explore map
-  *@param {object} map Map from init map.
   *@param {array} pins Map from init map.
   */
 UserMap.prototype.addPinsToMap = function(pins) {
-  var self = this;
+  const self = this;
   pins.forEach(function(pin) {
     const marker = self.addMarker(pin);
     self.addInfoWindow(pin, marker);
   });
-}
+};
 
+/**
+  *Adds a marker based on information from pin
+  *@param {object} pin Map from init map.
+  * @return {object} marker for map
+  */
 UserMap.prototype.addMarker = function(pin) {
   const pos = {
     lat: pin.pin_lat,
@@ -118,46 +231,59 @@ UserMap.prototype.addMarker = function(pin) {
 
   const marker = new UserMapMarker(this.map, new google.maps.LatLng(pos.lat, pos.lng), pin.user_profilePic);
   return marker;
-}
+};
 
-
+/**
+  *Adds an infowindow based on information from the pin
+  *@param {array} pin holds information about pin
+  *@param {array} marker the marker that the infowindow will be attatched to
+  */
 UserMap.prototype.addInfoWindow = function(pin, marker) {
   const infowindow = new google.maps.InfoWindow({
     pixelOffset: new google.maps.Size(25, 10),
   });
 
-  let img = './assets/images/userProfile.png';
-  if (pin.pin_imgUrl) img = pin.pin_imgUrl;
-  const contentString =
-  '<div class="infowindow">' +
-    '<div>' +
-      '<h1>'+ pin.pin_title + '</h1>' +
-    '</div>'+
+  $.ajax({
+    url: '/pin/images/?pinId=' + pin.pin_id,
+    type: 'GET',
+    contentType: 'application/json',
+    success: function(images) {
+      let img = '/assets/images/userProfile.png';
+      if (images.length > 0) img = images[0].photo_path.replace(/\\/g, '/');
+      const contentString =
+      '<div class="infowindow">' +
+        '<div>' +
+          '<h1>'+ pin.pin_title + '</h1>' +
+        '</div>'+
 
-    '<div>'+
-      '<div class="pin-img" style="background-image: url('+ img +'); "></div>'+
-    '</div>' +
-    '<div>'+
-      '<p><b>'+ pin.user_username + ' </b>'+ pin.pin_description + '</p>' +
-    '</div>'+
-  '</div>';
-  infowindow.setContent(contentString);
+        '<div>'+
+          '<div class="pin-img" style="background-image: url('+ img +'); "></div>'+
+        '</div>' +
+        '<div>'+
+          '<p><b>'+ pin.user_username + ' </b>'+ pin.pin_description + '</p>' +
+        '</div>'+
+      '</div>';
+      infowindow.setContent(contentString);
 
-  marker.addListener('mouseover', function() {
-    infowindow.open(map, marker);
+      marker.addListener('mouseover', function() {
+        infowindow.open(map, marker);
+      });
+      marker.addListener('mouseout', function() {
+        infowindow.close();
+      });
+      const self = this;
+      marker.addListener('click', function() {
+        self.map.setZoom(17);
+        self.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
+      });
+    },
   });
-  marker.addListener('mouseout', function() {
-    infowindow.close();
-  });
-
-  marker.addListener('click', function() {
-    this.map.setZoom(17);
-    this.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
-  });
-}
+};
 
 
-
+/**
+  *Initializes profile menu
+  */
 UserMap.prototype.initMenu = function() {
   $.get('/user/info', function( user ) {
     let img = './assets/images/userProfile.png';
@@ -166,15 +292,18 @@ UserMap.prototype.initMenu = function() {
     $('#username').html('@' + user.user_username);
     $('#bio').html(user.user_bio);
   });
-}
+};
 
+/**
+  *Adds buttons to bucketlist map
+  */
 UserMap.prototype.addButtons = function() {
   MapShotMap.prototype.addButtons.call(this);
   // button for adding pin
   const addPinControlDiv = document.createElement('div');
   addPinControl(addPinControlDiv);
   this.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(addPinControlDiv);
-}
+};
 
 
 /**
@@ -214,9 +343,12 @@ function addPinControl(controlDiv) {
     $('#addNewPinContainer').slideDown(500);
   });
 }
+/** @global */
+let map;
 
-var sitemap;
-
+/**
+  *Initializes the map when the window is loaded
+  */
 function initMap() {
-  sitemap = new UserMap();
+  map = new UserMap();
 }

@@ -53,7 +53,7 @@ app.use(flash());
 app.use('/', require('./routes/index'));
 app.use('/user', require('./routes/user'));
 app.use('/pin', require('./routes/pin'));
-app.use('/pin', require('./routes/tag'));
+app.use('/tag', require('./routes/tag'));
 
 
 app.use(express.static(path.join(__dirname, 'public')));

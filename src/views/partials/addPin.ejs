@@ -4,7 +4,19 @@
   <div id="addNewPinContainer" class="add-window">
     <span id="closeAddPin"><i class="fas fa-times"></i></span>
     <h2>Add Pin</h2>
-    <form class="" action="/pin" method="post">
+    <form action="/pin" enctype="multipart/form-data" method="post" id="newPinForm">
+      <input type="text" name="title" placeholder="Title" required><br>
+      <textarea name="descr" rows="3" cols="40" placeholder="Enter a description"></textarea><br>
+      <input type="text"  id="location_searchbox" name="location_name" placeholder="Location" required><br>
+      <input type="file" name="images" accept="image/*" multiple/><br>
+      <div class="image-preview" id="imagePreview">
+        <img src="" class="image-preview-img" alt="Image Preview">
+        <span class="image-preview-text">Image Preview</span>
+      </div>
+      <br>
+      <br>
+      <button id="submitButton">Submit</button>
+
     </form>
 
   </div>

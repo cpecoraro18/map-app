@@ -27,10 +27,10 @@ exports.authenticate_user = function(req, res, next) {
 */
 exports.get_user_info = function(req, res) {
   User.getUserById(req.user.user_id, function(err, user) {
-    if(err) return err;
+    if (err) return err;
     delete user['password'];
-    res.status(200).json(user)
-  })
+    res.status(200).json(user);
+  });
 };
 /**
 * get userInfo from req and delete password, then return user info
@@ -38,8 +38,6 @@ exports.get_user_info = function(req, res) {
 * @param {Object} res server response
 */
 exports.get_style = function(req, res) {
-  console.log(req.user)
-
   User.getUserStyle(req.user.user_id, function(err, mapStyle) {
     if (err) {
       res.status(500).json({
@@ -49,7 +47,6 @@ exports.get_style = function(req, res) {
       return;
     }
     res.status(200).json(mapStyle);
-
   });
 };
 

@@ -1,18 +1,13 @@
-/**
-* Explore Map
-*@module BucketListMap
-*/
 
 /**
  * Explore Map
  * @class
  * @constructor
  */
-
 function ExploreMap() {
-  console.log("Init Explore Map")
+  console.log('Init Explore Map');
   MapShotMap.call(this);
-  console.log("Done with Mapshot constructor")
+  console.log('Done with Mapshot constructor');
   this.initMenu();
   this.getPins();
 }
@@ -24,7 +19,7 @@ ExploreMap.prototype.constructor = ExploreMap;
   *Gets pins from backend and starts process of putting them on the map
   */
 ExploreMap.prototype.getPins = function() {
-  var self = this;
+  const self = this;
   $.ajax({
     url: '/pin/feed',
     method: 'GET',
@@ -32,23 +27,24 @@ ExploreMap.prototype.getPins = function() {
       self.addPinsToMap(pins);
     },
   });
-}
+};
 
 /**
   *Adds a marker and infowindow for each pin on explore map
   *@param {array} pins Map from init map.
   */
 ExploreMap.prototype.addPinsToMap = function(pins) {
-  var self = this;
+  const self = this;
   pins.forEach(function(pin) {
     const marker = self.addMarker(pin);
     self.addInfoWindow(pin, marker);
   });
-}
+};
 
 /**
   *Adds a marker based on pin information
-  *@param {array} pin has pin information
+  *@param {object} pin has pin information
+  * @return {object} marker to go on map
   */
 ExploreMap.prototype.addMarker = function(pin) {
   const pos = {
@@ -132,12 +128,12 @@ ExploreMap.prototype.addMarker = function(pin) {
 
   const marker = new ExploreMapMarker(this.map, new google.maps.LatLng(pos.lat, pos.lng), pin.user_profilePic);
   return marker;
-}
+};
 
 /**
   *Adds a infowindow to marker based on pin information
-  *@param {array} pin holds pin information
-  *@param {array} marker for infowindow to be attatched to
+  *@param {object} pin holds pin information
+  *@param {object} marker for infowindow to be attatched to
   */
 ExploreMap.prototype.addInfoWindow = function(pin, marker) {
   const infowindow = new google.maps.InfoWindow({
@@ -167,21 +163,21 @@ ExploreMap.prototype.addInfoWindow = function(pin, marker) {
   marker.addListener('mouseout', function() {
     infowindow.close();
   });
-
+  const self = this;
   marker.addListener('click', function() {
-    this.map.setZoom(17);
-    this.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
+    self.map.setZoom(17);
+    self.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
   });
-}
+};
 
 /**
   *Adds a infowindow to marker based on place information
-  *@param {array} pin holds pin information
-  *@param {array} marker for infowindow to be attatched to
+  *@param {object} place holds pin information
+  *@param {object} marker for infowindow to be attatched to
   */
 ExploreMap.prototype.addPlaceInfoWindow = function(place, marker) {
   let img = './assets/images/userProfile.png';
-  if (place.photos) img = place.photos[0].getUrl()
+  if (place.photos) img = place.photos[0].getUrl();
   const infowindow = new google.maps.InfoWindow();
   const contentString =
   '<div class="infowindow">' +
@@ -192,23 +188,23 @@ ExploreMap.prototype.addPlaceInfoWindow = function(place, marker) {
 
     '<div>'+
       '<div class="pin-img" style="background-image: url('+ img +'); "></div>'+
-      '<button>Use Location for New Event'
-    '</div>' +
+      '<button>Use Location for New Event';
+  '</div>' +
   '</div>';
   infowindow.setContent(contentString);
-
+  const self = this;
   marker.addListener('click', function() {
-    this.map.setZoom(17);
-    this.map.panTo(place.geometry.location)
-    infowindow.open(this.map, marker);
+    self.map.setZoom(17);
+    self.map.panTo(place.geometry.location);
+    infowindow.open(self.map, marker);
   });
-}
+};
 /**
   *Initializes explore map menu
   */
 ExploreMap.prototype.initMenu = function() {
-  console.log("Initializing Menu");
-  const searchbox = new google.maps.places.SearchBox($("#explore_textbox")[0]);
+  console.log('Initializing Menu');
+  const searchbox = new google.maps.places.SearchBox($('#explore_textbox')[0]);
   this.map.addListener('bounds_changed', () => {
     searchbox.setBounds(this.map.getBounds());
   });
@@ -241,15 +237,15 @@ ExploreMap.prototype.initMenu = function() {
         scaledSize: new google.maps.Size(25, 25),
       };
       // Create a marker for each place
-      let markerMap = this.map;
+      const markerMap = this.map;
       const marker = new google.maps.Marker({
-          map: markerMap,
-          icon: icon,
-          title: place.name,
-          position: place.geometry.location,
-        });
+        map: markerMap,
+        icon: icon,
+        title: place.name,
+        position: place.geometry.location,
+      });
       markers.push(
-        marker
+          marker,
       );
 
       this.addPlaceInfoWindow(place, marker);
@@ -264,9 +260,9 @@ ExploreMap.prototype.initMenu = function() {
     });
     this.map.fitBounds(bounds);
   });
-}
+};
 /** @global */
-var map;
+let map;
 /**
   *Initializes the map when the window is loaded
   */

@@ -1,7 +1,3 @@
-/**
-* Bucket List Map
-*@module BucketListMap
-*/
 
 /**
  * Bucket List Map
@@ -9,10 +5,10 @@
  * @constructor
  */
 function BucketListMap() {
-  console.log("Init Home Map")
+  console.log('Init Home Map');
   MapShotMap.call(this);
   this.getPins();
-  console.log("Done with Mapshot constructor")
+  console.log('Done with Mapshot constructor');
 }
 
 BucketListMap.prototype = Object.create(MapShotMap.prototype);
@@ -22,7 +18,7 @@ BucketListMap.prototype.constructor = BucketListMap;
   *Gets pins from backend and starts process of putting them on the map
   */
 BucketListMap.prototype.getPins = function() {
-  var self = this;
+  const self = this;
   $.ajax({
     url: '/pin',
     method: 'GET',
@@ -30,23 +26,24 @@ BucketListMap.prototype.getPins = function() {
       self.addPinsToMap(pins);
     },
   });
-}
+};
 
 /**
   *Adds a marker and infowindow for each pin on explore map
   *@param {array} pins Map from init map.
   */
 BucketListMap.prototype.addPinsToMap = function(pins) {
-  var self = this;
+  const self = this;
   pins.forEach(function(pin) {
     const marker = self.addMarker(pin);
     self.addInfoWindow(pin, marker);
   });
-}
+};
 
 /**
   *Adds a marker based on information from pin
-  *@param {array} pins Map from init map.
+  *@param {object} pin Map from init map.
+  *@return {object} marker to go on map
   */
 BucketListMap.prototype.addMarker = function(pin) {
   const pos = {
@@ -129,7 +126,7 @@ BucketListMap.prototype.addMarker = function(pin) {
 
   const marker = new BucketListMapMarker(this.map, new google.maps.LatLng(pos.lat, pos.lng), pin.user_profilePic);
   return marker;
-}
+};
 
 /**
   *Adds an infowindow based on information from the pin
@@ -164,13 +161,12 @@ BucketListMap.prototype.addInfoWindow = function(pin, marker) {
   marker.addListener('mouseout', function() {
     infowindow.close();
   });
-
+  const self = this;
   marker.addListener('click', function() {
-    this.map.setZoom(17);
-    this.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
+    self.map.setZoom(17);
+    self.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
   });
-}
-
+};
 
 
 /**
@@ -182,7 +178,7 @@ BucketListMap.prototype.addButtons = function() {
   const addPinControlDiv = document.createElement('div');
   addPinControl(addPinControlDiv);
   this.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(addPinControlDiv);
-}
+};
 
 
 /**
@@ -223,7 +219,7 @@ function addPinControl(controlDiv) {
 }
 
 /** @global */
-var map;
+let map;
 
 /**
   *Initializes the map when the window is loaded

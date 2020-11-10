@@ -5,7 +5,7 @@
     height: 100vh;
     background: #3B5284;
     color: #fff;
-    z-index: 100000000; /* should always be visible*/
+    z-index: 99; /* should always be visible*/
     overflow-y: scroll!important;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */

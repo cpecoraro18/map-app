@@ -6,7 +6,7 @@
     height     : 100%;
     background : #000;
     background: rgba(0, 0, 0, .6);
-    z-index: 5;
+    z-index: 100;
     display    : none;
 }
 
@@ -22,10 +22,32 @@
   border-radius: 20px;
   padding: 20px;
   box-shadow: 5px 10px 8px #383838;
+  z-index: 101;
 }
 
 .add-window {
   float: right;
+}
+
+.image-preview {
+  width: 100px;
+  height: 75px;
+  border: 2px solid #dddddd;
+  margin-top: 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #cccccc;
+
+  background-size: cover;
+  background-position: center;
+}
+
+.image-preview-img {
+  display: none;
+  width: 100%;
 }
 
 

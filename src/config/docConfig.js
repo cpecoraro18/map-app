@@ -1,4 +1,4 @@
-{
+/* {
   "plugins": [],
   "recursiveDepth": 10,
   "source": {
@@ -14,4 +14,4 @@
     "cleverLinks": false,
     "monospaceLinks": false
   }
-}
+}*/

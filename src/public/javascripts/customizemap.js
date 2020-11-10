@@ -1,104 +1,110 @@
 /**
-* Customize Map
-*@module customizeMap
-*/
-
-/**
-* current template that is styling the customize map. Can be saved as a user style
-* @type {Object}
-*/
-let template = [];
-
-/**
- * Adds buttons necessary for customize map
- * @param {map} map Map from init map.
+ * Customize Map
+ * @class
+ * @constructor
  */
-function addButtons(map) {
-  return;
+function CustomizeMap() {
+  console.log('Init Home Map');
+  MapShotMap.call(this);
+  this.template = [];
+  console.log('Done with Mapshot constructor');
 }
 
+CustomizeMap.prototype = Object.create(MapShotMap.prototype);
+CustomizeMap.prototype.constructor = CustomizeMap;
 
 /**
-  *Adds initial styles to the cu
-  stomize map
-  *@param {map} map Map from init map.
+  *Adds buttons to bucketlist map
   */
-function addStyles(map) {
-  return;
-}
+CustomizeMap.prototype.addButtons = function() {
+  MapShotMap.prototype.addButtons.call(this);
+};
 
 /**
-  *Adds markers that will be displayed on the customize map
-  *@param {map} map Map from init map.
+  * Changes map style based on values from menu
   */
-function loadMarkers(map) {
-  return;
-}
-
-function initMenu(map) {
-}
-
-/**
-  * Changes map styles based on values selected from a dropdown
-  */
-function changeMapStyles() {
+CustomizeMap.prototype.changeMapStyles = function() {
   //  get colors from selects
-  template = mapStyles[$('#styleTemplate').val()];
+  this.template = mapStyles[$('#styleTemplate').val()];
   const roadLabel = $('#roadVisible').val();
   const labels = $('#labels').val();
   const landmarks = $('#landmarks').val();
 
 
   if (landmarks == 'on') {
-    template = changeFeatureStyle(template,
+    this.template = changeFeatureStyle(this.template,
         'administrative', 'geometry', 'visibility', 'on');
-    template = changeFeatureStyle(template,
+    this.template = changeFeatureStyle(this.template,
         'poi', 'all', 'visibility', 'on');
-    template = changeFeatureStyle(template,
+    this.template = changeFeatureStyle(this.template,
         'road', 'labels.icon', 'visibility', 'on');
-    template = changeFeatureStyle(template,
+    this.template = changeFeatureStyle(this.template,
         'transit', 'all', 'visibility', 'on');
-  } if (landmarks == 'simplified') {
-    template = changeFeatureStyle(template,
+  } else if (landmarks == 'simplified') {
+    this.template = changeFeatureStyle(this.template,
         'administrative', 'geometry', 'visibility', 'on');
-    template = changeFeatureStyle(template,
+    this.template = changeFeatureStyle(this.template,
         'poi', 'all', 'visibility', 'off');
-    template = changeFeatureStyle(template,
+    this.template = changeFeatureStyle(this.template,
         'transit', 'all', 'visibility', 'off');
-  } else if (landmarks == 'off') {
-    template = changeFeatureStyle(template,
+  } else {
+    this.template = changeFeatureStyle(this.template,
         'administrative', 'geometry', 'visibility', 'off');
-    template = changeFeatureStyle(template,
+    this.template = changeFeatureStyle(this.template,
         'poi', 'all', 'visibility', 'off');
-    template = changeFeatureStyle(template,
+    this.template = changeFeatureStyle(this.template,
         'transit', 'all', 'visibility', 'off');
   }
 
-  template = changeFeatureStyle(template,
+  this.template = changeFeatureStyle(this.template,
       'road', null, 'visibility', roadLabel);
-  template = changeFeatureStyle(template,
+  this.template = changeFeatureStyle(this.template,
       null, 'labels', 'visibility', labels);
 
   //  set map options with new style
-  map.setOptions({
-    styles: template,
+  this.map.setOptions({
+    styles: this.template,
   });
-}
+};
 /**
-  * Sends style to server
+  * Save current style to backend
   */
-function saveStyle() {
+CustomizeMap.prototype.saveStyle = function() {
+  const self = this;
   $.ajax({
     type: 'PUT',
     url: '/user/style',
-    data: {userStyle: JSON.stringify(template)},
+    data: {userStyle: JSON.stringify(self.template)},
     dataType: 'json',
     contentType: 'application/x-www-form-urlencoded',
     success: function(data, status) {
       window.location = '/profile';
     },
   });
+};
+/** @global */
+let map;
+
+/**
+  *Initializes the map when the window is loaded
+  */
+function initMap() {
+  map = new CustomizeMap();
 }
+
+/**
+  * Changes map styles, called by htmlelements
+  */
+function changeMapStyles() {
+  map.changeMapStyles();
+}
+/**
+  * saves map style, called by htmlelements
+  */
+function saveStyle() {
+  map.saveStyle();
+}
+
 
 /**
   * Changes any given google style template to add or change a given style
