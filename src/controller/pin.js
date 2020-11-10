@@ -45,6 +45,19 @@ exports.get_pin_images = function(req, res) {
   });
 };
 
+/**
+* gets user id and post id from req and responds with a pin
+* @param {Object} req client request
+* @param {Object} res server response
+*/
+exports.get_pin_tags = function(req, res) {
+  const pinId = req.query.pinId;
+  Pin.getPinTags(pinId, (err, rows) => {
+    if (err) throw err;
+    res.status(200).json(rows);
+  });
+};
+
 
 /**
 * responds with a list of pins from feed

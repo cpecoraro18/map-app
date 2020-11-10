@@ -9,6 +9,7 @@ const {ensureAuthenticated} = require('../config/auth');
 
 
 router.get('/images', ensureAuthenticated, pinController.get_pin_images);
+router.get('/tags', ensureAuthenticated, pinController.get_pin_tags);
 // gets all user pins
 router.get('/', ensureAuthenticated, pinController.get_user_pins);
 router.get('/feed', ensureAuthenticated, pinController.get_user_feed);

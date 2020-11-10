@@ -84,6 +84,21 @@ Pin.getPinImages = function(pinId, result) {
 };
 
 /**
+  * Gets a single pin by its id
+  * @param {number} pinId ID of the pin
+  * @param {function} result function that takes and error and a pin
+  */
+Pin.getPinTags = function(pinId, result) {
+  const query = 'select (tag_name) from pin_tag left join tag on pin_tag_tagId = tag.tag_id where pin_tag_pinId = ' + pinId;
+  db.query(query, (err, tags, fields) => {
+    // if any error while executing above query, throw error
+    if (err) throw err;
+    // if there is no error, you have the result
+    result(null, tags);
+  });
+};
+
+/**
   * Creates a new pin
   * @param {Object} newPin The pin information that is being added
   * @param {Object} user The user who posted the pin
