@@ -23,7 +23,35 @@ HomeMap.prototype.getPins = function() {
     url: '/pin/feed',
     method: 'GET',
     success: function(pins) {
-      self.addPinsToMap(pins);
+      pins.forEach(function(pin) {
+        self.getPinImages(pin);
+      });
+    },
+  });
+};
+
+HomeMap.prototype.getPinImages = function(pin) {
+  const self = this;
+  $.ajax({
+    url: '/pin/images/?pinId=' + pin.pin_id,
+    type: 'GET',
+    contentType: 'application/json',
+    success: function(images) {
+      pin.images = images;
+      self.getPinTags(pin);
+    },
+  });
+};
+
+HomeMap.prototype.getPinTags = function(pin) {
+  const self = this;
+  $.ajax({
+    url: '/pin/tags/?pinId=' + pin.pin_id,
+    type: 'GET',
+    contentType: 'application/json',
+    success: function(tags) {
+      pin.tags = tags;
+      self.addPinToMap(pin);
     },
   });
 };
@@ -99,6 +127,7 @@ HomeMap.prototype.initAdd = function() {
       processData: false,
       contentType: false,
       success: function(result) {
+        console.log(result);
         $('#addNewEventContainer').slideUp(500);
         $('#overlay-back').fadeOut(500);
         self.getPins();
@@ -133,12 +162,9 @@ HomeMap.prototype.initAdd = function() {
   *Adds a marker and infowindow for each pin on explore map
   *@param {array} pins Map from init map.
   */
-HomeMap.prototype.addPinsToMap = function(pins) {
-  const self = this;
-  pins.forEach(function(pin) {
-    const marker = self.addMarker(pin);
-    self.addInfoWindow(pin, marker);
-  });
+HomeMap.prototype.addPinToMap = function(pin) {
+  const marker = this.addMarker(pin);
+  this.addInfoWindow(pin, marker);
 };
 
 /**
@@ -235,43 +261,41 @@ HomeMap.prototype.addMarker = function(pin) {
   *@param {array} marker the marker that the infowindow will be attatched to
   */
 HomeMap.prototype.addInfoWindow = function(pin, marker) {
+  console.log(pin);
   const infowindow = new google.maps.InfoWindow({
     pixelOffset: new google.maps.Size(25, 10),
   });
-  $.ajax({
-    url: '/pin/images/?pinId=' + pin.pin_id,
-    type: 'GET',
-    contentType: 'application/json',
-    success: function(images) {
-      let img = '/assets/images/userProfile.png';
-      if (images.length > 0) img = images[0].photo_path.replace(/\\/g, '/');
-      const contentString =
-      '<div class="infowindow">' +
-        '<div>' +
-          '<h1>'+ pin.pin_title + '</h1>' +
-        '</div>'+
 
-        '<div>'+
-          '<div class="pin-img" style="background-image: url('+ img +'); "></div>'+
-        '</div>' +
-        '<div>'+
-          '<p><b>'+ pin.user_username + ' </b>'+ pin.pin_description + '</p>' +
-        '</div>'+
-      '</div>';
-      infowindow.setContent(contentString);
+  let img = '/assets/images/userProfile.png';
+  let tag = "";
+  if (pin.images && pin.images.length > 0) img = pin.images[0].photo_path.replace(/\\/g, '/');
+  if (pin.tags && pin.tags.length > 0) tag = pin.tags[0].tag_name;
+  const contentString =
+  '<div class="infowindow">' +
+    '<div>' +
+      '<h1>'+ pin.pin_title + '</h1>' +
+      '<h3>' + tag + '</h3>' +
+    '</div>'+
 
-      marker.addListener('mouseover', function() {
-        infowindow.open(map, marker);
-      });
-      marker.addListener('mouseout', function() {
-        infowindow.close();
-      });
+    '<div>'+
+      '<div class="pin-img" style="background-image: url('+ img +'); "></div>'+
+    '</div>' +
+    '<div>'+
+      '<p><b>'+ pin.user_username + ' </b>'+ pin.pin_description + '</p>' +
+    '</div>'+
+  '</div>';
+  infowindow.setContent(contentString);
 
-      marker.addListener('click', function() {
-        this.map.setZoom(17);
-        this.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
-      });
-    },
+  marker.addListener('mouseover', function() {
+    infowindow.open(map, marker);
+  });
+  marker.addListener('mouseout', function() {
+    infowindow.close();
+  });
+
+  marker.addListener('click', function() {
+    this.map.setZoom(17);
+    this.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
   });
 };
 

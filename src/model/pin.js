@@ -20,7 +20,8 @@ const Pin = function(body) {
   this.description = body.descr || '',
   this.location_name = body.location_name,
   this.lat = body.lat,
-  this.lng = body.lng;
+  this.lng = body.lng,
+  this.tag = body.tag
 };
 
 /**
@@ -44,7 +45,6 @@ Pin.getPins = function(userId, result) {
   */
 Pin.getFeed = function(result) {
   const query = 'select pin.pin_id, pin.pin_title, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id';
-
   db.query(query, (err, pins, fields) => {
     // if any error while executing above query, throw error
     if (err) throw err;
@@ -59,7 +59,6 @@ Pin.getFeed = function(result) {
   */
 Pin.getPinById = function(pinId, result) {
   const query = 'select pin.pin_id, pin.pin_title, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id where pin.id = ' + pinId;
-
   db.query(query, (err, pin, fields) => {
     // if any error while executing above query, throw error
     if (err) throw err;
@@ -108,53 +107,94 @@ Pin.createPin = function(newPin, user, result) {
   // create new pin
   const pin = {
     userId: user.user_id,
-    userName: user.username,
+    userName: user.user_username,
     title: newPin.title,
     location_name: newPin.location_name,
     description: newPin.description,
     lat: newPin.lat,
     lng: newPin.lng,
+    tag: newPin.tag
   };
 
-  const imageFiles = newPin.img_url;
+  let images = newPin.img_url;
 
-  // add pin to db
-  const pinPhotos = [];
-
+  let self = this;
   // MAKE NEW PIN
   const newPinQuery = 'insert into pin (pin_userId, pin_title, pin_description, pin_lat, pin_lng) values("' + pin.userId + '","' + pin.title + '","' + pin.description + '","' + pin.lat + '","' + pin.lng + '")';
   db.query(newPinQuery, (err, pinInsert, fields) => {
     // if any error while executing above query, throw error
     if (err) throw err;
-    pin.pin_id = pinInsert.insertId;
-
-    // ADD PHOTOS
-    if (imageFiles && imageFiles.length > 0) {
-      const newPhotoQuery = 'INSERT INTO photo (photo_id, photo_path) VALUES ?';
-      const values = [];
-      imageFiles.forEach((file) => {
-        const trimmedPath = file.path.slice(6);
-        values.push([file.filename, trimmedPath]);
-        pinPhotos.push(file.filename);
-      });
-      db.query(newPhotoQuery, [values], (err, photos, fields) => {
-        if (err) throw err;
-        // CONNECT PIN WITH PHOTOS
-        if (pinPhotos.length > 0) {
-          const newPinPhotoQuery = 'INSERT INTO pin_photo (pin_photo_pinId, pin_photo_photoId) VALUES ? ';
-          const values = [];
-          pinPhotos.forEach((photo) => {
-            values.push([pin.pin_id, photo]);
-          });
-          db.query(newPinPhotoQuery, [values], (err, pinPhotos, fields) => {
-            if (err) throw err;
-            result(null, {pin, pinPhotos});
-          });
-        }
-      });
-    }
+    //add id
+    pin.id = pinInsert.insertId;
+    self.addPinImages(pin, images, result)
   });
 };
+
+Pin.addPinImages = function(pin, images, result) {
+  let self = this;
+  var pinPhotos = []
+  // ADD PHOTOS
+  if (images && images.length > 0) {
+    const newPhotoQuery = 'INSERT INTO photo (photo_id, photo_path) VALUES ?';
+    const values = [];
+    images.forEach((file) => {
+      const trimmedPath = file.path.slice(6);
+      values.push([file.filename, trimmedPath]);
+      pinPhotos.push(file.filename);
+    });
+
+    db.query(newPhotoQuery, [values], (err, photos, fields) => {
+      if (err) throw err;
+      self.connectImagesToPin(pin, pinPhotos, result);
+
+    });
+  } else {
+    self.addPinTags(pin, result);
+  }
+};
+
+Pin.connectImagesToPin = function(pin, pinPhotos, result) {
+  // CONNECT PIN WITH PHOTOS
+  if (pinPhotos.length > 0) {
+    const newPinPhotoQuery = 'INSERT INTO pin_photo (pin_photo_pinId, pin_photo_photoId) VALUES ? ';
+    const values = [];
+    pinPhotos.forEach((photo) => {
+      values.push([pin.id, photo]);
+    });
+    let self = this;
+    db.query(newPinPhotoQuery, [values], (err, pinPhotos, fields) => {
+      if (err) throw err;
+      self.addPinTags(pin, result);
+    });
+  }
+};
+
+
+Pin.addPinTags = function(pin, result) {
+  let self = this;
+  if (pin.tag) {
+    const newTagQuery = 'INSERT INTO tag (tag_name) VALUES("' + pin.tag +'")';
+    db.query(newTagQuery, (err, tag, fields) => {
+      if (err) throw err;
+      pin.tag = {name: pin.tag, id: tag.insertId}
+      self.connectTagstoPin(pin, result);
+    });
+  }
+};
+
+Pin.connectTagstoPin = function(pin, result) {
+  if (pin.tag) {
+    const newPinTagQuery = 'INSERT INTO pin_tag (pin_tag_pinId, pin_tag_tagId) VALUES('+ pin.id +', '+ pin.tag.id +')';
+    db.query(newPinTagQuery, (err, tag, fields) => {
+      if (err) throw err;
+      console.log(pin);
+      result(null, pin);
+    });
+  }
+};
+
+
+
 /**
   * Edits a pin
   * @param {number} editedPin ID of the pin
