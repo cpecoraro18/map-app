@@ -30,7 +30,7 @@ const Pin = function(body) {
   * @param {function} result function that takes and error and a list of pins
   */
 Pin.getPins = function(userId, result) {
-  const query = 'select pin.pin_id, pin.pin_title, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id WHERE pin_userId = ' + userId;
+  const query = 'select pin.pin_id, pin.pin_title,  pin.pin_locationName, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id WHERE pin_userId = ' + userId;
   db.query(query, (err, pins, fields) => {
     // if any error while executing above query, throw error
     if (err) throw err;
@@ -44,7 +44,7 @@ Pin.getPins = function(userId, result) {
   *@param {function} result function that takes and error and a list of pins
   */
 Pin.getFeed = function(result) {
-  const query = 'select pin.pin_id, pin.pin_title, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id';
+  const query = 'select pin.pin_id, pin.pin_title, pin_locationName, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id';
   db.query(query, (err, pins, fields) => {
     // if any error while executing above query, throw error
     if (err) throw err;
@@ -58,7 +58,7 @@ Pin.getFeed = function(result) {
   * @param {function} result function that takes and error and a pin
   */
 Pin.getPinById = function(pinId, result) {
-  const query = 'select pin.pin_id, pin.pin_title, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id where pin.id = ' + pinId;
+  const query = 'select pin.pin_id, pin.pin_title, pin_locationName, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id where pin.id = ' + pinId;
   db.query(query, (err, pin, fields) => {
     // if any error while executing above query, throw error
     if (err) throw err;
@@ -120,7 +120,7 @@ Pin.createPin = function(newPin, user, result) {
 
   let self = this;
   // MAKE NEW PIN
-  const newPinQuery = 'insert into pin (pin_userId, pin_title, pin_description, pin_lat, pin_lng) values("' + pin.userId + '","' + pin.title + '","' + pin.description + '","' + pin.lat + '","' + pin.lng + '")';
+  const newPinQuery = 'insert into pin (pin_userId, pin_title, pin_locationName, pin_description, pin_lat, pin_lng) values("' + pin.userId + '","' + pin.title + '","' + pin.location_name + '","' + pin.description + '","' + pin.lat + '","' + pin.lng + '")';
   db.query(newPinQuery, (err, pinInsert, fields) => {
     // if any error while executing above query, throw error
     if (err) throw err;
@@ -173,12 +173,26 @@ Pin.connectImagesToPin = function(pin, pinPhotos, result) {
 Pin.addPinTags = function(pin, result) {
   let self = this;
   if (pin.tag) {
-    const newTagQuery = 'INSERT INTO tag (tag_name) VALUES("' + pin.tag +'")';
-    db.query(newTagQuery, (err, tag, fields) => {
+    const checkTagExistsQuery = 'SELECT * FROM tag WHERE tag_name = "' + pin.tag + '"'
+    db.query(checkTagExistsQuery, (err, tags, fields) => {
       if (err) throw err;
-      pin.tag = {name: pin.tag, id: tag.insertId}
-      self.connectTagstoPin(pin, result);
+      //if tag exists
+      if(tags[0]){
+        //add pin tag relationship
+        pin.tag = {name: pin.tag, id: tags[0].tag_id}
+        self.connectTagstoPin(pin, result);
+        //if tag doesnt exist
+      } else {
+        //make new tag and add pin tag relationship
+        const newTagQuery = 'INSERT INTO tag (tag_name) VALUES("' + pin.tag +'")';
+        db.query(newTagQuery, (err, tag, fields) => {
+          if (err) throw err;
+          pin.tag = {name: pin.tag, id: tag.insertId}
+          self.connectTagstoPin(pin, result);
+        });
+      }
     });
+
   }
 };
 

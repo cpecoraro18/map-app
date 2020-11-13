@@ -1,6 +1,6 @@
 /*sidebar styling when fully expanded */
 #sidebar_explore {
-    min-width: 20%;
+    min-width: 30%;
     max-width: 30%;
     background: white;
     color: #fff;
@@ -127,4 +127,22 @@ a[data-toggle="collapse"] [data-toggle="collapse"]{
     height:60px;
     padding:5px;
     border-radius:15px;
+}
+
+#searchBar {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+  background-color: white;
+  width: 100%;
+  text-align: center;
+}
+#exploreImages {
+  margin:auto;
+}
+
+#exploreImages  img {
+  margin:auto;
+  width: 100px;
+  height: 100px;
 }

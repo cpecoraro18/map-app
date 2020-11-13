@@ -94,6 +94,27 @@ User.getUserInfo = function(id, result) {
     }
   });
 };
+
+
+/**
+  * Gets a single user by its id
+  * @param {number} id ID of the user
+  * @param {function} result function that takes and error and a user
+  */
+User.getUserTags = function(id, result) {
+  const query = 'select distinct tag.tag_name, tag.tag_id from tag left join pin_tag on pin_tag.pin_tag_tagId = tag.tag_id right join pin on pin_tag.pin_tag_pinId = pin.pin_id where pin.pin_userId = ' + id;
+
+  db.query(query, (err, tags, fields) => {
+    // if any error while executing above query, throw error
+    if (err) result(err, null);
+    else {
+      // if there is no error, you have the result
+      result(null, tags);
+    }
+  });
+};
+
+
 /**
   * Gets a single pin by its id
   * @param {string} username users username

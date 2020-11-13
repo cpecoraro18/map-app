@@ -4,6 +4,7 @@
  * @class
  * @constructor
  */
+
 function MapShotMap() {
   console.log('Init MapShot Map');
   const mapProp = {
@@ -12,16 +13,127 @@ function MapShotMap() {
     gestureHandling: 'greedy',
     minZoom: 2,
     disableDefaultUI: true,
+    disableDoubleClickZoom: true,
+    clickableIcons: false,
     mapTypeControl: true,
     fullscreenControl: true,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     backgroundColor: '#3B5284',
   };
   this.map = new google.maps.Map(document.getElementById('map'), mapProp);
+  google.maps.event.clearListeners(this.map, 'dblclick');
   this.addButtons();
   this.addStyles();
   this.initMenu();
+  this.initAddPinUI();
 }
+
+
+/**
+  * initializes form to add new events
+  */
+MapShotMap.prototype.initAddPinUI = function() {
+  const self = this;
+  $('#addNewPinContainer').slideUp(500);
+
+  //  closes new pin window when you click the x
+  $('#closeAddPin').on('click', () => {
+    self.closeAddPin();
+  });
+  const searchbox = new google.maps.places.SearchBox($('#location_searchbox')[0]);
+  $('#submitButton').click(function(e) {
+    e.preventDefault();
+    const formData = new FormData($('#newPinForm')[0]);
+    var validatedForm = self.validateForm(formData, searchbox);
+    console.log(validatedForm);
+
+
+    $.ajax({
+      type: 'POST',
+      url: '/pin',
+      data: validatedForm,
+      processData: false,
+      contentType: false,
+      success: function(result) {
+        console.log(result);
+        $('#addNewEventContainer').slideUp(500);
+        $('#overlay-back').fadeOut(500);
+        self.addPinToMap(result.pin);
+        self.map.setZoom(17);
+        self.map.panTo({lat: parseInt(result.lat), lng: parseInt(result.lng)});
+      },
+    });
+  });
+  const inpFile = $('input[name=images]');
+  const previewImg = $('.image-preview-img');
+  const previewText = $('.image-preview-text');
+  inpFile[0].addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      previewText[0].style.display = 'none';
+      previewImg[0].style.display = 'block';
+
+      reader.addEventListener('load', function() {
+        previewImg[0].setAttribute('src', this.result);
+      });
+
+      reader.readAsDataURL(file);
+    } else {
+      previewText[0].style.display = 'block';
+      previewImg[0].style.display = 'none';
+    }
+  });
+};
+
+
+
+MapShotMap.prototype.validateForm = function(formData, searchbox) {
+
+
+  const places = searchbox.getPlaces();
+  let pos;
+  if (places && places[0].geometry) {
+    pos = {
+      lat: places[0].geometry.location.lat(),
+      lng: places[0].geometry.location.lng(),
+    };
+  } else if (places) {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode( {'address': places.formatted_address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        pos = {
+          lat: results[0].geometry.location.lat(),
+          lng: results[0].geometry.location.lng(),
+        };
+      } else {
+        // address doesnt Exists
+        alert('ADDRESS DOESNT EXIST');
+        return;
+      }
+    });
+  } else {
+    // invalid location, input not entered
+    alert('PLEASE INPUT LOCATION FEILD');
+    return;
+  }
+
+
+  formData.append('lat', pos.lat);
+  formData.append('lng', pos.lng);
+  return formData;
+};
+
+MapShotMap.prototype.closeAddPin = function() {
+  $('#addNewPinContainer').slideUp(500);
+  $('#overlay-back').fadeOut(500);
+  $('#newPinForm').trigger('reset');
+  $('.image-preview-text')[0].style.display = 'block';
+  $('.image-preview-img')[0].style.display = 'none';
+  $('.image-preview-img')[0].setAttribute('src', '');
+};
+
+
 /**
   *Adds buttons to bucketlist map
   */
@@ -34,6 +146,11 @@ MapShotMap.prototype.addButtons = function() {
   const zoomControlDiv = document.createElement('div');
   this.addZoom(zoomControlDiv);
   this.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(zoomControlDiv);
+
+  // button for adding pin
+  const addPinControlDiv = document.createElement('div');
+  addPinControl(addPinControlDiv);
+  this.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(addPinControlDiv);
 
   if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
     const sidebarToggleControlDiv = document.createElement('div');

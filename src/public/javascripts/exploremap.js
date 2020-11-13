@@ -19,14 +19,7 @@ ExploreMap.prototype.constructor = ExploreMap;
   *Gets pins from backend and starts process of putting them on the map
   */
 ExploreMap.prototype.getPins = function() {
-  const self = this;
-  $.ajax({
-    url: '/pin/feed',
-    method: 'GET',
-    success: function(pins) {
-      self.addPinsToMap(pins);
-    },
-  });
+  
 };
 
 /**

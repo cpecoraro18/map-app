@@ -32,6 +32,21 @@ exports.get_user_info = function(req, res) {
     res.status(200).json(user);
   });
 };
+
+/**
+* get userInfo from req and delete password, then return user info
+* @param {Object} req client request
+* @param {Object} res server response
+*/
+exports.get_user_tags = function(req, res) {
+  User.getUserTags(req.user.user_id, function(err, tags) {
+    if (err) return err;
+    console.log(tags);
+    res.status(200).json(tags);
+  });
+};
+
+
 /**
 * get userInfo from req and delete password, then return user info
 * @param {Object} req client request

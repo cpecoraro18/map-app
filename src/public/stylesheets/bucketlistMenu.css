@@ -1,3 +1,7 @@
-.tag {
-  background-color: red;
+/*sidebar styling when fully expanded */
+#bucketlistSidebar {
+    min-width: 30%;
+    max-width: 30%;
+    background: white;
+    color: black;
 }

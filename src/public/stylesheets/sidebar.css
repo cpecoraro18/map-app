@@ -32,10 +32,15 @@
     padding-top: 20px;
     padding-left: 0px;
     font-size: 1.5em;
-    display: block;
+    display: inline-block;
+    margin-left: 25%;
     text-align: center;
     color: white;
     background: #3B5284;
+}
+
+#sidebar li {
+  position: relative;
 }
 
 
@@ -66,6 +71,13 @@ a[data-toggle="collapse"] [data-toggle="collapse"]{
     top: 50%;
     right: 20px;
     transform: translateY(-50%);
+}
+
+.notification-bubble {
+  display: inline-block;
+  float: right;
+  position: absolute;
+  top: 39%;
 }
 /*toggle button*/
 #sidebar button {

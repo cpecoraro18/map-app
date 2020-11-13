@@ -19,13 +19,6 @@ BucketListMap.prototype.constructor = BucketListMap;
   */
 BucketListMap.prototype.getPins = function() {
   const self = this;
-  $.ajax({
-    url: '/pin',
-    method: 'GET',
-    success: function(pins) {
-      self.addPinsToMap(pins);
-    },
-  });
 };
 
 /**
@@ -169,54 +162,6 @@ BucketListMap.prototype.addInfoWindow = function(pin, marker) {
 };
 
 
-/**
-  *Adds buttons to bucketlist map
-  */
-BucketListMap.prototype.addButtons = function() {
-  MapShotMap.prototype.addButtons.call(this);
-  // button for adding pin
-  const addPinControlDiv = document.createElement('div');
-  addPinControl(addPinControlDiv);
-  this.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(addPinControlDiv);
-};
-
-
-/**
- * Adds add pin control to map
- * @param {html} controlDiv Map from init map.
- */
-function addPinControl(controlDiv) {
-  // Set CSS for the control border.
-  const controlUI = document.createElement('div');
-  controlUI.id = 'rightControl';
-  controlUI.style.width = '75px';
-  controlUI.style.height = '75px';
-  controlUI.style.backgroundColor = '#fff';
-  controlUI.style.border = '2px solid #fff';
-  controlUI.style.borderRadius = '100%';
-  controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
-  controlUI.style.cursor = 'pointer';
-  controlUI.style.margin = '30px';
-  controlUI.style.textAlign = 'center';
-  controlUI.title = 'Click to add a pin';
-  controlDiv.appendChild(controlUI);
-  // Set CSS for the control interior.
-  const controlText = document.createElement('div');
-  controlText.style.color = 'rgb(25,25,25)';
-  controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
-  controlText.style.fontSize = '30px';
-  controlText.style.lineHeight = '38px';
-  controlText.style.paddingLeft = '5px';
-  controlText.style.paddingRight = '5px';
-  controlText.style.paddingTop = '16px';
-  controlText.innerHTML = '<i class="fas fa-plus"></i>';
-  controlUI.appendChild(controlText);
-
-  controlUI.addEventListener('click', () => {
-    $('#overlay-back').fadeIn(500);
-    $('#addNewBucketContainer').slideDown(500);
-  });
-}
 
 /** @global */
 let map;

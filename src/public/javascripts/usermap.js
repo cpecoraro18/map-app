@@ -8,7 +8,7 @@ function UserMap() {
   console.log('Init Home Map');
   MapShotMap.call(this);
   this.getPins();
-  this.initAdd();
+  this.getTags();
   console.log('Done with Mapshot constructor');
 }
 
@@ -29,106 +29,45 @@ UserMap.prototype.getPins = function() {
   });
 };
 
-
-/**
-  *Gets pins from backend and starts process of putting them on the map
-  */
-UserMap.prototype.initAdd = function() {
+UserMap.prototype.getTags = function() {
   const self = this;
-
-  $('#addNewPinContainer').slideUp(500);
-
-  //  closes new pin window
-  $('#closeAddPin').on('click', () => {
-    $('#addNewEventContainer').slideUp(500);
-    $('#overlay-back').fadeOut(500);
-    $('#newPinForm').trigger('reset');
-    $('.image-preview-text')[0].style.display = 'block';
-    $('.image-preview-img')[0].style.display = 'none';
-    $('.image-preview-img')[0].setAttribute('src', '');
+  $.ajax({
+    url: '/user/tags',
+    method: 'GET',
+    success: function(tags) {
+      self.addTagstoMenu(tags);
+    },
   });
-  //  closes new pin window
-  $('#overlay-back').on('click', (e) => {
-    if (e.target.id == 'addNewPinContainer' || $(e.target).parents('#addNewPinContainer').length) {
-      return;
-    }
-    $('#addNewEventContainer').slideUp(500);
-    $('#overlay-back').fadeOut(500);
-    $('#newPinForm').trigger('reset');
-    $('.image-preview-text')[0].style.display = 'block';
-    $('.image-preview-img')[0].style.display = 'none';
-    $('.image-preview-img')[0].setAttribute('src', '');
-  });
+};
 
-  const searchbox = new google.maps.places.SearchBox($('#location_searchbox')[0]);
-  $('#submitButton').click(function(e) {
-    e.preventDefault();
-    const formData = new FormData($('#newPinForm')[0]);
-    const places = searchbox.getPlaces();
-    let pos;
-    if (places && places[0].geometry) {
-      pos = {
-        lat: places[0].geometry.location.lat(),
-        lng: places[0].geometry.location.lng(),
-      };
-    } else if (places) {
-      const geocoder = new google.maps.Geocoder();
-      geocoder.geocode( {'address': places.formatted_address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-          pos = {
-            lat: results[0].geometry.location.lat(),
-            lng: results[0].geometry.location.lng(),
-          };
-        } else {
-          // address doesnt Exists
-          alert('ADDRESS DOESNT EXIST');
-          return;
-        }
-      });
-    } else {
-      // invalid location, input not entered
-      alert('PLEASE INPUT LOCATION FEILD');
-      return;
+UserMap.prototype.addTagstoMenu = function(tags) {
+  let tagContainer = $('#tags')[0]
+  tags.forEach((tag, i) => {
+    console.log(tag)
+    if(i%2 == 1) return;
+
+    let tagRow = document.createElement('tr');
+
+    let firstTagContainer = document.createElement('td');
+    let firstTag = document.createElement("span");
+    firstTag.className = "tag"
+    firstTag.innerHTML = tag.tag_name;
+    firstTagContainer.appendChild(firstTag);
+
+    tagRow.appendChild(firstTagContainer);
+
+    if(tags[i+1]){
+      let secondTagContainer = document.createElement('td');
+      let secondTag = document.createElement("span");
+      secondTag.className = "tag"
+      secondTag.innerHTML = tags[i + 1].tag_name;
+      secondTagContainer.appendChild(secondTag);
+      tagRow.appendChild(secondTagContainer);
     }
 
 
-    formData.append('lat', pos.lat);
-    formData.append('lng', pos.lng);
-    $.ajax({
-      type: 'POST',
-      url: '/pin',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function(result) {
-        $('#addNewEventContainer').slideUp(500);
-        $('#overlay-back').fadeOut(500);
-        self.getPins();
-        self.map.setZoom(17);
-        self.map.panTo({lat: parseInt(result.lat), lng: parseInt(result.lng)});
-      },
-    });
-  });
+    tagContainer.appendChild(tagRow);
 
-  const inpFile = $('input[name=images]');
-  const previewImg = $('.image-preview-img');
-  const previewText = $('.image-preview-text');
-  inpFile[0].addEventListener('change', function() {
-    const file = this.files[0];
-    if (file) {
-      const reader = new FileReader();
-      previewText[0].style.display = 'none';
-      previewImg[0].style.display = 'block';
-
-      reader.addEventListener('load', function() {
-        previewImg[0].setAttribute('src', this.result);
-      });
-
-      reader.readAsDataURL(file);
-    } else {
-      previewText[0].style.display = 'block';
-      previewImg[0].style.display = 'none';
-    }
   });
 };
 
@@ -239,10 +178,11 @@ UserMap.prototype.addMarker = function(pin) {
   *@param {array} marker the marker that the infowindow will be attatched to
   */
 UserMap.prototype.addInfoWindow = function(pin, marker) {
+  console.log(pin);
   const infowindow = new google.maps.InfoWindow({
     pixelOffset: new google.maps.Size(25, 10),
   });
-
+  const self = this;
   $.ajax({
     url: '/pin/images/?pinId=' + pin.pin_id,
     type: 'GET',
@@ -271,7 +211,6 @@ UserMap.prototype.addInfoWindow = function(pin, marker) {
       marker.addListener('mouseout', function() {
         infowindow.close();
       });
-      const self = this;
       marker.addListener('click', function() {
         self.map.setZoom(17);
         self.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
@@ -290,59 +229,14 @@ UserMap.prototype.initMenu = function() {
     if (user.user_profilePic) img = user.user_profilePic;
     $('#profilePicture').css('background-image', 'url(' + img + ')');
     $('#username').html('@' + user.user_username);
-    $('#bio').html(user.user_bio);
+    $('#user').html(user.user_name);
+    if(user.user_bio) $('#profile_TextBox').html(user.user_bio);
+    else $('#profile_TextBox').css('display', 'none')
   });
 };
 
-/**
-  *Adds buttons to bucketlist map
-  */
-UserMap.prototype.addButtons = function() {
-  MapShotMap.prototype.addButtons.call(this);
-  // button for adding pin
-  const addPinControlDiv = document.createElement('div');
-  addPinControl(addPinControlDiv);
-  this.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(addPinControlDiv);
-};
 
 
-/**
- * Adds add pin control to map
-* @param {html} controlDiv Map from init map.
- * @param {map} map Map from init map.
- */
-function addPinControl(controlDiv) {
-  // Set CSS for the control border.
-  const controlUI = document.createElement('div');
-  controlUI.id = 'rightControl';
-  controlUI.style.width = '75px';
-  controlUI.style.height = '75px';
-  controlUI.style.backgroundColor = '#fff';
-  controlUI.style.border = '2px solid #fff';
-  controlUI.style.borderRadius = '100%';
-  controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
-  controlUI.style.cursor = 'pointer';
-  controlUI.style.margin = '30px';
-  controlUI.style.textAlign = 'center';
-  controlUI.title = 'Click to add a pin';
-  controlDiv.appendChild(controlUI);
-  // Set CSS for the control interior.
-  const controlText = document.createElement('div');
-  controlText.style.color = 'rgb(25,25,25)';
-  controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
-  controlText.style.fontSize = '30px';
-  controlText.style.lineHeight = '38px';
-  controlText.style.paddingLeft = '5px';
-  controlText.style.paddingRight = '5px';
-  controlText.style.paddingTop = '16px';
-  controlText.innerHTML = '<i class="fas fa-plus"></i>';
-  controlUI.appendChild(controlText);
-
-  controlUI.addEventListener('click', () => {
-    $('#overlay-back').fadeIn(500);
-    $('#addNewPinContainer').slideDown(500);
-  });
-}
 /** @global */
 let map;
 
