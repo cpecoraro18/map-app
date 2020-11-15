@@ -29,8 +29,23 @@ const Pin = function(body) {
   * @param {number} userId ID of user getting the pins
   * @param {function} result function that takes and error and a list of pins
   */
-Pin.getPins = function(userId, result) {
+Pin.getUserPins = function(userId, result) {
   const query = 'select pin.pin_id, pin.pin_title,  pin.pin_locationName, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id WHERE pin_userId = ' + userId;
+  db.query(query, (err, pins, fields) => {
+    // if any error while executing above query, throw error
+    if (err) throw err;
+    // if there is no error, you have the result
+    result(null, pins);
+
+  });
+};
+
+/**
+  * Gets all feed pins from database
+  *@param {function} result function that takes and error and a list of pins
+  */
+Pin.getUserFeed = function(userId, result) {
+  const query = 'select pin.pin_id, pin.pin_title, pin_locationName, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id';
   db.query(query, (err, pins, fields) => {
     // if any error while executing above query, throw error
     if (err) throw err;
@@ -43,7 +58,7 @@ Pin.getPins = function(userId, result) {
   * Gets all feed pins from database
   *@param {function} result function that takes and error and a list of pins
   */
-Pin.getFeed = function(result) {
+Pin.getBucketList = function(userId, result) {
   const query = 'select pin.pin_id, pin.pin_title, pin_locationName, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id';
   db.query(query, (err, pins, fields) => {
     // if any error while executing above query, throw error
@@ -52,18 +67,21 @@ Pin.getFeed = function(result) {
     result(null, pins);
   });
 };
+
+
 /**
   * Gets a single pin by its id
   * @param {number} pinId ID of the pin
   * @param {function} result function that takes and error and a pin
   */
 Pin.getPinById = function(pinId, result) {
+  let self = this;
   const query = 'select pin.pin_id, pin.pin_title, pin_locationName, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id where pin.id = ' + pinId;
   db.query(query, (err, pin, fields) => {
     // if any error while executing above query, throw error
     if (err) throw err;
     // if there is no error, you have the result
-    result(null, pin);
+    result(null, pin)
   });
 };
 
@@ -73,11 +91,12 @@ Pin.getPinById = function(pinId, result) {
   * @param {function} result function that takes and error and a pin
   */
 Pin.getPinImages = function(pinId, result) {
+  let self = this;
   const query = 'select (photo_path) from pin_photo left join photo on pin_photo.pin_photo_photoId = photo.photo_id where pin_photo_pinId = ' + pinId;
   db.query(query, (err, photos, fields) => {
     // if any error while executing above query, throw error
     if (err) throw err;
-    // if there is no error, you have the result
+    // if there is no error, you have the resul
     result(null, photos);
   });
 };
@@ -93,6 +112,7 @@ Pin.getPinTags = function(pinId, result) {
     // if any error while executing above query, throw error
     if (err) throw err;
     // if there is no error, you have the result
+    //
     result(null, tags);
   });
 };
@@ -123,7 +143,7 @@ Pin.createPin = function(newPin, user, result) {
   const newPinQuery = 'insert into pin (pin_userId, pin_title, pin_locationName, pin_description, pin_lat, pin_lng) values("' + pin.userId + '","' + pin.title + '","' + pin.location_name + '","' + pin.description + '","' + pin.lat + '","' + pin.lng + '")';
   db.query(newPinQuery, (err, pinInsert, fields) => {
     // if any error while executing above query, throw error
-    if (err) throw err;
+    if (err) result(err, null);
     //add id
     pin.id = pinInsert.insertId;
     self.addPinImages(pin, images, result)

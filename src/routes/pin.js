@@ -7,12 +7,14 @@ const upload = require('../config/multer-config');
 
 const {ensureAuthenticated} = require('../config/auth');
 
-
 router.get('/images', ensureAuthenticated, pinController.get_pin_images);
 router.get('/tags', ensureAuthenticated, pinController.get_pin_tags);
-// gets all user pins
-router.get('/', ensureAuthenticated, pinController.get_user_pins);
+
+
+router.get('/user', ensureAuthenticated, pinController.get_user_pins);
 router.get('/feed', ensureAuthenticated, pinController.get_user_feed);
+router.get('/explore', ensureAuthenticated, pinController.get_explore_feed);
+router.get('/bucket', ensureAuthenticated, pinController.get_user_bucketlist);
 
 // router.get('/explore', ensureAuthenticated, pinController.get_explore_feed);
 router.post('/', ensureAuthenticated, upload.array('images', 10), pinController.post_pin);

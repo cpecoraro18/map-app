@@ -19,7 +19,7 @@ ExploreMap.prototype.constructor = ExploreMap;
   *Gets pins from backend and starts process of putting them on the map
   */
 ExploreMap.prototype.getPins = function() {
-  
+
 };
 
 /**
@@ -172,19 +172,40 @@ ExploreMap.prototype.addPlaceInfoWindow = function(place, marker) {
   let img = './assets/images/userProfile.png';
   if (place.photos) img = place.photos[0].getUrl();
   const infowindow = new google.maps.InfoWindow();
-  const contentString =
-  '<div class="infowindow">' +
-    '<div>' +
-      '<h1>'+ place.name + '</h1>' +
-      '<h3>'+ place.formatted_address + '</h3>' +
-    '</div>'+
+  let infowindowdiv = document.createElement('div');
+  infowindowdiv.className = "infowindow";
 
-    '<div>'+
-      '<div class="pin-img" style="background-image: url('+ img +'); "></div>'+
-      '<button>Use Location for New Event';
-  '</div>' +
-  '</div>';
-  infowindow.setContent(contentString);
+  let placeHeader = document.createElement("div");
+  let placeName = document.createElement("h1");
+  placeName.innerHTML = place.name;
+  let placeAddress = document.createElement("h3");
+  placeAddress.innerHTML = place.formatted_address;
+  placeHeader.appendChild(placeName);
+  placeHeader.appendChild(placeAddress);
+  infowindowdiv.appendChild(placeHeader);
+
+  let placeImages = document.createElement('div');
+
+  let images = document.createElement('div');
+  images.className = "pin-img";
+  images.setAttribute('style', 'background-image: url('+ img +')');
+  let bucketButton = document.createElement('button');
+  bucketButton.innerHTML = "Bucket Location"
+  bucketButton.addEventListener('click', function() {
+    alert("BUCKETING ADDRESS: " + place.formatted_address)
+  })
+  let pinButton = document.createElement('button');
+  pinButton.innerHTML = "Pin Location"
+  pinButton.addEventListener('click', function() {
+    alert("PINNING ADDRESS: " + place.formatted_address)
+  })
+
+  placeImages.appendChild(images);
+  placeImages.appendChild(bucketButton);
+  placeImages.appendChild(pinButton);
+
+  infowindowdiv.appendChild(placeImages);
+  infowindow.setContent(infowindowdiv);
   const self = this;
   marker.addListener('click', function() {
     self.map.setZoom(17);
@@ -215,13 +236,17 @@ ExploreMap.prototype.initMenu = function() {
       marker.setMap(null);
     });
     markers = [];
+    document.getElementById('exploreImages').innerHTML = "";
+    let columnCount = 0;
+    var newRow;
     // For each place, get the icon, name and location.
     const bounds = new google.maps.LatLngBounds();
-    places.forEach((place) => {
+    places.forEach((place, i) => {
       if (!place.geometry) {
         console.log('Returned place contains no geometry');
         return;
       }
+      //ADD MARKER
       const icon = {
         url: place.icon,
         size: new google.maps.Size(71, 71),
@@ -240,7 +265,7 @@ ExploreMap.prototype.initMenu = function() {
       markers.push(
           marker,
       );
-
+      //ADD INFOWINDOW
       this.addPlaceInfoWindow(place, marker);
 
 
@@ -250,6 +275,58 @@ ExploreMap.prototype.initMenu = function() {
       } else {
         bounds.extend(place.geometry.location);
       }
+
+
+    //ADD TO MENU
+
+    if (place.photos && place.photos.length>0){
+      place.photos.forEach((img) => {
+        if(columnCount%3 == 0){
+          //add td
+          newRow = document.createElement('tr');
+          let newCol = document.createElement('td');
+          newCol.addEventListener('click', function() {
+            google.maps.event.trigger(marker, 'click', {
+              latLng: new google.maps.LatLng(0, 0)
+            });
+          })
+          let newImg = document.createElement('img');
+          newImg.className = 'table_pic';
+          newImg.setAttribute('src', img.getUrl())
+          newCol.appendChild(newImg);
+          newRow.appendChild(newCol);
+          columnCount++;
+        } else if(columnCount%3 == 1){
+          let newCol = document.createElement('td');
+          newCol.addEventListener('click', function() {
+            google.maps.event.trigger(marker, 'click', {
+              latLng: new google.maps.LatLng(0, 0)
+            });
+          })
+          let newImg = document.createElement('img');
+          newImg.className = 'table_pic';
+          newImg.setAttribute('src', img.getUrl())
+          newCol.appendChild(newImg);
+          newRow.appendChild(newCol);
+          columnCount++;
+        } else {
+          let newCol = document.createElement('td');
+          newCol.addEventListener('click', function() {
+            google.maps.event.trigger(marker, 'click', {
+              latLng: new google.maps.LatLng(0, 0)
+            });
+          })
+          let newImg = document.createElement('img');
+          newImg.className = 'table_pic';
+          newImg.setAttribute('src', img.getUrl())
+          newCol.appendChild(newImg);
+          newRow.appendChild(newCol);
+          document.getElementById('exploreImages').appendChild(newRow);
+          columnCount++;
+        }
+      });
+    }
+
     });
     this.map.fitBounds(bounds);
   });

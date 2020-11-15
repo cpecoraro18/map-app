@@ -40,6 +40,11 @@ MapShotMap.prototype.initAddPinUI = function() {
   $('#closeAddPin').on('click', () => {
     self.closeAddPin();
   });
+
+  //  closes new pin window when you click the x
+  $('#imagePreview').on('click', () => {
+    $('#imageInput')[0].click();
+  });
   const searchbox = new google.maps.places.SearchBox($('#location_searchbox')[0]);
   $('#submitButton').click(function(e) {
     e.preventDefault();

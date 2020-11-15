@@ -5,19 +5,17 @@
     <span id="closeAddPin"><i class="fas fa-times"></i></span>
     <h2>Add Pin</h2>
     <form action="/pin" enctype="multipart/form-data" method="post" id="newPinForm">
-      <input type="text" name="title" placeholder="Title" required><br>
-      <textarea name="descr" rows="3" cols="40" placeholder="Enter a description"></textarea><br>
-      <input type="text"  id="location_searchbox" name="location_name" placeholder="Location" required><br>
-      <input type="text"  id="tag" name="tag" placeholder="tag"><br>
-      <input type="file" name="images" accept="image/*" multiple/><br>
-      <div class="image-preview" id="imagePreview">
-        <img src="" class="image-preview-img" alt="Image Preview">
-        <span class="image-preview-text">Image Preview</span>
-      </div>
-      <br>
-      <br>
-      <button id="submitButton">Submit</button>
-
+      <input type="text1" id="title" name="title" placeholder="Title">
+          <input type="date" id="date" name="date" placeholder="Date">
+          <input type="text1" id="location_searchbox" name="location_name" placeholder="Add Location">
+          <textarea id="caption" name="descr" placeholder="Write a Caption..." rows="30" cols="50"></textarea>
+          <div class="image image-preview" id="imagePreview">
+            <img class="image-preview-img">
+            <span class="image-preview-text"><i class="fas fa-plus"></i></span>
+          </div>
+          <input type="text2" id="tag" name="tag" placeholder="Add Tags">
+          <input type="file" name="images" accept="image/*" style="display: none" id="imageInput" multiple/><br>
+          <button class="button button1" id="submitButton">PUSH PIN</button>
     </form>
 
   </div>

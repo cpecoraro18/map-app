@@ -6,33 +6,6 @@
 const Pin = require('../model/pin');
 
 /**
-* gets user id from request and responds with an array of user posts
-* @param {Object} req client request
-* @param {Object} res server response
-*/
-exports.get_user_pins = function(req, res) {
-  const userId = req.user.user_id;
-  Pin.getPins(userId, (err, rows) => {
-    if (err) throw err;
-    res.status(200).json(rows);
-  });
-};
-
-/**
-* gets user id and post id from req and responds with a pin
-* @param {Object} req client request
-* @param {Object} res server response
-*/
-exports.get_pin_by_id = function(req, res) {
-  // NOT IMPLEMENTED
-  const userId = req.user.user_id;
-  Pin.getPins(userId, (err, rows) => {
-    if (err) throw err;
-    res.status(200).json(rows);
-  });
-};
-
-/**
 * gets user id and post id from req and responds with a pin
 * @param {Object} req client request
 * @param {Object} res server response
@@ -50,6 +23,8 @@ exports.get_pin_images = function(req, res) {
 * @param {Object} req client request
 * @param {Object} res server response
 */
+
+
 exports.get_pin_tags = function(req, res) {
   const pinId = req.query.pinId;
   Pin.getPinTags(pinId, (err, rows) => {
@@ -60,17 +35,58 @@ exports.get_pin_tags = function(req, res) {
 
 
 /**
-* responds with a list of pins from feed
+* gets user id from request and responds with an array of user posts
 * @param {Object} req client request
 * @param {Object} res server response
 */
-exports.get_user_feed = function(req, res) {
-  Pin.getFeed((err, rows) => {
+exports.get_user_pins = function(req, res) {
+  const userId = req.params.userId;
+  Pin.getUserPins(userId, (err, rows) => {
     if (err) throw err;
     res.status(200).json(rows);
   });
 };
 
+/**
+* gets user id from request and responds with an array of user posts
+* @param {Object} req client request
+* @param {Object} res server response
+*/
+exports.get_user_feed = function(req, res) {
+  const userId = req.user.user_id;
+  Pin.getUserFeed(userId, (err, rows) => {
+    if (err) throw err;
+    res.status(200).json(rows);
+  });
+};
+
+
+/**
+* gets user id from request and responds with an array of user posts
+* @param {Object} req client request
+* @param {Object} res server response
+*/
+exports.get_explore_feed = function(req, res) {
+  const userId = req.params.userId;
+  Pin.getFeed(userId, (err, rows) => {
+    if (err) throw err;
+    res.status(200).json(rows);
+  });
+};
+
+
+/**
+* gets user id from request and responds with an array of user posts
+* @param {Object} req client request
+* @param {Object} res server response
+*/
+exports.get_user_bucketlist = function(req, res) {
+  const userId = req.params.userId;
+  Pin.getBucketList(userId, (err, rows) => {
+    if (err) throw err;
+    res.status(200).json(rows);
+  });
+};
 
 /**
 * gets user and new pin from request and
@@ -87,6 +103,21 @@ exports.post_pin = function(req, res) {
     res.status(201).json(newPin);
   });
 };
+
+/**
+* gets user id and post id from req and responds with a pin
+* @param {Object} req client request
+* @param {Object} res server response
+*/
+exports.get_pin_by_id = function(req, res) {
+  // NOT IMPLEMENTED
+  const userId = req.user.user_id;
+  Pin.getPins(userId, (err, rows) => {
+    if (err) throw err;
+    res.status(200).json(rows);
+  });
+};
+
 /**
 * gets a new pin based on the old pin from request
 * responds with a 201 status if successfull
