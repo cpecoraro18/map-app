@@ -1,37 +1,53 @@
-<div class="dynamic-sidebar" id="customizeSidebar">
-  <div id="options">
-    <div class="item">
-      <label for="hue">Style</label>
-      <select id="template" onchange="changeMapStyles()">
-        <option value="standard">Standard</option>
-        <option value="silver">Silver</option>
-        <option value="retro">Retro</option>
-        <option value="dark">Dark</option>
-        <option value="night">Night</option>
-        <option value="aub">Aubergine</option>
-      </select>
-      <br>
+<div class="dynamic-sidebar2" >
+  <h3>
+    Customizable Options
+  </h3>
+  <div id="customizeSidebar">
+    <table style="margin:auto" id="labels">
+      <tr>
+        <td>
+          <label for="hue" class="DropDown_Label">Style</label>
+          <select id="template" onchange="changeMapStyles()" class="DropDown">
+            <option value="standard">Standard</option>
+            <option value="silver">Silver</option>
+            <option value="retro">Retro</option>
+            <option value="dark">Dark</option>
+            <option value="night">Night</option>
+            <option value="aub">Aubergine</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+      <tr>
+        <td>
+          <label for="labels" class="DropDown_Label">Roads</label>
+          <select id="roadDropDown" onchange="changeMapStyles()" class="DropDown">
+            <option value="On">On</option>
+            <option value="Off">Off</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="labels" class="DropDown_Label">Landmarks</label>
+          <select id="poiDropDown" onchange="changeMapStyles()" class="DropDown">
+            <option value="On">On</option>
+            <option value="Off">Off</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="labels" class="DropDown_Label">Labels</label>
+          <select id="labelDropDown" onchange="changeMapStyles()" class="DropDown">
+            <option value="On">On</option>
+            <option value="Off">Off</option>
+          </select>
+        <td>
+      </tr>
+    </table>
+    <div class="Button_Div">
+      <button type="button" class="Button_Style">Save</button>
     </div>
   </div>
-
-
-  <div id="labels">
-    <div>
-      <input type="checkbox" id="roadCheckbox" name="labels" value="labels" onclick="changeMapStyles()" checked>
-      <label for="labels">Roads</label>
-      <br>
-    </div>
-    <div>
-      <input type="checkbox" id="poiCheckbox" name="labels" value="labels" onclick="changeMapStyles()" checked>
-      <label for="labels">Landmarks</label>
-      <br>
-    </div>
-    <div>
-      <input type="checkbox" id="labelCheckbox" name="labels" value="labels" onclick="changeMapStyles()" checked>
-      <label for="labels">Labels</label>
-      <br>
-    </div>
-  </div>
-
-
 </div>

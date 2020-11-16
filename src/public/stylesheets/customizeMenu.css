@@ -1,3 +1,50 @@
 #customizeSidebar {
-  width: 400px;
+  width: 300px;
+  text-align:center;
+  min-height:100%;
+  margin-top:30px;
+}
+
+#labels {
+  text-align:left;
+}
+#template {
+  margin:auto;
+  text-align:left;
+}
+
+.dynamic-sidebar2 {
+  background-color: white;
+  min-height: 100%;
+  z-index: 100;
+  border-radius: 10px;
+  margin-left: -10px;
+  padding-left: 30px;
+  box-shadow: 5px 10px #ffffff;
+}
+td {
+  padding-top:20px; 
+  padding-left:10px;
+}
+.DropDown {
+  width:270px;
+  outline-style:none;
+}
+.DropDown_Label{
+  padding:5px;
+  width:270px;
+  background-color:#00cc00  ;
+  color:white;
+  text-align:center;
+}
+.Button_Div {
+  text-align:left;
+  margin-left:10px;
+}
+
+.Button_Style {
+  margin-top:20px;
+  padding:5px;
+  background-color:#00cc00;
+  color:white;
 }
