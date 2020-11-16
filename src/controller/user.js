@@ -121,8 +121,8 @@ exports.get_user_by_id = function(req, res) {
 * @param {Object} res server response
 */
 exports.register_user = function(req, res) {
-  const {name, username, email, password} = req.body;
-
+  const {firstname, lastname, username, email, password} = req.body;
+  let name = firstname + " " + lastname;
   const errors = [];
 
   User.getUserByUsername(username, (err, user) => {

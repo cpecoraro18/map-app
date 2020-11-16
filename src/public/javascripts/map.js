@@ -52,7 +52,7 @@ MapShotMap.prototype.initAddPinUI = function() {
     var validatedForm = self.validateForm(formData, searchbox);
     console.log(validatedForm);
 
-
+    
     $.ajax({
       type: 'POST',
       url: '/pin',
@@ -90,6 +90,31 @@ MapShotMap.prototype.initAddPinUI = function() {
     }
   });
 };
+
+MapShotMap.prototype.bucketPin = function(pin) {
+  alert("Bucket pin:" + pin.pin_id);
+  $.ajax({
+    type: 'POST',
+    url: '/bucket',
+    data: pin,
+    success: function(result) {
+      let notificationBubble = document.createElement("span");
+      notificationBubble.className = "notification-bubble"
+      notificationBubble.innerHTML = '<i class="fas fa-circle"></i>'
+      $('#bucketListLink')[0].appendChild(notificationBubble);
+    },
+  });
+
+};
+
+MapShotMap.prototype.likePin = function(pin) {
+
+};
+
+MapShotMap.prototype.pinLocation = function(locationName, lat, lng) {
+
+};
+
 
 
 
@@ -137,6 +162,16 @@ MapShotMap.prototype.closeAddPin = function() {
   $('.image-preview-img')[0].style.display = 'none';
   $('.image-preview-img')[0].setAttribute('src', '');
 };
+
+MapShotMap.prototype.openAddPin = function() {
+  $('#addNewPinContainer').slideUp(500);
+  $('#overlay-back').fadeOut(500);
+  $('#newPinForm').trigger('reset');
+  $('.image-preview-text')[0].style.display = 'block';
+  $('.image-preview-img')[0].style.display = 'none';
+  $('.image-preview-img')[0].setAttribute('src', '');
+};
+
 
 
 /**

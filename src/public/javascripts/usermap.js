@@ -7,6 +7,7 @@
 function UserMap() {
   console.log('Init Home Map');
   MapShotMap.call(this);
+  this.pinObjects = []
   this.getPins();
   this.getTags();
   console.log('Done with Mapshot constructor');
@@ -21,10 +22,46 @@ UserMap.prototype.constructor = UserMap;
 UserMap.prototype.getPins = function() {
   const self = this;
   $.ajax({
-    url: '/pin',
+    url: '/pin/user',
     method: 'GET',
     success: function(pins) {
-      self.addPinsToMap(pins);
+      pins.forEach(function(pin) {
+        self.getPinImages(pin);
+      });
+    },
+  });
+};
+/**
+  *Gets pins images
+  */
+UserMap.prototype.getPinImages = function(pin) {
+  //to be removed
+  const self = this;
+    $.ajax({
+      url: '/pin/images/?pinId=' + pin.pin_id,
+      type: 'GET',
+      contentType: 'application/json',
+      success: function(images) {
+        pin.images = images;
+        self.getPinTags(pin);
+      },
+    });
+
+};
+
+/**
+  *Gets pins tags
+  */
+UserMap.prototype.getPinTags = function(pin) {
+  //to be removed
+  const self = this;
+  $.ajax({
+    url: '/pin/tags/?pinId=' + pin.pin_id,
+    type: 'GET',
+    contentType: 'application/json',
+    success: function(tags) {
+      pin.tags = tags;
+      self.addPinToMap(pin);
     },
   });
 };
@@ -41,14 +78,33 @@ UserMap.prototype.getTags = function() {
 };
 
 UserMap.prototype.addTagstoMenu = function(tags) {
+  let self = this;
   let tagContainer = $('#tags')[0]
+  let allTagRow = document.createElement('tr');
+  let allTagContainer = document.createElement('td');
+  allTagContainer.addEventListener('click', function(){
+    self.filterEventsByTag({tag_name: "All"})
+  })
+  let allTag = document.createElement("span");
+  allTag.className = "tag"
+  allTag.innerHTML = "All";
+  allTagContainer.appendChild(allTag);
+
+  allTagRow.appendChild(allTagContainer);
+
+  tagContainer.appendChild(allTagRow);
+
   tags.forEach((tag, i) => {
     console.log(tag)
-    if(i%2 == 1) return;
+    if(i%2 == 0) return;
 
     let tagRow = document.createElement('tr');
 
+
     let firstTagContainer = document.createElement('td');
+    firstTagContainer.addEventListener('click', function(){
+      self.filterEventsByTag(tag)
+    })
     let firstTag = document.createElement("span");
     firstTag.className = "tag"
     firstTag.innerHTML = tag.tag_name;
@@ -56,8 +112,12 @@ UserMap.prototype.addTagstoMenu = function(tags) {
 
     tagRow.appendChild(firstTagContainer);
 
+
     if(tags[i+1]){
       let secondTagContainer = document.createElement('td');
+      secondTagContainer.addEventListener('click', function(){
+        self.filterEventsByTag(tags[i + 1])
+      })
       let secondTag = document.createElement("span");
       secondTag.className = "tag"
       secondTag.innerHTML = tags[i + 1].tag_name;
@@ -71,17 +131,47 @@ UserMap.prototype.addTagstoMenu = function(tags) {
   });
 };
 
+UserMap.prototype.filterEventsByTag = function(tag) {
+  console.log(tag);
+  let self = this;
+  var bounds = new google.maps.LatLngBounds();
+  this.pinObjects.forEach((pinObject) => {
+    let hasTag = false;
+    pinObject.pin.tags.forEach((t) => {
+      if(t.tag_name == tag.tag_name || tag.tag_name == "All") {
+        hasTag = true;
+      }
+    });
+    if(hasTag){
+      pinObject.marker.setMap(self.map);
+      bounds.extend(pinObject.marker.latlng_);
+    }
+    else pinObject.marker.setMap(null);
+  });
+  this.map.fitBounds(bounds, {padding: {
+            top: 0,
+            bottom: 0,
+            left:600,
+            right: 0
+        }});
+  retractMenu();
+};
+
 
 /**
   *Adds a marker and infowindow for each pin on explore map
   *@param {array} pins Map from init map.
   */
-UserMap.prototype.addPinsToMap = function(pins) {
-  const self = this;
-  pins.forEach(function(pin) {
-    const marker = self.addMarker(pin);
-    self.addInfoWindow(pin, marker);
-  });
+UserMap.prototype.addPinToMap = function(pin) {
+  const pinMarker = this.addMarker(pin);
+  const pinInfoWindow = this.addInfoWindow(pin, pinMarker);
+
+  var pinElements = {
+    pin: pin,
+    marker: pinMarker,
+    infowindow: pinInfoWindow,
+  }
+  this.pinObjects.push(pinElements)
 };
 
 /**
@@ -167,8 +257,10 @@ UserMap.prototype.addMarker = function(pin) {
   UserMapMarker.prototype.getPosition = function() {
     return this.latlng_;
   };
+  let img = './assets/images/userProfile.png';
+  if(pin.user_profilePic) img = pin.user_profilePic
 
-  const marker = new UserMapMarker(this.map, new google.maps.LatLng(pos.lat, pos.lng), pin.user_profilePic);
+  const marker = new UserMapMarker(this.map, new google.maps.LatLng(pos.lat, pos.lng), img);
   return marker;
 };
 
@@ -217,6 +309,7 @@ UserMap.prototype.addInfoWindow = function(pin, marker) {
       });
     },
   });
+  return infowindow;
 };
 
 

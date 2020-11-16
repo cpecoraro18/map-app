@@ -71,34 +71,34 @@ HomeMap.prototype.constructor = HomeMap;
   *Gets pins from backend and starts process of putting them on the map
   */
 HomeMap.prototype.focusNextPin = function() {
-  console.log(this.pinObjects)
-  if(this.currentPin && this.currentPin.next) {
-    this.currentPin.pinObject.pinElement.hide();
-    this.currentPin =  this.currentPin.next;
-  } else if(this.currentPin){
-    console.log("HERE")
-    this.currentPin.pinObject.pinElement.hide();
-    this.currentPin = this.pinObjects.head;
-  }
-  else {
-    if(this.pinObjects){
+  if(this.pinObjects.size > 0) {
+    if(this.currentPin && this.currentPin.next) {
+      this.currentPin.pinObject.pinElement.hide();
+      this.currentPin =  this.currentPin.next;
+    } else if(this.currentPin){
+      console.log("HERE")
+      this.currentPin.pinObject.pinElement.hide();
       this.currentPin = this.pinObjects.head;
     }
+    else {
+      if(this.pinObjects){
+        this.currentPin = this.pinObjects.head;
+      }
+    }
+    google.maps.event.trigger(this.currentPin.pinObject.marker, 'click');
   }
-  google.maps.event.trigger(this.currentPin.pinObject.marker, 'click');
 };
 
 HomeMap.prototype.focusPrevPin = function() {
-  console.log(this.pinObjects)
-  console.log(this.currentPin)
-  if(this.currentPin && this.currentPin.prev) {
-    this.currentPin.pinObject.pinElement.hide();
-    this.currentPin =  this.currentPin.prev;
-    google.maps.event.trigger(this.currentPin.pinObject.marker, 'click');
-  } else {
-    google.maps.event.trigger(this.currentPin.pinObject.marker, 'click');
-  }
-
+    if(this.pinObjects.size > 0) {
+      if(this.currentPin && this.currentPin.prev) {
+        this.currentPin.pinObject.pinElement.hide();
+        this.currentPin =  this.currentPin.prev;
+        google.maps.event.trigger(this.currentPin.pinObject.marker, 'click');
+      } else {
+        google.maps.event.trigger(this.currentPin.pinObject.marker, 'click');
+      }
+    }
 };
 
 /**
@@ -181,10 +181,6 @@ HomeMap.prototype.addPinToMap = function(pin) {
   */
 
 HomeMap.prototype.addMarker = function(pin) {
-  const pos = {
-    lat: pin.pin_lat,
-    lng: pin.pin_lng,
-  };
   HomeMapMarker.prototype = new google.maps.OverlayView();
   /**
     *Adds custom markers to the explore map
@@ -265,9 +261,10 @@ HomeMap.prototype.addMarker = function(pin) {
   HomeMapMarker.prototype.getPosition = function() {
     return this.latlng_;
   };
-
-  const marker = new HomeMapMarker(this.map, new google.maps.LatLng(pos.lat, pos.lng), pin.user_profilePic);
-  return marker;
+  if(pin){
+    const marker = new HomeMapMarker(this.map, new google.maps.LatLng(pin.pin_lat,pin.pin_lng), pin.user_profilePic);
+    return marker;
+  }
 };
 
 /**
@@ -457,7 +454,7 @@ HomeMap.prototype.addPin = function(pin) {
   }
 
   PinElement.prototype.createButtonContainer = function() {
-      let self = this;
+      let pinElementSelf = this;
 
       let buttonContainer = document.createElement('div');
       buttonContainer.className = "pin-button"
@@ -467,7 +464,7 @@ HomeMap.prototype.addPin = function(pin) {
       likeButton.style.cursor = 'pointer';
       likeButton.setAttribute('style', 'color: #a83f39; cursor: pointer')
       google.maps.event.addDomListener(likeButton, 'click', function(event) {
-         alert("Just liked pin:" + self.pin_.pin_id);
+         alert("Just liked pin:" + pinElementSelf.pin_.pin_id);
       });
 
       let commentButton = document.createElement('a')
@@ -476,7 +473,7 @@ HomeMap.prototype.addPin = function(pin) {
       commentButton.setAttribute('style', 'color: #3B5284; cursor: pointer')
       google.maps.event.addDomListener(commentButton, 'click', function(event) {
 
-         alert("Comment on pin:" + self.pin_.pin_id);
+         alert("Comment on pin:" + pinElementSelf.pin_.pin_id);
       });
 
       let bucketButton = document.createElement('button');
@@ -484,11 +481,7 @@ HomeMap.prototype.addPin = function(pin) {
       bucketButton.setAttribute('style', 'border-radius: 25px; color: white; background-color: #94B447;')
       bucketButton.innerHTML = "<b>Bucket it!</b>"
       google.maps.event.addDomListener(bucketButton, 'click', function(event) {
-        alert("Bucket pin:" + self.pin_.pin_id);
-        let notificationBubble = document.createElement("span");
-        notificationBubble.className = "notification-bubble"
-        notificationBubble.innerHTML = '<i class="fas fa-circle"></i>'
-        $('#bucketListLink')[0].appendChild(notificationBubble);
+        self.bucketPin(pinElementSelf.pin_);
       });
 
 
@@ -668,12 +661,15 @@ HomeMap.prototype.addPin = function(pin) {
     return this.latlng_;
   };
 
-  const pinElement = new PinElement(this.map, pin);
-  this.map.addListener("zoom_changed", () => {
-    if(this.map.getZoom() < 8) pinElement.hide();
-  })
-  pinElement.hide();
-  return pinElement;
+  if(pin){
+    const pinElement = new PinElement(this.map, pin);
+    this.map.addListener("zoom_changed", () => {
+      if(this.map.getZoom() < 8) pinElement.hide();
+    })
+    pinElement.hide();
+    return pinElement;
+  }
+
 };
 
 /**

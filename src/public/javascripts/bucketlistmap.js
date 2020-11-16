@@ -7,7 +7,7 @@
 function BucketListMap() {
   console.log('Init Home Map');
   MapShotMap.call(this);
-  this.getPins();
+  this.getBuckets();
   console.log('Done with Mapshot constructor');
 }
 
@@ -17,20 +17,65 @@ BucketListMap.prototype.constructor = BucketListMap;
 /**
   *Gets pins from backend and starts process of putting them on the map
   */
-BucketListMap.prototype.getPins = function() {
-  const self = this;
+BucketListMap.prototype.getBuckets = function() {
+  let self = this;
+  $.ajax({
+    url: '/bucket',
+    method: 'GET',
+    success: function(buckets) {
+      if(buckets && buckets.length > 0) {
+        document.getElementById('bucketList').innerHTML = ""
+        buckets.forEach(function(bucket) {
+          var marker = self.addBuckettoMap(bucket);
+          self.addBuckettoMenu(bucket, marker);
+
+        });
+      }
+    },
+    error: function(err) {
+    }
+  });
 };
 
+/**
+  *Initializes explore map menu
+  */
+BucketListMap.prototype.addBuckettoMenu = function(bucket, marker) {
+  console.log(bucket);
+  let bucketlistContainer = document.createElement('div');
+  let bucketlistCheck = document.createElement('input');
+  bucketlistCheck.setAttribute('type', "checkbox")
+  bucketlistCheck.className = 'bucket-checkbox'
+  bucketlistCheck.addEventListener('change', function() {
+    document.getElementById('bucketlistButton').disabled = $('input.bucket-checkbox:checked').length == 0;
+  });
+
+  let bucketItem = document.createElement('span');
+  bucketItem.innerHTML = bucket.pin_locationName;
+
+
+  bucketlistContainer.appendChild(bucketlistCheck);
+  bucketlistContainer.appendChild(bucketItem);
+
+  $('#bucketList')[0].appendChild(bucketlistContainer);
+  let self = this;
+  bucketItem.addEventListener('click', function(){
+    self.map.setZoom(17);
+    self.map.panTo(marker.position);
+  })
+};
 /**
   *Adds a marker and infowindow for each pin on explore map
   *@param {array} pins Map from init map.
   */
-BucketListMap.prototype.addPinsToMap = function(pins) {
-  const self = this;
-  pins.forEach(function(pin) {
-    const marker = self.addMarker(pin);
-    self.addInfoWindow(pin, marker);
+BucketListMap.prototype.addBuckettoMap = function(bucket) {
+  let self = this;
+  marker = new google.maps.Marker({
+    map: self.map,
+    animation: google.maps.Animation.DROP,
+    position: { lat: bucket.pin_lat, lng: bucket.pin_lng },
   });
+  return marker;
 };
 
 /**
@@ -160,6 +205,8 @@ BucketListMap.prototype.addInfoWindow = function(pin, marker) {
     self.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
   });
 };
+
+
 
 
 

@@ -5,3 +5,14 @@
     background: white;
     color: black;
 }
+
+
+#bucketlistButton {
+  position: absolute;
+  right: 5%;
+  bottom: 5%;
+}
+
+.bucket-checkbox {
+
+}

@@ -14,7 +14,6 @@ router.get('/tags', ensureAuthenticated, pinController.get_pin_tags);
 router.get('/user', ensureAuthenticated, pinController.get_user_pins);
 router.get('/feed', ensureAuthenticated, pinController.get_user_feed);
 router.get('/explore', ensureAuthenticated, pinController.get_explore_feed);
-router.get('/bucket', ensureAuthenticated, pinController.get_user_bucketlist);
 
 // router.get('/explore', ensureAuthenticated, pinController.get_explore_feed);
 router.post('/', ensureAuthenticated, upload.array('images', 10), pinController.post_pin);

@@ -1,3 +1,5 @@
-#customizeSidebar select {
-  width: 200px;
+/*sidebar styling when fully expanded */
+#customizeSidebar {
+    min-width: 30%;
+    max-width: 30
 }

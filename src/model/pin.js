@@ -29,8 +29,8 @@ const Pin = function(body) {
   * @param {number} userId ID of user getting the pins
   * @param {function} result function that takes and error and a list of pins
   */
-Pin.getUserPins = function(userId, result) {
-  const query = 'select pin.pin_id, pin.pin_title,  pin.pin_locationName, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id WHERE pin_userId = ' + userId;
+Pin.getUserPins = async function(userId, result) {
+  const query = 'select pin.pin_id, pin.pin_title,  pin.pin_locationName, pin.pin_description, pin.pin_lat, pin.pin_lng, pin.pin_userId, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id WHERE pin_userId = ' + userId;
   db.query(query, (err, pins, fields) => {
     // if any error while executing above query, throw error
     if (err) throw err;
@@ -44,22 +44,8 @@ Pin.getUserPins = function(userId, result) {
   * Gets all feed pins from database
   *@param {function} result function that takes and error and a list of pins
   */
-Pin.getUserFeed = function(userId, result) {
-  const query = 'select pin.pin_id, pin.pin_title, pin_locationName, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id';
-  db.query(query, (err, pins, fields) => {
-    // if any error while executing above query, throw error
-    if (err) throw err;
-    // if there is no error, you have the result
-    result(null, pins);
-  });
-};
-
-/**
-  * Gets all feed pins from database
-  *@param {function} result function that takes and error and a list of pins
-  */
-Pin.getBucketList = function(userId, result) {
-  const query = 'select pin.pin_id, pin.pin_title, pin_locationName, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id';
+Pin.getUserFeed = async function(userId, result) {
+  const query = 'select pin.pin_id, pin.pin_title, pin_locationName, pin.pin_description, pin.pin_lat, pin.pin_lng,  pin.pin_userId, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id';
   db.query(query, (err, pins, fields) => {
     // if any error while executing above query, throw error
     if (err) throw err;
@@ -74,7 +60,7 @@ Pin.getBucketList = function(userId, result) {
   * @param {number} pinId ID of the pin
   * @param {function} result function that takes and error and a pin
   */
-Pin.getPinById = function(pinId, result) {
+Pin.getPinById = async function(pinId, result) {
   let self = this;
   const query = 'select pin.pin_id, pin.pin_title, pin_locationName, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id where pin.id = ' + pinId;
   db.query(query, (err, pin, fields) => {
@@ -90,7 +76,7 @@ Pin.getPinById = function(pinId, result) {
   * @param {number} pinId ID of the pin
   * @param {function} result function that takes and error and a pin
   */
-Pin.getPinImages = function(pinId, result) {
+Pin.getPinImages = async function(pinId, result) {
   let self = this;
   const query = 'select (photo_path) from pin_photo left join photo on pin_photo.pin_photo_photoId = photo.photo_id where pin_photo_pinId = ' + pinId;
   db.query(query, (err, photos, fields) => {
@@ -106,7 +92,7 @@ Pin.getPinImages = function(pinId, result) {
   * @param {number} pinId ID of the pin
   * @param {function} result function that takes and error and a pin
   */
-Pin.getPinTags = function(pinId, result) {
+Pin.getPinTags = async function(pinId, result) {
   const query = 'select (tag_name) from pin_tag left join tag on pin_tag_tagId = tag.tag_id where pin_tag_pinId = ' + pinId;
   db.query(query, (err, tags, fields) => {
     // if any error while executing above query, throw error
@@ -123,7 +109,7 @@ Pin.getPinTags = function(pinId, result) {
   * @param {Object} user The user who posted the pin
   * @param {function} result function that takes and error and a pin
   */
-Pin.createPin = function(newPin, user, result) {
+Pin.createPin = async function(newPin, user, result) {
   // create new pin
   const pin = {
     userId: user.user_id,
@@ -150,7 +136,7 @@ Pin.createPin = function(newPin, user, result) {
   });
 };
 
-Pin.addPinImages = function(pin, images, result) {
+Pin.addPinImages = async function(pin, images, result) {
   let self = this;
   var pinPhotos = []
   // ADD PHOTOS
@@ -173,7 +159,7 @@ Pin.addPinImages = function(pin, images, result) {
   }
 };
 
-Pin.connectImagesToPin = function(pin, pinPhotos, result) {
+Pin.connectImagesToPin = async function(pin, pinPhotos, result) {
   // CONNECT PIN WITH PHOTOS
   if (pinPhotos.length > 0) {
     const newPinPhotoQuery = 'INSERT INTO pin_photo (pin_photo_pinId, pin_photo_photoId) VALUES ? ';
@@ -186,11 +172,13 @@ Pin.connectImagesToPin = function(pin, pinPhotos, result) {
       if (err) throw err;
       self.addPinTags(pin, result);
     });
+  } else {
+    result(null, pin);
   }
 };
 
 
-Pin.addPinTags = function(pin, result) {
+Pin.addPinTags = async function(pin, result) {
   let self = this;
   if (pin.tag) {
     const checkTagExistsQuery = 'SELECT * FROM tag WHERE tag_name = "' + pin.tag + '"'
@@ -212,11 +200,12 @@ Pin.addPinTags = function(pin, result) {
         });
       }
     });
-
+  } else {
+    result(null, pin);
   }
 };
 
-Pin.connectTagstoPin = function(pin, result) {
+Pin.connectTagstoPin = async function(pin, result) {
   if (pin.tag) {
     const newPinTagQuery = 'INSERT INTO pin_tag (pin_tag_pinId, pin_tag_tagId) VALUES('+ pin.id +', '+ pin.tag.id +')';
     db.query(newPinTagQuery, (err, tag, fields) => {
@@ -224,6 +213,8 @@ Pin.connectTagstoPin = function(pin, result) {
       console.log(pin);
       result(null, pin);
     });
+  } else {
+    result(null, pin);
   }
 };
 
@@ -234,7 +225,7 @@ Pin.connectTagstoPin = function(pin, result) {
   * @param {number} editedPin ID of the pin
   * @param {function} result function that takes and error
   */
-Pin.editPin = function(editedPin, result) {
+Pin.editPin = async function(editedPin, result) {
   result(null);
 };
 /**
@@ -242,7 +233,7 @@ Pin.editPin = function(editedPin, result) {
   * @param {number} pinId ID of the pin
   * @param {function} result function that takes and error
   */
-Pin.deletePin = function(pinId, result) {
+Pin.deletePin = async function(pinId, result) {
   pins = pins.filter((p) => p.id != pinId);
   result(null);
 };

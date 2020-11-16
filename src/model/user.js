@@ -39,7 +39,13 @@ User.createUser = async function(newUser, result) {
     // if any error while executing above query, throw error
     if (err) throw err;
     // if there is no error, you have the result
-    result(null, user[0]);
+    const mapquery = 'insert into mapstyle (mapStyle_template, mapStyle_userId) values("[]", '+ user.insertId+')';
+    db.query(mapquery, (err, user, fields) => {
+
+      if (err) throw err;
+      result(null, user);
+    });
+
   });
 };
 /**

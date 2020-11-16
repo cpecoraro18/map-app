@@ -20,6 +20,12 @@ CustomizeMap.prototype.addButtons = function() {
   MapShotMap.prototype.addButtons.call(this);
 };
 
+
+MapShotMap.prototype.initAddPinUI = function() {
+  
+}
+
+
 /**
   * Changes map style based on values from menu
   */

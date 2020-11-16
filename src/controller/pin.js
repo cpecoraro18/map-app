@@ -40,7 +40,7 @@ exports.get_pin_tags = function(req, res) {
 * @param {Object} res server response
 */
 exports.get_user_pins = function(req, res) {
-  const userId = req.params.userId;
+  const userId = req.user.user_id;
   Pin.getUserPins(userId, (err, rows) => {
     if (err) throw err;
     res.status(200).json(rows);
