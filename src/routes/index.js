@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const {ensureAuthenticated, forwardAuthenticated} = require('../config/auth');
+const userController = require('../controller/user');
 
 router.get('/', ensureAuthenticated, function(req, res, next) {
   res.render('home', {page: 'Home', menuId: 'home', username: req.user.username});

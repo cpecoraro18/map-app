@@ -407,8 +407,8 @@ HomeMap.prototype.addPin = function(pin) {
       tagElement.className = 'pin'
       tagElement.innerHTML = tag.tag_name;
       tagElement.setAttribute('style', 'cursor: pointer; color: white;')
-      google.maps.event.addDomListener(tagElement, 'click', function(event) {;
-         alert("Go to tag: " + tag.tag_name);
+      google.maps.event.addDomListener(tagElement, 'click', function(event) {
+        console.log("tag:" + tag)
       });
       tagContainer.appendChild(tagElement);
     });
@@ -464,7 +464,7 @@ HomeMap.prototype.addPin = function(pin) {
       likeButton.style.cursor = 'pointer';
       likeButton.setAttribute('style', 'color: #a83f39; cursor: pointer')
       google.maps.event.addDomListener(likeButton, 'click', function(event) {
-         alert("Just liked pin:" + pinElementSelf.pin_.pin_id);
+        //like pin
       });
 
       let commentButton = document.createElement('a')
@@ -473,7 +473,7 @@ HomeMap.prototype.addPin = function(pin) {
       commentButton.setAttribute('style', 'color: #3B5284; cursor: pointer')
       google.maps.event.addDomListener(commentButton, 'click', function(event) {
 
-         alert("Comment on pin:" + pinElementSelf.pin_.pin_id);
+         //comment on pin
       });
 
       let bucketButton = document.createElement('button');
