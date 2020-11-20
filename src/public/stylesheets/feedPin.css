@@ -143,6 +143,10 @@ p.pin {
   margin-bottom: 0px;
 }
 
+.settings-element {
+  float:right;
+  color:black;
+}
 
 
 /* Smartphones (portrait and landscape) ----------- */

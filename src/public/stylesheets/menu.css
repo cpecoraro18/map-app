@@ -16,7 +16,7 @@
 }
 
 .menu-toggle {
-  
+
   text-align: right;
   font-size: 3em;
   display: block;
@@ -24,7 +24,7 @@
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 0;
-  margin-right: 10px;
+  margin-right: 20px;
 }
 
 .menu-content {

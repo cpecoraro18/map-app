@@ -16,8 +16,8 @@
   position: relative;
   position: fixed;
   width: 60%;
-  height: 85%;
-  top: 5%;
+  height:80%;
+  top: 10%;
   left: 25%;
   border-radius: 20px;
   padding: 20px;
@@ -26,8 +26,9 @@
   overflow: scroll;
 }
 
-.add-window {
-  float: right;
+.add-window h2 {
+  text-align: center;
+  margin-top: -20px;
 }
 
 .image-preview {
@@ -54,7 +55,7 @@
 
 
 .image {
-  width: 250px;
+  width: 43%;
   height: 210px;
   border: 2px solid #D9D9D9;
   box-shadow: inset 2px 5px 7px #D9D9D9;

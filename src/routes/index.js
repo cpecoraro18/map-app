@@ -3,13 +3,13 @@
 const express = require('express');
 const router = express.Router();
 const {ensureAuthenticated, forwardAuthenticated} = require('../config/auth');
-const userController = require('../controller/user');
 
 router.get('/', ensureAuthenticated, function(req, res, next) {
   res.render('home', {page: 'Home', menuId: 'home', username: req.user.username});
 });
 
 router.get('/profile', ensureAuthenticated, function(req, res, next) {
+
   res.render('profile', {page: 'Profile', menuId: 'profile', username: req.user.username});
 });
 router.get('/explore', ensureAuthenticated, function(req, res, next) {
@@ -36,4 +36,5 @@ router.get('/register', forwardAuthenticated, function(req, res) {
   const errors = req.flash().error || [];
   res.render('register', {page: 'Register', errors: errors});
 });
+
 module.exports = router;

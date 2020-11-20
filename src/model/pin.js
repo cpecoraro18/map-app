@@ -21,7 +21,7 @@ const Pin = function(body) {
   this.location_name = body.location_name,
   this.lat = body.lat,
   this.lng = body.lng,
-  this.tag = body.tag
+  this.tag = body.tag;
 };
 
 /**
@@ -36,7 +36,6 @@ Pin.getUserPins = async function(userId, result) {
     if (err) throw err;
     // if there is no error, you have the result
     result(null, pins);
-
   });
 };
 
@@ -61,13 +60,13 @@ Pin.getUserFeed = async function(userId, result) {
   * @param {function} result function that takes and error and a pin
   */
 Pin.getPinById = async function(pinId, result) {
-  let self = this;
+  const self = this;
   const query = 'select pin.pin_id, pin.pin_title, pin_locationName, pin.pin_description, pin.pin_lat, pin.pin_lng, user.user_username, user.user_profilePic FROM pin join user on pin.pin_userId = user.user_id where pin.id = ' + pinId;
   db.query(query, (err, pin, fields) => {
     // if any error while executing above query, throw error
     if (err) throw err;
     // if there is no error, you have the result
-    result(null, pin)
+    result(null, pin);
   });
 };
 
@@ -77,7 +76,7 @@ Pin.getPinById = async function(pinId, result) {
   * @param {function} result function that takes and error and a pin
   */
 Pin.getPinImages = async function(pinId, result) {
-  let self = this;
+  const self = this;
   const query = 'select (photo_path) from pin_photo left join photo on pin_photo.pin_photo_photoId = photo.photo_id where pin_photo_pinId = ' + pinId;
   db.query(query, (err, photos, fields) => {
     // if any error while executing above query, throw error
@@ -119,26 +118,26 @@ Pin.createPin = async function(newPin, user, result) {
     description: newPin.description,
     lat: newPin.lat,
     lng: newPin.lng,
-    tag: newPin.tag
+    tag: newPin.tag,
   };
 
-  let images = newPin.img_url;
+  const images = newPin.img_url;
 
-  let self = this;
+  const self = this;
   // MAKE NEW PIN
   const newPinQuery = 'insert into pin (pin_userId, pin_title, pin_locationName, pin_description, pin_lat, pin_lng) values("' + pin.userId + '","' + pin.title + '","' + pin.location_name + '","' + pin.description + '","' + pin.lat + '","' + pin.lng + '")';
   db.query(newPinQuery, (err, pinInsert, fields) => {
     // if any error while executing above query, throw error
     if (err) result(err, null);
-    //add id
+    // add id
     pin.id = pinInsert.insertId;
-    self.addPinImages(pin, images, result)
+    self.addPinImages(pin, images, result);
   });
 };
 
 Pin.addPinImages = async function(pin, images, result) {
-  let self = this;
-  var pinPhotos = []
+  const self = this;
+  const pinPhotos = [];
   // ADD PHOTOS
   if (images && images.length > 0) {
     const newPhotoQuery = 'INSERT INTO photo (photo_id, photo_path) VALUES ?';
@@ -152,7 +151,6 @@ Pin.addPinImages = async function(pin, images, result) {
     db.query(newPhotoQuery, [values], (err, photos, fields) => {
       if (err) throw err;
       self.connectImagesToPin(pin, pinPhotos, result);
-
     });
   } else {
     self.addPinTags(pin, result);
@@ -167,7 +165,7 @@ Pin.connectImagesToPin = async function(pin, pinPhotos, result) {
     pinPhotos.forEach((photo) => {
       values.push([pin.id, photo]);
     });
-    let self = this;
+    const self = this;
     db.query(newPinPhotoQuery, [values], (err, pinPhotos, fields) => {
       if (err) throw err;
       self.addPinTags(pin, result);
@@ -179,23 +177,23 @@ Pin.connectImagesToPin = async function(pin, pinPhotos, result) {
 
 
 Pin.addPinTags = async function(pin, result) {
-  let self = this;
+  const self = this;
   if (pin.tag) {
-    const checkTagExistsQuery = 'SELECT * FROM tag WHERE tag_name = "' + pin.tag + '"'
+    const checkTagExistsQuery = 'SELECT * FROM tag WHERE tag_name = "' + pin.tag + '"';
     db.query(checkTagExistsQuery, (err, tags, fields) => {
       if (err) throw err;
-      //if tag exists
-      if(tags[0]){
-        //add pin tag relationship
-        pin.tag = {name: pin.tag, id: tags[0].tag_id}
+      // if tag exists
+      if (tags[0]) {
+        // add pin tag relationship
+        pin.tag = {name: pin.tag, id: tags[0].tag_id};
         self.connectTagstoPin(pin, result);
-        //if tag doesnt exist
+        // if tag doesnt exist
       } else {
-        //make new tag and add pin tag relationship
+        // make new tag and add pin tag relationship
         const newTagQuery = 'INSERT INTO tag (tag_name) VALUES("' + pin.tag +'")';
         db.query(newTagQuery, (err, tag, fields) => {
           if (err) throw err;
-          pin.tag = {name: pin.tag, id: tag.insertId}
+          pin.tag = {name: pin.tag, id: tag.insertId};
           self.connectTagstoPin(pin, result);
         });
       }
@@ -217,7 +215,6 @@ Pin.connectTagstoPin = async function(pin, result) {
     result(null, pin);
   }
 };
-
 
 
 /**

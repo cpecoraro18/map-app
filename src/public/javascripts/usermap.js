@@ -7,7 +7,7 @@
 function UserMap() {
   console.log('Init Home Map');
   MapShotMap.call(this);
-  this.pinObjects = []
+  this.pinObjects = [];
   this.getPins();
   this.getTags();
   console.log('Done with Mapshot constructor');
@@ -33,27 +33,28 @@ UserMap.prototype.getPins = function() {
 };
 /**
   *Gets pins images
+  * @param pin
   */
 UserMap.prototype.getPinImages = function(pin) {
-  //to be removed
+  // to be removed
   const self = this;
-    $.ajax({
-      url: '/pin/images/?pinId=' + pin.pin_id,
-      type: 'GET',
-      contentType: 'application/json',
-      success: function(images) {
-        pin.images = images;
-        self.getPinTags(pin);
-      },
-    });
-
+  $.ajax({
+    url: '/pin/images/?pinId=' + pin.pin_id,
+    type: 'GET',
+    contentType: 'application/json',
+    success: function(images) {
+      pin.images = images;
+      self.getPinTags(pin);
+    },
+  });
 };
 
 /**
   *Gets pins tags
+  * @param pin
   */
 UserMap.prototype.getPinTags = function(pin) {
-  //to be removed
+  // to be removed
   const self = this;
   $.ajax({
     url: '/pin/tags/?pinId=' + pin.pin_id,
@@ -66,6 +67,9 @@ UserMap.prototype.getPinTags = function(pin) {
   });
 };
 
+/**
+  *Gets pins
+  */
 UserMap.prototype.getTags = function() {
   const self = this;
   $.ajax({
@@ -77,17 +81,22 @@ UserMap.prototype.getTags = function() {
   });
 };
 
+/**
+  *Gets pins tags
+  * @param tags
+  */
 UserMap.prototype.addTagstoMenu = function(tags) {
-  let self = this;
-  let tagContainer = $('#tags')[0]
-  let allTagRow = document.createElement('tr');
-  let allTagContainer = document.createElement('td');
-  allTagContainer.addEventListener('click', function(){
-    self.filterEventsByTag({tag_name: "All"})
-  })
-  let allTag = document.createElement("span");
-  allTag.className = "tag"
-  allTag.innerHTML = "All";
+  const self = this;
+  const tagContainer = $('#tags')[0];
+  const allTagRow = document.createElement('tr');
+
+  const allTagContainer = document.createElement('td');
+  allTagContainer.addEventListener('click', function() {
+    self.filterEventsByTag({tag_name: 'All'});
+  });
+  const allTag = document.createElement('span');
+  allTag.className = 'tag';
+  allTag.innerHTML = 'All';
   allTagContainer.appendChild(allTag);
 
   allTagRow.appendChild(allTagContainer);
@@ -95,31 +104,31 @@ UserMap.prototype.addTagstoMenu = function(tags) {
   tagContainer.appendChild(allTagRow);
 
   tags.forEach((tag, i) => {
-    console.log(tag)
-    if(i%2 == 0) return;
+    console.log(tag);
+    if (i%2 == 1) return;
 
-    let tagRow = document.createElement('tr');
+    const tagRow = document.createElement('tr');
 
 
-    let firstTagContainer = document.createElement('td');
-    firstTagContainer.addEventListener('click', function(){
-      self.filterEventsByTag(tag)
-    })
-    let firstTag = document.createElement("span");
-    firstTag.className = "tag"
+    const firstTagContainer = document.createElement('td');
+    firstTagContainer.addEventListener('click', function() {
+      self.filterEventsByTag(tag);
+    });
+    const firstTag = document.createElement('span');
+    firstTag.className = 'tag';
     firstTag.innerHTML = tag.tag_name;
     firstTagContainer.appendChild(firstTag);
 
     tagRow.appendChild(firstTagContainer);
 
 
-    if(tags[i+1]){
-      let secondTagContainer = document.createElement('td');
-      secondTagContainer.addEventListener('click', function(){
-        self.filterEventsByTag(tags[i + 1])
-      })
-      let secondTag = document.createElement("span");
-      secondTag.className = "tag"
+    if (tags[i+1]) {
+      const secondTagContainer = document.createElement('td');
+      secondTagContainer.addEventListener('click', function() {
+        self.filterEventsByTag(tags[i + 1]);
+      });
+      const secondTag = document.createElement('span');
+      secondTag.className = 'tag';
       secondTag.innerHTML = tags[i + 1].tag_name;
       secondTagContainer.appendChild(secondTag);
       tagRow.appendChild(secondTagContainer);
@@ -127,52 +136,405 @@ UserMap.prototype.addTagstoMenu = function(tags) {
 
 
     tagContainer.appendChild(tagRow);
-
   });
 };
 
+/**
+  *Gets pins tags
+  * @param tag
+  */
 UserMap.prototype.filterEventsByTag = function(tag) {
   console.log(tag);
-  let self = this;
-  var bounds = new google.maps.LatLngBounds();
+  const self = this;
+  const bounds = new google.maps.LatLngBounds();
   this.pinObjects.forEach((pinObject) => {
     let hasTag = false;
     pinObject.pin.tags.forEach((t) => {
-      if(t.tag_name == tag.tag_name || tag.tag_name == "All") {
+      console.log(tag.tag_name == 'All')
+      if (t.tag_name == tag.tag_name || tag.tag_name == 'All') {
         hasTag = true;
       }
     });
-    if(hasTag){
+    if (hasTag) {
       pinObject.marker.setMap(self.map);
       bounds.extend(pinObject.marker.latlng_);
-    }
-    else pinObject.marker.setMap(null);
+    } else pinObject.marker.setMap(null);
   });
-  this.map.fitBounds(bounds, {padding: {
-            top: 0,
-            bottom: 0,
-            left:600,
-            right: 0
-        }});
+  this.map.fitBounds(bounds);
   retractMenu();
 };
 
 
 /**
   *Adds a marker and infowindow for each pin on explore map
-  *@param {array} pins Map from init map.
+  *@param {array} pin Map from init map.
   */
 UserMap.prototype.addPinToMap = function(pin) {
-  const pinMarker = this.addMarker(pin);
-  const pinInfoWindow = this.addInfoWindow(pin, pinMarker);
+  let self = this;
+  const pinElement = this.addPin(pin);
+  const pinMarker = this.addMarker(pin)
+  pinMarker.addListener("click", () => {
+    self.map.setZoom(17);
+    self.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
+    pinElement.toggle();
+  });;
+  //const pinInfoWindow = this.addInfoWindow(pin, pinMarker);
 
-  var pinElements = {
+  const pinElements = {
     pin: pin,
     marker: pinMarker,
-    infowindow: pinInfoWindow,
-  }
-  this.pinObjects.push(pinElements)
+  };
+  this.pinObjects.push(pinElements);
 };
+
+
+
+/**
+  *Adds custom markers to the explore map
+  *@param {map} pin Map from init map.
+  */
+UserMap.prototype.addPin = function(pin) {
+  const self = this;
+  console.log(pin);
+  PinElement.prototype = new google.maps.OverlayView();
+  /**
+    *Adds custom markers to the explore map
+    *@param {map} map Map from init map.
+    *@param {object} latlng a lat lng object
+    *@param {object} imageSrc image used for marker
+    */
+  function PinElement(map, pin) {
+    this.latlng_ = new google.maps.LatLng(pin.pin_lat, pin.pin_lng);
+    this.pin_ = pin;
+    // Once the LatLng and text are set, add the overlay to the map.  This will
+    // trigger a call to panes_changed which should in turn call draw.
+    this.setMap(map);
+  }
+
+
+  PinElement.prototype.onAdd = function() {
+    // Check if the div has been created.
+    let div = this.div_;
+    if (!div) {
+      // CONTAINER
+      div = this.div_ = document.createElement('div');
+      div.className = 'pin pin-container';
+
+
+      const headerElement = this.createHeader();
+      if (headerElement) div.appendChild(headerElement);
+
+      // TAGS
+      const tagContainer = this.createTagContainer();
+      if (tagContainer) div.appendChild(tagContainer);
+
+      // IMAGES
+      const imageContainer = this.createImageContainer();
+      if (imageContainer) div.appendChild(imageContainer);
+
+      // descriptions
+      const likeCommentContainer = this.createLikeCommentContainer();
+      if (likeCommentContainer) div.appendChild(likeCommentContainer);
+
+      // descriptions
+      const descriptionContainer = this.createDescriptionContainer();
+      if (descriptionContainer) div.appendChild(descriptionContainer);
+
+      const buttonContainer = this.createButtonContainer();
+      if (buttonContainer) div.appendChild(buttonContainer);
+
+
+      // Then add the overlay to the DOM
+      const panes = this.getPanes();
+      panes.overlayImage.appendChild(div);
+      this.div_.style.visibility = 'hidden';
+    }
+  };
+
+  PinElement.prototype.createHeader = function() {
+    // Header
+    const headerElement = document.createElement('div');
+    headerElement.className = 'pin pin-header';
+
+    const settingsElement = document.createElement("span")
+    settingsElement.className = "settings-element";
+    settingsElement.innerHTML = '<i class="fas fa-ellipsis-h"></i>'
+    headerElement.appendChild(settingsElement);
+    console.log(settingsElement);
+
+    const titleElement = document.createElement('h2');
+    titleElement.className = 'pin pin-title';
+    titleElement.innerHTML = this.pin_.pin_title;
+    headerElement.appendChild(titleElement);
+
+    const locationElement = document.createElement('h3');
+    locationElement.className = 'pin pin-location';
+    locationElement.innerHTML = this.pin_.pin_locationName;
+    headerElement.appendChild(locationElement);
+
+    const dateElemeent = document.createElement('h4');
+
+
+    return headerElement;
+  };
+
+  PinElement.prototype.createTagContainer = function() {
+    // Header
+    const tagContainer = document.createElement('div');
+    tagContainer.className = 'pin pin-tag';
+    this.pin_.tags.forEach((tag) => {
+      const tagElement = document.createElement('h4');
+      tagElement.className = 'pin';
+      tagElement.innerHTML = tag.tag_name;
+      tagElement.setAttribute('style', 'cursor: pointer; color: white;');
+      google.maps.event.addDomListener(tagElement, 'click', function(event) {
+        console.log('tag:' + tag);
+      });
+      tagContainer.appendChild(tagElement);
+    });
+
+    return tagContainer;
+  };
+
+  PinElement.prototype.createLikeCommentContainer = function() {
+    // Header
+    const likeCommentContainer = document.createElement('div');
+    likeCommentContainer.className = 'pin-like-comment';
+
+    const likeText = document.createElement('a');
+    likeText.innerHTML = '48 Likes';
+    likeText.setAttribute('style', 'cursor: pointer');
+
+
+    const commentText = document.createElement('a');
+    commentText.innerHTML = '8 Comments';
+    commentText.setAttribute('style', 'cursor: pointer');
+
+    likeCommentContainer.appendChild(likeText);
+    likeCommentContainer.appendChild(commentText);
+
+    return likeCommentContainer;
+  };
+
+  PinElement.prototype.createDescriptionContainer = function() {
+    // Header
+    const descriptionContainer = document.createElement('div');
+    descriptionContainer.className = 'pin pin-description-container';
+
+    const descriptionElement = document.createElement('p');
+    descriptionElement.className = 'pin';
+    descriptionElement.innerHTML = '<a href="/profile"><b>@' + this.pin_.user_username + '</b></a> '+ this.pin_.pin_description;
+    descriptionElement.setAttribute('style', 'color: black');
+    descriptionContainer.appendChild(descriptionElement);
+
+    return descriptionContainer;
+  };
+
+  PinElement.prototype.createButtonContainer = function() {
+    const pinElementSelf = this;
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'pin-button';
+
+    const likeButton = document.createElement('a');
+    likeButton.innerHTML = '<i class="fas fa-heart"></i>';
+    likeButton.style.cursor = 'pointer';
+    likeButton.setAttribute('style', 'color: #a83f39; cursor: pointer');
+    google.maps.event.addDomListener(likeButton, 'click', function(event) {
+      // like pin
+    });
+
+    const commentButton = document.createElement('a');
+    commentButton.innerHTML = '<i class="fas fa-comment"></i>';
+    commentButton.style.cursor = 'pointer';
+    commentButton.setAttribute('style', 'color: #3B5284; cursor: pointer');
+    google.maps.event.addDomListener(commentButton, 'click', function(event) {
+
+      // comment on pin
+    });
+
+
+    buttonContainer.appendChild(likeButton);
+    buttonContainer.appendChild(commentButton);
+
+    return buttonContainer;
+  };
+
+  PinElement.prototype.createImageContainer = function() {
+    const self = this;
+    if (this.pin_.images.length == 0) return;
+
+    const carouselContainer = document.createElement('div');
+    carouselContainer.className = 'pin pin-image-carousel';
+    carouselContainer.style.cursor = 'pointer';
+
+
+    const photosElement = document.createElement('div');
+    photosElement.setAttribute('id', 'controls' + this.pin_.pin_id);
+    photosElement.className = 'carousel slide';
+    photosElement.setAttribute('data-ride', 'carousel');
+
+
+    const imageIndicators = document.createElement('ol');
+    imageIndicators.className = 'carousel-indicators';
+    photosElement.appendChild(imageIndicators);
+
+    const photosContainer = document.createElement('div');
+    photosContainer.className = 'carousel-inner';
+    this.pin_.images.forEach((image, i) => {
+      const imageContainer = document.createElement('div');
+      if (i == 0) imageContainer.className = ' item carousel-item active';
+      else imageContainer.className = 'item carousel-item';
+
+      const imageElement = document.createElement('div');
+      imageElement.className = 'pin-image';
+      imageElement.setAttribute('style',
+          'background-image: url("'+ image.photo_path.replace(/\\/g, '/') + '")');
+      google.maps.event.addDomListener(imageElement, 'dblclick', function(event) {
+        self.toggleImageFullscreen();
+      });
+      imageContainer.appendChild(imageElement);
+      photosContainer.appendChild(imageContainer);
+
+      if (self.pin_.images.length > 1) {
+        const imgIndicator = document.createElement('li');
+        imgIndicator.setAttribute('data-target', '#controls' + this.pin_.pin_id);
+        imgIndicator.setAttribute('data-slide-to', i);
+        if (i==0) imgIndicator.className = 'active';
+        imageIndicators.appendChild(imgIndicator);
+      }
+    });
+    photosElement.appendChild(photosContainer);
+
+    carouselContainer.appendChild(photosElement);
+    if (this.pin_.images.length > 1) {
+      // CONTROLS
+      const prevControl = document.createElement('a');
+      prevControl.className = 'carousel-control-prev';
+      prevControl.innerHTML = '<i class="fas fa-caret-left"></i>';
+      prevControl.setAttribute('href', '#controls' + this.pin_.pin_id);
+      prevControl.setAttribute('role', 'button');
+      prevControl.setAttribute('data-slide', 'prev');
+
+      const prevIcon = document.createElement('span');
+      prevIcon.className = 'carousel-control-prev-icon';
+
+      const prevText = document.createElement('span');
+      prevText.className = 'sr-only';
+      prevText.innerHtml = 'Previous';
+
+      prevControl.appendChild(prevIcon);
+      prevControl.appendChild(prevText);
+
+      const nextControl = document.createElement('a');
+      nextControl.className = 'carousel-control-next';
+      nextControl.innerHTML = '<i class="fas fa-caret-right"></i>';
+      nextControl.setAttribute('href', '#controls' + this.pin_.pin_id);
+      nextControl.setAttribute('role', 'button');
+      nextControl.setAttribute('data-slide', 'next');
+
+      const nextIcon = document.createElement('span');
+      nextIcon.className = 'carousel-control-next-icon';
+
+      const nextText = document.createElement('span');
+      nextText.className = 'sr-only';
+      nextText.innerHtml = 'Next';
+
+      nextControl.appendChild(nextIcon);
+      nextControl.appendChild(nextText);
+
+      carouselContainer.appendChild(prevControl);
+      carouselContainer.appendChild(nextControl);
+    }
+
+    return carouselContainer;
+  };
+
+
+  PinElement.prototype.draw = function() {
+    $('.carousel').carousel('pause');
+    // Position the overlay
+    const point = this.getProjection().fromLatLngToDivPixel(this.latlng_);
+    if (point) {
+      this.div_.style.left = point.x - 15 + 'px';
+      this.div_.style.top = point.y - 15 + 'px';
+    }
+  };
+
+  // Set the visibility to 'hidden' or 'visible'.
+  PinElement.prototype.hide = function() {
+    if (this.div_) {
+      // The visibility property must be a string enclosed in quotes.
+      this.div_.style.visibility = 'hidden';
+    }
+  };
+
+  PinElement.prototype.show = function() {
+    if (this.div_) {
+      this.div_.style.visibility = 'visible';
+      console.log(this.div_.offsetHeight/2);
+      self.map.panBy(-25, .45*this.div_.offsetHeight);
+    }
+  };
+
+  PinElement.prototype.toggle = function() {
+    if (this.div_) {
+      if (this.div_.style.visibility === 'hidden') {
+        this.show();
+      } else {
+        this.hide();
+      }
+    }
+  };
+
+
+  // Set the visibility to 'hidden' or 'visible'.
+  PinElement.prototype.enterImageFullscreen = function() {
+    if (this.div_) {
+    // The visibility property must be a string enclosed in quotes.
+      this.div_.classList.add('fullscreen');
+      this.map.panBy(250, this.div_.offsetHeight/12);
+    }
+  };
+
+  PinElement.prototype.exitImageFullscreen = function() {
+    if (this.div_) {
+      this.div_.classList.remove('fullscreen');
+      this.map.panBy(-250, -this.div_.offsetHeight/7.9);
+    }
+  };
+  PinElement.prototype.toggleImageFullscreen = function() {
+    if (this.div_) {
+      if (this.div_.classList.contains('fullscreen')) {
+        this.exitImageFullscreen();
+      } else {
+        this.enterImageFullscreen();
+      }
+    }
+  };
+
+  PinElement.prototype.onRemove = function() {
+    // Check if the overlay was on the map and needs to be removed.
+    if (this.div_) {
+      this.div_.parentNode.removeChild(this.div_);
+      this.div_ = null;
+    }
+  };
+
+  PinElement.prototype.getPosition = function() {
+    return this.latlng_;
+  };
+
+  if (pin) {
+    const pinElement = new PinElement(this.map, pin);
+    this.map.addListener('zoom_changed', () => {
+      if (this.map.getZoom() < 8) pinElement.hide();
+    });
+    pinElement.hide();
+    return pinElement;
+  }
+};
+
 
 /**
   *Adds a marker based on information from pin
@@ -258,7 +620,7 @@ UserMap.prototype.addMarker = function(pin) {
     return this.latlng_;
   };
   let img = './assets/images/userProfile.png';
-  if(pin.user_profilePic) img = pin.user_profilePic
+  if (pin.user_profilePic) img = pin.user_profilePic;
 
   const marker = new UserMapMarker(this.map, new google.maps.LatLng(pos.lat, pos.lng), img);
   return marker;
@@ -323,11 +685,10 @@ UserMap.prototype.initMenu = function() {
     $('#profilePicture').css('background-image', 'url(' + img + ')');
     $('#username').html('@' + user.user_username);
     $('#user').html(user.user_name);
-    if(user.user_bio) $('#profile_TextBox').html(user.user_bio);
-    else $('#profile_TextBox').css('display', 'none')
+    if (user.user_bio) $('#profile_TextBox').html(user.user_bio);
+    else $('#profile_TextBox').css('display', 'none');
   });
 };
-
 
 
 /** @global */
@@ -338,4 +699,24 @@ let map;
   */
 function initMap() {
   map = new UserMap();
+}
+
+
+function openSettings() {
+  console.log("HERE")
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
 }

@@ -6,7 +6,18 @@
   <div class="menu-toggle" onclick="toggleMenu()">
     <i class="fas fa-caret-left"></i>
   </div>
+>
   <div class="menu-content">
+    <div class="dropdown" id="settings">
+      <button onclick="openSettings()" class="dropbtn">Settings</button>
+      <div id="myDropdown" class="dropdown-content">
+        <a href="/customizeMap">Customize Map</a>
+        <a href="/settings">Settings</a>
+        <a href="/changePassword">Change Password</a>
+        <a href="#" id=logoutButton>Logout <i class="fas fa-sign-out-alt"></i></a>
+      </div>
+    </div>
+    <br>
     <table style="margin:auto">
         <tr class="blank_row"><td colspan="3"></td></tr>
         <tr class="blank_row"><td colspan="3"></td></tr>
@@ -50,6 +61,7 @@
     <table id = 'tags' style="margin:auto">
 
     </table>
+    <button type="button" name="button" class="btn activity-button" onclick="toggleActivity()">Activity</button>
   </div>
 
 </div>

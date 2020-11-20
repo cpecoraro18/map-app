@@ -10,7 +10,7 @@ const {ensureAuthenticated} = require('../config/auth');
 // router.get('/explore', ensureAuthenticated, pinController.get_explore_feed);
 router.post('/', ensureAuthenticated, bucketController.post_bucket);
 router.get('/', ensureAuthenticated, bucketController.get_user_buckets);
-router.delete('/:pinId', ensureAuthenticated, bucketController.delete_bucket);
+router.delete('/:bucketId', ensureAuthenticated, bucketController.delete_bucket);
 
 
 module.exports = router;

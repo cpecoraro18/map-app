@@ -62,17 +62,28 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('*', function(req, res, next) {
   const error = new Error('Not Found');
   error.status = 404;
-  next(error);
+  res.render('error', {status: error.status, error: "Not Found"});
+});
+
+
+app.use(function(error, req, res, next) {
+  res.status(error.status || 500);
+  res.json({
+    error : {
+      message: error.message
+    }
+  });
+  console.log("ERROR: ", error);
 });
 
 app.use(function(error, req, res, next) {
   res.status(error.status || 500);
   res.json({
-    error: {
-      message: error.message,
-    },
+    error : {
+      message: error.message
+    }
   });
-  console.log('ERROR: ', error);
+  console.log("ERROR: ", error);
 });
 
 module.exports = app;

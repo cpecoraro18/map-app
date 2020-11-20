@@ -49,10 +49,10 @@ MapShotMap.prototype.initAddPinUI = function() {
   $('#submitButton').click(function(e) {
     e.preventDefault();
     const formData = new FormData($('#newPinForm')[0]);
-    var validatedForm = self.validateForm(formData, searchbox);
+    const validatedForm = self.validateForm(formData, searchbox);
     console.log(validatedForm);
 
-    
+
     $.ajax({
       type: 'POST',
       url: '/pin',
@@ -92,19 +92,54 @@ MapShotMap.prototype.initAddPinUI = function() {
 };
 
 MapShotMap.prototype.bucketPin = function(pin) {
-  alert("Bucket pin:" + pin.pin_id);
+  let data = {
+    lat: pin.pin_lat,
+    lng: pin.pin_lng,
+    location: pin.pin_locationName
+  }
+  console.log(data);
   $.ajax({
     type: 'POST',
     url: '/bucket',
-    data: pin,
+    data: data,
     success: function(result) {
-      let notificationBubble = document.createElement("span");
-      notificationBubble.className = "notification-bubble"
-      notificationBubble.innerHTML = '<i class="fas fa-circle"></i>'
+      const notificationBubble = document.createElement('span');
+      notificationBubble.className = 'notification-bubble';
+      notificationBubble.innerHTML = '<i class="fas fa-circle"></i>';
       $('#bucketListLink')[0].appendChild(notificationBubble);
     },
+    error: function(err) {
+      console.log(err);
+    }
   });
+};
 
+MapShotMap.prototype.bucketPlace = function(place) {
+  let data = {
+    lat: place.geometry.location.lat(),
+    lng: place.geometry.location.lng(),
+    location: place.name
+  }
+  console.log(data);
+  $.ajax({
+    beforeSend: function(xhrObj){
+      xhrObj.setRequestHeader("Content-Type","application/json");
+      xhrObj.setRequestHeader("Accept","application/json");
+    },
+    type: 'POST',
+    url: '/bucket',
+    data: JSON.stringify(data),
+    success: function(result) {
+      console.log(result);
+      const notificationBubble = document.createElement('span');
+      notificationBubble.className = 'notification-bubble';
+      notificationBubble.innerHTML = '<i class="fas fa-circle"></i>';
+      $('#bucketListLink')[0].appendChild(notificationBubble);
+    },
+    error: function(err) {
+      console.log(err.responseJSON.msg);
+    }
+  });
 };
 
 MapShotMap.prototype.likePin = function(pin) {
@@ -116,11 +151,7 @@ MapShotMap.prototype.pinLocation = function(locationName, lat, lng) {
 };
 
 
-
-
 MapShotMap.prototype.validateForm = function(formData, searchbox) {
-
-
   const places = searchbox.getPlaces();
   let pos;
   if (places && places[0].geometry) {
@@ -171,7 +202,6 @@ MapShotMap.prototype.openAddPin = function() {
   $('.image-preview-img')[0].style.display = 'none';
   $('.image-preview-img')[0].setAttribute('src', '');
 };
-
 
 
 /**

@@ -22,8 +22,8 @@ CustomizeMap.prototype.addButtons = function() {
 
 
 MapShotMap.prototype.initAddPinUI = function() {
-  
-}
+
+};
 
 
 /**

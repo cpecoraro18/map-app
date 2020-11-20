@@ -41,11 +41,9 @@ User.createUser = async function(newUser, result) {
     // if there is no error, you have the result
     const mapquery = 'insert into mapstyle (mapStyle_template, mapStyle_userId) values("[]", '+ user.insertId+')';
     db.query(mapquery, (err, user, fields) => {
-
       if (err) throw err;
       result(null, user);
     });
-
   });
 };
 /**

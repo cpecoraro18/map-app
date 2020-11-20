@@ -26,12 +26,14 @@ exports.get_user_buckets = function(req, res) {
 * @param {Object} req client request
 * @param {Object} res server response
 */
-exports.post_bucket = function(req, res) {
+exports.post_bucket = function(req, res, next) {
   const newBucket = new Bucket(req.body);
-  let userId = req.user.user_id;
+  const userId = req.user.user_id;
   Bucket.createBucket(newBucket, userId, (err, bucket) => {
-    if (err) throw err;
-    res.status(201).json(bucket);
+    if (err) return next(err);
+    else {
+      res.status(201).json(bucket);
+    }
   });
 };
 /**
@@ -41,9 +43,10 @@ exports.post_bucket = function(req, res) {
 * @param {Object} res server response
 */
 exports.delete_bucket = function(req, res) {
-  const bucketId = req.bucketId;
+  const bucketId = req.params.bucketId;
   Bucket.deleteBucket(bucketId, (err, bucket) => {
     if (err) throw err;
-    res.status(201);
+    console.log("BUCKET DELETED")
+    res.sendStatus(200);
   });
 };

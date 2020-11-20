@@ -55,11 +55,7 @@ exports.get_user_tags = function(req, res) {
 exports.get_style = function(req, res) {
   User.getUserStyle(req.user.user_id, function(err, mapStyle) {
     if (err) {
-      res.status(500).json({
-        error: err,
-        message: 'Could not getstyle',
-      });
-      return;
+      return err;
     }
     res.status(200).json(mapStyle);
   });
@@ -73,7 +69,7 @@ exports.get_style = function(req, res) {
 exports.edit_style = function(req, res) {
   const newStyle = req.body.userStyle;
   User.changeStyle(req.user.user_id, newStyle, (err, style) => {
-    if (err) throw err;
+    if (err) return err;
     res.status(201).json(style);
   });
 };
@@ -98,11 +94,7 @@ exports.get_user_by_id = function(req, res) {
   const id = parseInt(req.params.id);
   User.getUserById(id, function(err, user) {
     if (err) {
-      res.status(500).json({
-        error: err,
-        message: 'Could not get user',
-      });
-      return;
+      return err;
     }
     if (user == null) {
       res.status(401).json({
@@ -122,7 +114,7 @@ exports.get_user_by_id = function(req, res) {
 */
 exports.register_user = function(req, res) {
   const {firstname, lastname, username, email, password} = req.body;
-  let name = firstname + " " + lastname;
+  const name = firstname + ' ' + lastname;
   const errors = [];
 
   User.getUserByUsername(username, (err, user) => {

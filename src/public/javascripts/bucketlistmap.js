@@ -7,7 +7,9 @@
 function BucketListMap() {
   console.log('Init Home Map');
   MapShotMap.call(this);
+  this.initMenu();
   this.getBuckets();
+  this.bucketObjects = [];
   console.log('Done with Mapshot constructor');
 }
 
@@ -18,62 +20,72 @@ BucketListMap.prototype.constructor = BucketListMap;
   *Gets pins from backend and starts process of putting them on the map
   */
 BucketListMap.prototype.getBuckets = function() {
-  let self = this;
+  const self = this;
   $.ajax({
     url: '/bucket',
     method: 'GET',
     success: function(buckets) {
-      if(buckets && buckets.length > 0) {
-        document.getElementById('bucketList').innerHTML = ""
+      if (buckets && buckets.length > 0) {
+        document.getElementById('bucketList').innerHTML = '';
         buckets.forEach(function(bucket) {
-          var marker = self.addBuckettoMap(bucket);
-          self.addBuckettoMenu(bucket, marker);
-
+          const marker = self.addBuckettoMap(bucket);
+          const bucketlistCheck = self.addBuckettoMenu(bucket, marker);
+          self.bucketObjects.push({marker, bucketlistCheck, bucket})
         });
       }
     },
     error: function(err) {
-    }
+    },
   });
 };
 
 /**
   *Initializes explore map menu
+  * @param bucket the bucket
+  * @param marker marker associated with bucket
   */
 BucketListMap.prototype.addBuckettoMenu = function(bucket, marker) {
   console.log(bucket);
-  let bucketlistContainer = document.createElement('div');
-  let bucketlistCheck = document.createElement('input');
-  bucketlistCheck.setAttribute('type', "checkbox")
-  bucketlistCheck.className = 'bucket-checkbox'
+  const bucketlistContainer = document.createElement('div');
+  const bucketlistCheck = document.createElement('input');
+  bucketlistCheck.setAttribute('type', 'checkbox');
+  bucketlistCheck.className = 'bucket-checkbox';
   bucketlistCheck.addEventListener('change', function() {
     document.getElementById('bucketlistButton').disabled = $('input.bucket-checkbox:checked').length == 0;
   });
 
-  let bucketItem = document.createElement('span');
-  bucketItem.innerHTML = bucket.pin_locationName;
+  const bucketItem = document.createElement('span');
+  bucketItem.innerHTML = bucket.bucket_location;
 
 
   bucketlistContainer.appendChild(bucketlistCheck);
   bucketlistContainer.appendChild(bucketItem);
 
   $('#bucketList')[0].appendChild(bucketlistContainer);
-  let self = this;
-  bucketItem.addEventListener('click', function(){
+  const self = this;
+  bucketItem.addEventListener('click', function() {
     self.map.setZoom(17);
     self.map.panTo(marker.position);
-  })
+  });
+
+  return bucketlistCheck;
+
 };
 /**
   *Adds a marker and infowindow for each pin on explore map
-  *@param {array} pins Map from init map.
+  *@param {array} bucket Map from init map.
+  * @return marker that was put on the map
   */
 BucketListMap.prototype.addBuckettoMap = function(bucket) {
-  let self = this;
+  const self = this;
   marker = new google.maps.Marker({
     map: self.map,
     animation: google.maps.Animation.DROP,
-    position: { lat: bucket.pin_lat, lng: bucket.pin_lng },
+    position: {lat: bucket.bucket_lat, lng: bucket.bucket_lng},
+  });
+  marker.addListener('click', function() {
+    self.map.setZoom(17);
+    self.map.panTo(marker.position);
   });
   return marker;
 };
@@ -205,10 +217,29 @@ BucketListMap.prototype.addInfoWindow = function(pin, marker) {
     self.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
   });
 };
+/**
+  *Initializes explore map menu
+  */
+BucketListMap.prototype.initMenu = function() {
+  let self = this;
+  $('#bucketlistButton')[0].addEventListener('click', function() {
+    self.bucketObjects.forEach((object, i) => {
+        console.log(object);
+        if(object.bucketlistCheck.checked){
+          $.ajax({
+            url: '/bucket/' + object.bucket.bucket_id,
+            type: 'DELETE',
+            success: function(result) {
+                console.log(result);
+            }
+        });
+        }
+    });
 
 
+  });
 
-
+};
 
 /** @global */
 let map;
