@@ -8,7 +8,7 @@
     background: white;
     color: white;
     transition: all 0.3s;
-    z-index: 101;
+    z-index: 99;
     overflow: visible;
 }
 

@@ -20,6 +20,11 @@ BucketListMap.prototype.constructor = BucketListMap;
   *Gets pins from backend and starts process of putting them on the map
   */
 BucketListMap.prototype.getBuckets = function() {
+  if(this.bucketObjects && this.bucketObjects.length > 0) {
+    this.bucketObjects.forEach((object) => {
+      object.marker.setMap(null);
+    });
+  }
   const self = this;
   $.ajax({
     url: '/bucket',
@@ -32,6 +37,8 @@ BucketListMap.prototype.getBuckets = function() {
           const bucketlistCheck = self.addBuckettoMenu(bucket, marker);
           self.bucketObjects.push({marker, bucketlistCheck, bucket})
         });
+      } else {
+        document.getElementById('bucketList').innerHTML = 'No Buckets :(';
       }
     },
     error: function(err) {
@@ -80,7 +87,6 @@ BucketListMap.prototype.addBuckettoMap = function(bucket) {
   const self = this;
   marker = new google.maps.Marker({
     map: self.map,
-    animation: google.maps.Animation.DROP,
     position: {lat: bucket.bucket_lat, lng: bucket.bucket_lng},
   });
   marker.addListener('click', function() {
@@ -222,23 +228,28 @@ BucketListMap.prototype.addInfoWindow = function(pin, marker) {
   */
 BucketListMap.prototype.initMenu = function() {
   let self = this;
-  $('#bucketlistButton')[0].addEventListener('click', function() {
-    self.bucketObjects.forEach((object, i) => {
-        console.log(object);
-        if(object.bucketlistCheck.checked){
-          $.ajax({
-            url: '/bucket/' + object.bucket.bucket_id,
-            type: 'DELETE',
-            success: function(result) {
-                console.log(result);
-            }
-        });
-        }
-    });
-
-
+  $('#bucketlistButton')[0].addEventListener('click', async function() {
+    self.map.setZoom();
+    await Promise.all(self.bucketObjects.map(async (object) => {
+      if(object.bucketlistCheck.checked){
+        await self.deleteBucket(object.bucket.bucket_id);
+      }
+    }));
+    self.getBuckets();
+    document.getElementById('bucketlistButton').disabled = true;
   });
+};
 
+BucketListMap.prototype.deleteBucket = function(bucketId) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/bucket/' + bucketId,
+      type: 'DELETE',
+      success: function(result) {
+          resolve(result);
+      }
+    });
+  });
 };
 
 /** @global */

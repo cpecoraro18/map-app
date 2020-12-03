@@ -91,7 +91,7 @@ function addPinControl(controlDiv) {
   controlText.style.paddingLeft = '5px';
   controlText.style.paddingRight = '5px';
   controlText.style.paddingTop = '16px';
-  controlText.innerHTML = '<i class="fas fa-plus"></i>';
+  controlText.innerHTML = '<i class="fas fa-map-pin"></i>';
   controlUI.appendChild(controlText);
 
   controlUI.addEventListener('click', () => {

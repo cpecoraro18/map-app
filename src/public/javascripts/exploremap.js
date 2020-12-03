@@ -246,9 +246,22 @@ ExploreMap.prototype.addPlacePin = function(place, marker) {
   };
 
   PinElement.prototype.createHeader = function() {
+    let self = this;
+    // Header
+
+
     // Header
     const headerElement = document.createElement('div');
     headerElement.className = 'pin pin-header';
+
+    const closeButton = document.createElement('h4');
+    closeButton.innerHTML = 'x';
+    closeButton.style.float = 'right';
+    closeButton.style.cursor = 'pointer';
+    closeButton.addEventListener('click', function() {
+      self.hide();
+    });
+    headerElement.appendChild(closeButton);
 
     const titleElement = document.createElement('h2');
     titleElement.className = 'pin pin-title';
@@ -395,7 +408,7 @@ ExploreMap.prototype.addPlacePin = function(place, marker) {
   PinElement.prototype.show = function() {
     if (this.div_) {
       this.div_.style.visibility = 'visible';
-      //self.map.panBy(this.div_.offsetWidth/2, this.div_.offsetHeight/2);
+      self.map.panBy(.15*this.div_.offsetWidth, this.div_.offsetHeight/2);
     }
   };
 

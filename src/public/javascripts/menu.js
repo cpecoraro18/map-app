@@ -49,7 +49,7 @@ function retractActivity() {
 
 function expandActivity() {
   $('#sidebar_activity').css('margin-left', '30%');
-  $('#sidebar_activity').css('margin-right', '-30%');
+  $('#sidebar_activity').css('margin-right', '-60%');
   $('.activity-toggle').html('<i class="fas fa-caret-left"></i>');
   $('#sidebar_activity').removeClass('active');
 }

@@ -88,6 +88,10 @@ CustomizeMap.prototype.saveStyle = function() {
     },
   });
 };
+
+CustomizeMap.prototype.addStyles = function() {
+  this.setMapStyle([]);
+};
 /** @global */
 let map;
 

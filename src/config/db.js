@@ -1,15 +1,23 @@
 var mysql = require('mysql');
 
 //local mysql db connection
-var connection = mysql.createConnection({
-    host     : "127.0.0.1",
-    user     : "root",
-    password : 'Yerocp1!',
-    database : 'mapshotdatabase'
+var connection = mysql.createPool({
+    host     : "us-cdbr-east-02.cleardb.com",
+    user     : "b8889425be5c87",
+    password : '480bb1d8',
+    database : 'heroku_b5296ce3cc0609c'
 });
 
-connection.connect(function(err) {
+connection.getConnection(function(err) {
     if (err) throw err;
+    else {
+      console.log("Connected to MYSQL database!");
+    }
 });
 
 module.exports = connection;
+
+
+// b8889425be5c87
+// 480bb1d8
+// us-cdbr-east-02.cleardb.com

@@ -6,7 +6,7 @@
     height     : 100%;
     background : #000;
     background: rgba(0, 0, 0, .6);
-    z-index: 100;
+    z-index     :  101;
     display    : none;
 }
 
@@ -22,7 +22,7 @@
   border-radius: 20px;
   padding: 20px;
   box-shadow: 5px 10px 8px #383838;
-  z-index: 101;
+  z-index:102;
   overflow: scroll;
 }
 
@@ -159,7 +159,6 @@ input[type=textarea1]:focus {
 input[type=date]:focus {
   border: 1px solid #555;
 }
-
 
 
 @media (max-width: 768px) {

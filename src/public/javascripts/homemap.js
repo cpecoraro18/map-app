@@ -710,6 +710,11 @@ HomeMap.prototype.addButtons = function() {
     self.focusNextPin();
   });
   this.map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(rightControlDiv);
+
+  // button for adding pin
+  const addPinControlDiv = document.createElement('div');
+  addPinControl(addPinControlDiv);
+  this.map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(addPinControlDiv);
 };
 
 /** @global */

@@ -76,6 +76,7 @@ UserMap.prototype.getTags = function() {
     url: '/user/tags',
     method: 'GET',
     success: function(tags) {
+      console.log(tags);
       self.addTagstoMenu(tags);
     },
   });
@@ -93,6 +94,7 @@ UserMap.prototype.addTagstoMenu = function(tags) {
   const allTagContainer = document.createElement('td');
   allTagContainer.addEventListener('click', function() {
     self.filterEventsByTag({tag_name: 'All'});
+    this.style.border = 'solid';
   });
   const allTag = document.createElement('span');
   allTag.className = 'tag';
@@ -102,7 +104,6 @@ UserMap.prototype.addTagstoMenu = function(tags) {
   allTagRow.appendChild(allTagContainer);
 
   tagContainer.appendChild(allTagRow);
-
   tags.forEach((tag, i) => {
     console.log(tag);
     if (i%2 == 1) return;
@@ -113,6 +114,7 @@ UserMap.prototype.addTagstoMenu = function(tags) {
     const firstTagContainer = document.createElement('td');
     firstTagContainer.addEventListener('click', function() {
       self.filterEventsByTag(tag);
+      this.style.border = 'solid';
     });
     const firstTag = document.createElement('span');
     firstTag.className = 'tag';
@@ -126,6 +128,7 @@ UserMap.prototype.addTagstoMenu = function(tags) {
       const secondTagContainer = document.createElement('td');
       secondTagContainer.addEventListener('click', function() {
         self.filterEventsByTag(tags[i + 1]);
+        this.style.backgroundColor = 'black';
       });
       const secondTag = document.createElement('span');
       secondTag.className = 'tag';
@@ -161,7 +164,6 @@ UserMap.prototype.filterEventsByTag = function(tag) {
     } else pinObject.marker.setMap(null);
   });
   this.map.fitBounds(bounds);
-  retractMenu();
 };
 
 
