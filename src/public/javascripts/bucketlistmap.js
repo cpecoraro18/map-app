@@ -20,7 +20,7 @@ BucketListMap.prototype.constructor = BucketListMap;
   *Gets pins from backend and starts process of putting them on the map
   */
 BucketListMap.prototype.getBuckets = function() {
-  if(this.bucketObjects && this.bucketObjects.length > 0) {
+  if (this.bucketObjects && this.bucketObjects.length > 0) {
     this.bucketObjects.forEach((object) => {
       object.marker.setMap(null);
     });
@@ -35,7 +35,7 @@ BucketListMap.prototype.getBuckets = function() {
         buckets.forEach(function(bucket) {
           const marker = self.addBuckettoMap(bucket);
           const bucketlistCheck = self.addBuckettoMenu(bucket, marker);
-          self.bucketObjects.push({marker, bucketlistCheck, bucket})
+          self.bucketObjects.push({marker, bucketlistCheck, bucket});
         });
       } else {
         document.getElementById('bucketList').innerHTML = 'No Buckets :(';
@@ -76,7 +76,6 @@ BucketListMap.prototype.addBuckettoMenu = function(bucket, marker) {
   });
 
   return bucketlistCheck;
-
 };
 /**
   *Adds a marker and infowindow for each pin on explore map
@@ -227,11 +226,11 @@ BucketListMap.prototype.addInfoWindow = function(pin, marker) {
   *Initializes explore map menu
   */
 BucketListMap.prototype.initMenu = function() {
-  let self = this;
+  const self = this;
   $('#bucketlistButton')[0].addEventListener('click', async function() {
     self.map.setZoom();
     await Promise.all(self.bucketObjects.map(async (object) => {
-      if(object.bucketlistCheck.checked){
+      if (object.bucketlistCheck.checked) {
         await self.deleteBucket(object.bucket.bucket_id);
       }
     }));
@@ -246,8 +245,8 @@ BucketListMap.prototype.deleteBucket = function(bucketId) {
       url: '/bucket/' + bucketId,
       type: 'DELETE',
       success: function(result) {
-          resolve(result);
-      }
+        resolve(result);
+      },
     });
   });
 };

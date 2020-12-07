@@ -51,7 +51,7 @@ MapShotMap.prototype.initAddPinUI = function() {
     const formData = new FormData($('#newPinForm')[0]);
     const validatedForm = self.validateForm(formData, searchbox);
     console.log(validatedForm);
-    if(validatedForm) {
+    if (validatedForm) {
       const newPin = await self.postPin(validatedForm);
       console.log(newPin);
       self.map.setZoom(17);
@@ -83,7 +83,7 @@ MapShotMap.prototype.initAddPinUI = function() {
 
 
 MapShotMap.prototype.postPin = function(form) {
-  let self = this;
+  const self = this;
   return new Promise((resolve, reject) => {
     $.ajax({
       type: 'POST',
@@ -96,16 +96,16 @@ MapShotMap.prototype.postPin = function(form) {
         resolve(result);
       },
     });
-  })
-}
+  });
+};
 
 
 MapShotMap.prototype.bucketPin = function(pin) {
-  let data = {
+  const data = {
     lat: pin.pin_lat,
     lng: pin.pin_lng,
-    location: pin.pin_locationName
-  }
+    location: pin.pin_locationName,
+  };
   console.log(data);
   $.ajax({
     type: 'POST',
@@ -119,21 +119,21 @@ MapShotMap.prototype.bucketPin = function(pin) {
     },
     error: function(err) {
       console.log(err);
-    }
+    },
   });
 };
 
 MapShotMap.prototype.bucketPlace = function(place) {
-  let data = {
+  const data = {
     lat: place.geometry.location.lat(),
     lng: place.geometry.location.lng(),
-    location: place.name
-  }
+    location: place.name,
+  };
   console.log(data);
   $.ajax({
-    beforeSend: function(xhrObj){
-      xhrObj.setRequestHeader("Content-Type","application/json");
-      xhrObj.setRequestHeader("Accept","application/json");
+    beforeSend: function(xhrObj) {
+      xhrObj.setRequestHeader('Content-Type', 'application/json');
+      xhrObj.setRequestHeader('Accept', 'application/json');
     },
     type: 'POST',
     url: '/bucket',
@@ -147,7 +147,7 @@ MapShotMap.prototype.bucketPlace = function(place) {
     },
     error: function(err) {
       console.log(err.responseJSON.msg);
-    }
+    },
   });
 };
 
@@ -189,7 +189,7 @@ MapShotMap.prototype.validateForm = function(formData, searchbox) {
     return;
   }
 
-  if(pos){
+  if (pos) {
     formData.append('lat', pos.lat);
     formData.append('lng', pos.lng);
     return formData;
@@ -232,8 +232,6 @@ MapShotMap.prototype.addButtons = function() {
   const zoomInControlDiv = document.createElement('div');
   this.addZoomIn(zoomInControlDiv);
   this.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(zoomInControlDiv);
-
-
 
 
   if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {

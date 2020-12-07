@@ -100,9 +100,9 @@ UserMap.prototype.addTagstoMenu = function(tags) {
   allTagRow.appendChild(allTagContainer);
   allTagContainer.addEventListener('click', function() {
     self.filterEventsByTag({tag_name: 'All'});
-    const tagElements = document.querySelectorAll(".tag");
+    const tagElements = document.querySelectorAll('.tag');
     tagElements.forEach((item) => {
-      item.style.backgroundColor = "#94B447"
+      item.style.backgroundColor = '#94B447';
     });
     allTag.style.backgroundColor = '#3B5284';
   });
@@ -122,9 +122,9 @@ UserMap.prototype.addTagstoMenu = function(tags) {
     firstTagContainer.appendChild(firstTag);
     firstTagContainer.addEventListener('click', function() {
       self.filterEventsByTag(tag);
-      const tagElements = document.querySelectorAll(".tag");
+      const tagElements = document.querySelectorAll('.tag');
       tagElements.forEach((item) => {
-        item.style.backgroundColor = "#94B447"
+        item.style.backgroundColor = '#94B447';
       });
       firstTag.style.backgroundColor = '#3B5284';
     });
@@ -139,9 +139,9 @@ UserMap.prototype.addTagstoMenu = function(tags) {
       secondTagContainer.appendChild(secondTag);
       secondTagContainer.addEventListener('click', function() {
         self.filterEventsByTag(tags[i + 1]);
-        const tagElements = document.querySelectorAll(".tag");
+        const tagElements = document.querySelectorAll('.tag');
         tagElements.forEach((item) => {
-          item.style.backgroundColor = "#94B447"
+          item.style.backgroundColor = '#94B447';
         });
         secondTag.style.backgroundColor = '#3B5284';
       });
@@ -164,7 +164,7 @@ UserMap.prototype.filterEventsByTag = function(tag) {
   this.pinObjects.forEach((pinObject) => {
     let hasTag = false;
     pinObject.pin.tags.forEach((t) => {
-      console.log(tag.tag_name == 'All')
+      console.log(tag.tag_name == 'All');
       if (t.tag_name == tag.tag_name || tag.tag_name == 'All') {
         hasTag = true;
       }
@@ -183,15 +183,15 @@ UserMap.prototype.filterEventsByTag = function(tag) {
   *@param {array} pin Map from init map.
   */
 UserMap.prototype.addPinToMap = function(pin) {
-  let self = this;
+  const self = this;
   const pinElement = this.addPin(pin);
-  const pinMarker = this.addMarker(pin)
-  pinMarker.addListener("click", () => {
+  const pinMarker = this.addMarker(pin);
+  pinMarker.addListener('click', () => {
     self.map.setZoom(17);
     self.map.panTo({lat: pin.pin_lat, lng: pin.pin_lng});
     pinElement.toggle();
-  });;
-  //const pinInfoWindow = this.addInfoWindow(pin, pinMarker);
+  }); ;
+  // const pinInfoWindow = this.addInfoWindow(pin, pinMarker);
 
   const pinElements = {
     pin: pin,
@@ -199,7 +199,6 @@ UserMap.prototype.addPinToMap = function(pin) {
   };
   this.pinObjects.push(pinElements);
 };
-
 
 
 /**
@@ -269,9 +268,9 @@ UserMap.prototype.addPin = function(pin) {
     const headerElement = document.createElement('div');
     headerElement.className = 'pin pin-header';
 
-    const settingsElement = document.createElement("span")
-    settingsElement.className = "settings-element";
-    settingsElement.innerHTML = '<i class="fas fa-ellipsis-h"></i>'
+    const settingsElement = document.createElement('span');
+    settingsElement.className = 'settings-element';
+    settingsElement.innerHTML = '<i class="fas fa-ellipsis-h"></i>';
     headerElement.appendChild(settingsElement);
     console.log(settingsElement);
 
@@ -284,8 +283,6 @@ UserMap.prototype.addPin = function(pin) {
     locationElement.className = 'pin pin-location';
     locationElement.innerHTML = this.pin_.pin_locationName;
     headerElement.appendChild(locationElement);
-
-    const dateElemeent = document.createElement('h4');
 
 
     return headerElement;
@@ -344,8 +341,6 @@ UserMap.prototype.addPin = function(pin) {
   };
 
   PinElement.prototype.createButtonContainer = function() {
-    const pinElementSelf = this;
-
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'pin-button';
 
@@ -716,18 +711,18 @@ function initMap() {
 
 
 function openSettings() {
-  console.log("HERE")
-  document.getElementById("myDropdown").classList.toggle("show");
+  console.log('HERE');
+  document.getElementById('myDropdown').classList.toggle('show');
 }
 
 // Close the dropdown if the user clicks outside of it
 window.onclick = function(e) {
-  console.log("REMOVING")
-  console.log(e.target)
+  console.log('REMOVING');
+  console.log(e.target);
   if (!e.target.matches('.dropbtn, .fas')) {
-    var myDropdown = document.getElementById("myDropdown");
+    const myDropdown = document.getElementById('myDropdown');
     if (myDropdown.classList.contains('show')) {
       myDropdown.classList.remove('show');
     }
   }
-}
+};

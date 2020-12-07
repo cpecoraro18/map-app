@@ -8,7 +8,7 @@ function retractMenu() {
   $('.dynamic-sidebar').css('margin-left', '-25%');
   $('.dynamic-sidebar').css('margin-right', '0');
   $('.menu-toggle').html('<i class="fas fa-caret-right"></i>');
-  if($('#sidebar_activity')) {
+  if ($('#sidebar_activity')) {
     retractActivity();
   }
 }
@@ -41,7 +41,6 @@ function toggleActivity() {
 }
 
 function retractActivity() {
-
   $('#sidebar_activity').css('margin-left', '-30%');
   $('#sidebar_activity').css('margin-right', '0');
   $('#sidebar_activity').addClass('active');

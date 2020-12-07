@@ -246,7 +246,7 @@ ExploreMap.prototype.addPlacePin = function(place, marker) {
   };
 
   PinElement.prototype.createHeader = function() {
-    let self = this;
+    const self = this;
     // Header
 
 
@@ -277,11 +277,10 @@ ExploreMap.prototype.addPlacePin = function(place, marker) {
   };
 
 
-
   PinElement.prototype.createButtonContainer = function() {
     const pinElementSelf = this;
 
-    const buttonContainer = document.createElement('div')
+    const buttonContainer = document.createElement('div');
     buttonContainer.className = 'pin-button';
     const bucketButton = document.createElement('button');
     bucketButton.className = 'btn pin-bucket-button';
@@ -466,13 +465,12 @@ ExploreMap.prototype.addPlacePin = function(place, marker) {
       if (this.map.getZoom() < 8) pinElement.hide();
     });
     pinElement.hide();
-    marker.addListener("click", () => {
+    marker.addListener('click', () => {
       pinElement.toggle();
     });
     return pinElement;
   }
 };
-
 
 
 /**
@@ -484,25 +482,13 @@ ExploreMap.prototype.initMenu = function() {
   this.map.addListener('bounds_changed', () => {
     searchbox.setBounds(this.map.getBounds());
   });
-  $('#explore_textbox').keyup(function(e){
-    //if the text is at least 4 chars long
-    if($('#explore_textbox').val().length > 4)
-    {
-        //iterate through each of the autocomplete options
-        $(".pac-item").each(function(){
-            if($(this).text() == $('#explore_textbox').val() )
-            {
-                google.maps.event.trigger(autocomplete, 'place_changed');
-            }
-        });
-    }
-});
+
   let markers = [];
   // Listen for the event fired when the user selects a prediction and retrieve
   // more details for that place.
   searchbox.addListener('places_changed', () => {
     const places = searchbox.getPlaces();
-    console.log(places)
+    console.log(places);
     if (places.length == 0) {
       return;
     }
@@ -553,7 +539,7 @@ ExploreMap.prototype.initMenu = function() {
 
 
       // ADD TO MENU
-      console.log(place.photos)
+      console.log(place.photos);
       if (place.photos && place.photos.length>0) {
         place.photos.forEach((img) => {
           if (columnCount%3 == 0) {
