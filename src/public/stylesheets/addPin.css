@@ -62,7 +62,7 @@
   border-radius: 20px;
   }
 
-textarea {
+#newPinForm textarea {
   resize: none;
   width:43%;
   float:right;

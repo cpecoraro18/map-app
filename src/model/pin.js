@@ -147,6 +147,7 @@ Pin.addPin = function(pin) {
     db.query(newPinQuery, (err, pinInsert, fields) => {
       // if any error while executing above query, throw error
       if (err) reject(err)
+      console.log(pinInsert)
       resolve(pinInsert.insertId);
     });
   });

@@ -92,16 +92,20 @@ UserMap.prototype.addTagstoMenu = function(tags) {
   const allTagRow = document.createElement('tr');
 
   const allTagContainer = document.createElement('td');
-  allTagContainer.addEventListener('click', function() {
-    self.filterEventsByTag({tag_name: 'All'});
-    this.style.border = 'solid';
-  });
+
   const allTag = document.createElement('span');
   allTag.className = 'tag';
   allTag.innerHTML = 'All';
   allTagContainer.appendChild(allTag);
-
   allTagRow.appendChild(allTagContainer);
+  allTagContainer.addEventListener('click', function() {
+    self.filterEventsByTag({tag_name: 'All'});
+    const tagElements = document.querySelectorAll(".tag");
+    tagElements.forEach((item) => {
+      item.style.backgroundColor = "#94B447"
+    });
+    allTag.style.backgroundColor = '#3B5284';
+  });
 
   tagContainer.appendChild(allTagRow);
   tags.forEach((tag, i) => {
@@ -112,28 +116,35 @@ UserMap.prototype.addTagstoMenu = function(tags) {
 
 
     const firstTagContainer = document.createElement('td');
-    firstTagContainer.addEventListener('click', function() {
-      self.filterEventsByTag(tag);
-      this.style.border = 'solid';
-    });
     const firstTag = document.createElement('span');
     firstTag.className = 'tag';
     firstTag.innerHTML = tag.tag_name;
     firstTagContainer.appendChild(firstTag);
-
+    firstTagContainer.addEventListener('click', function() {
+      self.filterEventsByTag(tag);
+      const tagElements = document.querySelectorAll(".tag");
+      tagElements.forEach((item) => {
+        item.style.backgroundColor = "#94B447"
+      });
+      firstTag.style.backgroundColor = '#3B5284';
+    });
     tagRow.appendChild(firstTagContainer);
 
 
     if (tags[i+1]) {
       const secondTagContainer = document.createElement('td');
-      secondTagContainer.addEventListener('click', function() {
-        self.filterEventsByTag(tags[i + 1]);
-        this.style.backgroundColor = 'black';
-      });
       const secondTag = document.createElement('span');
       secondTag.className = 'tag';
       secondTag.innerHTML = tags[i + 1].tag_name;
       secondTagContainer.appendChild(secondTag);
+      secondTagContainer.addEventListener('click', function() {
+        self.filterEventsByTag(tags[i + 1]);
+        const tagElements = document.querySelectorAll(".tag");
+        tagElements.forEach((item) => {
+          item.style.backgroundColor = "#94B447"
+        });
+        secondTag.style.backgroundColor = '#3B5284';
+      });
       tagRow.appendChild(secondTagContainer);
     }
 
