@@ -157,7 +157,7 @@ a[data-toggle="collapse"] [data-toggle="collapse"]{
 }
 
 #tags {
-  margin: 0 20px 0 20px;
+  margin: auto;
 }
 
 .tag {
@@ -199,7 +199,10 @@ a[data-toggle="collapse"] [data-toggle="collapse"]{
 
 /* Dropdown Button */
 .dropbtn {
-  margin-right: 20px;
+  float: right;
+  background: none;
+  border: none;
+  font-size: 2em;
 }
 /* Dropdown button on hover & focus */
 .dropbtn:hover, .dropbtn:focus {
@@ -211,6 +214,7 @@ a[data-toggle="collapse"] [data-toggle="collapse"]{
   position: absolute;
   right: 100px;
   display: inline-block;
+  z-index: 100000000!important;
 }
 
 /* Dropdown Content (Hidden by Default) */

@@ -484,6 +484,19 @@ ExploreMap.prototype.initMenu = function() {
   this.map.addListener('bounds_changed', () => {
     searchbox.setBounds(this.map.getBounds());
   });
+  $('#explore_textbox').keyup(function(e){
+    //if the text is at least 4 chars long
+    if($('#explore_textbox').val().length > 4)
+    {
+        //iterate through each of the autocomplete options
+        $(".pac-item").each(function(){
+            if($(this).text() == $('#explore_textbox').val() )
+            {
+                google.maps.event.trigger(autocomplete, 'place_changed');
+            }
+        });
+    }
+});
   let markers = [];
   // Listen for the event fired when the user selects a prediction and retrieve
   // more details for that place.
@@ -540,7 +553,7 @@ ExploreMap.prototype.initMenu = function() {
 
 
       // ADD TO MENU
-
+      console.log(place.photos)
       if (place.photos && place.photos.length>0) {
         place.photos.forEach((img) => {
           if (columnCount%3 == 0) {

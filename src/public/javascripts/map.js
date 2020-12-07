@@ -51,11 +51,13 @@ MapShotMap.prototype.initAddPinUI = function() {
     const formData = new FormData($('#newPinForm')[0]);
     const validatedForm = self.validateForm(formData, searchbox);
     console.log(validatedForm);
-    const newPin = await self.postPin(validatedForm);
-    console.log(newPin);
-    self.map.setZoom(17);
-    self.map.panTo({lat: parseFloat(newPin.lat), lng: parseFloat(newPin.lng)});
-    self.getPins();
+    if(validatedForm) {
+      const newPin = await self.postPin(validatedForm);
+      console.log(newPin);
+      self.map.setZoom(17);
+      self.map.panTo({lat: parseFloat(newPin.lat), lng: parseFloat(newPin.lng)});
+      self.getPins();
+    }
   });
   const inpFile = $('input[name=images]');
   const previewImg = $('.image-preview-img');
@@ -160,8 +162,9 @@ MapShotMap.prototype.pinLocation = function(locationName, lat, lng) {
 
 MapShotMap.prototype.validateForm = function(formData, searchbox) {
   const places = searchbox.getPlaces();
+  console.log(searchbox);
   let pos;
-  if (places && places[0].geometry) {
+  if (places && places[0] && places[0].geometry) {
     pos = {
       lat: places[0].geometry.location.lat(),
       lng: places[0].geometry.location.lng(),
@@ -182,14 +185,15 @@ MapShotMap.prototype.validateForm = function(formData, searchbox) {
     });
   } else {
     // invalid location, input not entered
-    alert('PLEASE INPUT LOCATION FEILD');
+    alert('PLEASE INPUT VALID LOCATION');
     return;
   }
 
-
-  formData.append('lat', pos.lat);
-  formData.append('lng', pos.lng);
-  return formData;
+  if(pos){
+    formData.append('lat', pos.lat);
+    formData.append('lng', pos.lng);
+    return formData;
+  }
 };
 
 
