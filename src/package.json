@@ -30,6 +30,6 @@
     "stylelint": "^13.7.2",
     "stylelint-config-standard": "^20.0.0",
     "debug": "~2.6.9",
-    "nodemon": "^2.0.4",
+    "nodemon": "^2.0.4"
   }
 }
