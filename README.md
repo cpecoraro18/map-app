@@ -24,3 +24,5 @@ NodeJS
 Express
 
 MySQL
+
+![Alt Text](app_photos/addPin.gif)
