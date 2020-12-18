@@ -26,3 +26,12 @@ Express
 MySQL
 
 ![Alt Text](app_photos/addPin.gif)
+
+
+![Alt Text](app_photos/bucketList.gif)
+
+
+![Alt Text](app_photos/feed.gif)
+
+
+![Alt Text](app_photos/explore.gif)
