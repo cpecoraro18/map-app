@@ -17,18 +17,3 @@ jQuery
 NodeJS
 Express
 MySQL
-
-
-
-
-
-
-Open `http://localhost:3000` to access the site and login with
-
-test
-
-test
-
-Commit
------
-When starting a new feature, make a separate branch. When you are done, merge that branch into dev.
