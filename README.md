@@ -7,13 +7,20 @@ Technologies
 
 ## Front End
 HTML
+
 EJS
+
 CSS
+
 Bootstrap
+
 Javascript
+
 jQuery
 
 ## Back End
 NodeJS
+
 Express
+
 MySQL
