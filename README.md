@@ -25,13 +25,16 @@ Express
 
 MySQL
 
+## Demo
+
+### Adding a Pin
 ![Alt Text](app_photos/addPin.gif)
 
-
+### Bucketing a Pin
 ![Alt Text](app_photos/bucketList.gif)
 
-
+### Scrolling through feed
 ![Alt Text](app_photos/feed.gif)
 
-
+### Exploring places/pins
 ![Alt Text](app_photos/explore.gif)
